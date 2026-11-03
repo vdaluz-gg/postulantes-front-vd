@@ -1,0 +1,63 @@
+<main class="login" aria-labelledby="lg-t">
+  <app-theme-switch class="lg-theme" />
+  <a appButton variant="ghost" class="lg-back" routerLink="/">
+    <svg appIcon="arrow" [flip]="true"></svg>
+    Volver a la portada
+  </a>
+
+  <div class="lg-card">
+    <div>
+      <h1 id="lg-t">Ingresá a tu portal</h1>
+      <p class="sub" aria-live="polite">{{ subtitle() }}</p>
+    </div>
+
+    <form class="lg-form" novalidate (submit)="submit($event)">
+      @if (step() === 'email') {
+        <app-text-field
+          label="Tu correo electrónico"
+          inputId="lg-mail"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          placeholder="nombre@correo.com"
+          describedBy="lg-err"
+          [required]="true"
+          [(value)]="email"
+        />
+      } @else {
+        <app-text-field
+          label="Código de 6 dígitos"
+          inputId="lg-code"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          placeholder="······"
+          describedBy="lg-err lg-hint"
+          [maxlength]="6"
+          [code]="true"
+          [digitsOnly]="true"
+          [value]="code()"
+          (valueChange)="onCodeChange($event)"
+        >
+          <p class="hint" id="lg-hint">
+            Prototipo: tu código es <b>{{ devCode() }}</b>.
+            <button appButton variant="ghost" size="sm" (click)="fillCode()">Completar</button>
+          </p>
+        </app-text-field>
+      }
+
+      <p class="err" id="lg-err" role="alert">{{ error() }}</p>
+
+      <button appButton variant="pri" type="submit" class="full">
+        {{ step() === 'email' ? 'Enviarme el código' : 'Entrar a mi portal' }}
+      </button>
+      @if (step() === 'code') {
+        <button appButton variant="ghost" (click)="useOtherEmail()">Usar otro correo</button>
+      }
+      <button appButton class="full" (click)="enterWithDemo()">Entrar con datos de ejemplo</button>
+    </form>
+
+    <p class="lg-foot">
+      Prototipo con datos de ejemplo. Podés entrar con cualquier correo válido o con el botón de arriba.
+    </p>
+  </div>
+</main>

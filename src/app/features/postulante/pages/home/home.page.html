@@ -1,0 +1,8 @@
+<main class="home" aria-labelledby="h1">
+  <h1 id="h1">Hola.</h1>
+  <p class="lead">Entraste como <b>{{ session.email() }}</b>. El portal completo se está construyendo.</p>
+  <button appButton variant="ghost" size="sm" (click)="logout()">
+    <svg appIcon="logout"></svg>
+    Salir
+  </button>
+</main>
