@@ -1,4 +1,4 @@
-:host{position:relative;display:flex;flex-direction:column;align-items:center;width:clamp(90px,9vw,130px);height:clamp(220px,36vh,310px);transition:width .7s cubic-bezier(.2,.8,.2,1),height .7s cubic-bezier(.2,.8,.2,1),opacity .45s,transform .7s cubic-bezier(.2,.8,.2,1)}
+:host{position:relative;display:flex;flex-direction:column;align-items:center;--fh:var(--figure-h,clamp(220px,36vh,310px));width:calc(var(--fh) * .42);height:var(--fh);transition:width .7s cubic-bezier(.2,.8,.2,1),height .7s cubic-bezier(.2,.8,.2,1),opacity .45s,transform .7s cubic-bezier(.2,.8,.2,1)}
 
 .halo{position:absolute;left:50%;top:44%;width:260%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgb(243 238 252 / .11),transparent)}
 :host-context([data-theme="light"]) .halo{background:radial-gradient(closest-side,rgb(26 19 40 / .05),transparent)}
