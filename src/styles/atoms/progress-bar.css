@@ -1,0 +1,2 @@
+.docp{height:10px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.docp i{display:block;height:100%;background:linear-gradient(90deg,var(--vio),var(--mint));border-radius:inherit;transition:width .9s var(--ease)}

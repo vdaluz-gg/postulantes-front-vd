@@ -1,0 +1,3 @@
+.post{display:flex;flex-direction:column;gap:18px}
+.post h3{font-size:18px;letter-spacing:-.01em}
+.match{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--mint-t)}

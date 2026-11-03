@@ -1,0 +1,15 @@
+.todo{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line);transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s,background .28s}
+.todo:first-of-type{border-top:0}
+.todo:hover{background:color-mix(in srgb,var(--vio) 6%,transparent)}
+.todo .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--tint-vio);color:var(--vio-t);flex:none}
+.todo .tx{flex:1;min-width:0}
+.todo .tx b{display:block;font-weight:600;background:linear-gradient(currentColor,currentColor) 0 58%/0% 2px no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.todo .tx span{color:var(--mut);font-size:13.5px}
+/* Tilde que se tacha al completar. */
+.todo.done{overflow:hidden}
+.todo.done .ti{background:color-mix(in srgb,var(--mint) 24%,transparent);color:var(--mint-t);transition:background .3s}
+.todo.done .ti svg path{stroke-dasharray:30;stroke-dashoffset:30;animation:draw .45s .05s ease forwards}
+.todo.done .tx b{display:inline;background-size:100% 2px;color:var(--mut);transition:background-size .5s ease .2s,color .3s .2s}
+.todo.done .tx span{display:block;opacity:.45;transition:opacity .3s .2s}
+.todo.done .btn{opacity:0;pointer-events:none;transition:opacity .2s}
+.todo.gone{height:0!important;padding-top:0;padding-bottom:0;opacity:0;border-width:0;transition:height .35s ease,padding .35s ease,opacity .3s ease}

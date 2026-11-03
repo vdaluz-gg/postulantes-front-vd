@@ -1,0 +1,8 @@
+.field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px}
+.inp{width:100%;min-height:48px;padding:0 14px;border-radius:var(--r-s);background:var(--surface);border:1px solid var(--line2);color:var(--ink);font:inherit}
+textarea.inp{padding:12px 14px;min-height:96px;resize:vertical}
+.inp::placeholder{color:var(--mut);opacity:.8}
+.inp:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.code{letter-spacing:.5em;text-align:center;font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.err{color:var(--fuc-t);font-size:13.5px;min-height:20px}
+.hint{font-size:13.5px;color:var(--mut)}

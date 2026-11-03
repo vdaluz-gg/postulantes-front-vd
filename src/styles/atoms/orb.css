@@ -1,0 +1,5 @@
+.orb{position:relative;width:100%;height:100%}
+.orb .fl{position:absolute;left:50%;top:50%;pointer-events:none;animation:flo 6s ease-in-out infinite}
+.orb canvas{position:absolute;inset:0;width:100%;height:100%}
+.orb.nogl{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--vio) 60%,var(--gg-violet-950))}
+.orb.tap{cursor:pointer}
