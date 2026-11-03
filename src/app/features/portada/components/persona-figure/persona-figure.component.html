@@ -21,6 +21,17 @@
   </g>
 </svg>
 
+@if (persona().avatar; as avatar) {
+  @if (avatarStatus() !== 'failed') {
+    <app-holo-avatar
+      [model]="avatar.model"
+      [config]="avatar.config"
+      [state]="state()"
+      (status)="avatarStatus.set($event)"
+    />
+  }
+}
+
 <div class="ask" aria-hidden="true">
   <b>{{ persona().question }}</b>
   <small>Click para entrar</small>

@@ -1,4 +1,12 @@
+import { HoloAvatarConfig } from '../../shared/three/holo-avatar.types';
+
 export type PersonaId = 'post' | 'cli' | 'col';
+
+export interface PersonaAvatar {
+  /** Modelo GLB servido desde public/. */
+  readonly model: string;
+  readonly config: HoloAvatarConfig;
+}
 
 export interface PersonaAction {
   readonly label: string;
@@ -28,6 +36,8 @@ export interface Persona {
   readonly footnote: string;
   /** Portal privado del perfil. Null mientras no esté construido. */
   readonly portalLink: string | null;
+  /** Avatar 3D. Sin avatar se muestra la silueta. */
+  readonly avatar?: PersonaAvatar;
 }
 
 export const PERSONAS: readonly Persona[] = [
@@ -51,6 +61,7 @@ export const PERSONAS: readonly Persona[] = [
     ],
     footnote: 'Matching con IA · 14 sucursales en todo el país',
     portalLink: '/postulante',
+    avatar: { model: 'assets/models/postulante.glb', config: { rotD: 0, rotL: 0 } },
   },
   {
     id: 'cli',
