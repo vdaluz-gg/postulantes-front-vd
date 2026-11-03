@@ -61,6 +61,8 @@
   --glow1:rgba(122,43,227,.13);--glow2:rgba(19,122,95,.07);
 }
 [data-contrast="high"]{--bg:#000;--surface:#000;--surface2:#1a1a1a;--line:rgba(255,255,255,.6);--line2:#fff;--ink:#fff;--mut:#e9e6f0;--vio:#6df0c3;--vio-t:#8ff7d2;--glow1:transparent;--glow2:transparent}
+/* Texto negro sobre el acento menta: el blanco daba 1,41:1; el negro 14,9:1 (skill, corrección 9). */
+[data-contrast="high"]{--on:#000}
 
 @property --vio{syntax:'<color>';inherits:true;initial-value:#8b3bf0}
 @property --vio-t{syntax:'<color>';inherits:true;initial-value:#c7a6ff}

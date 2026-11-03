@@ -8,4 +8,6 @@
 :host(.ghost:hover){background:var(--tint-vio)}
 :host(.sm){min-height:36px;padding:0 14px;font-size:13.5px}
 :host([disabled]){opacity:.5;cursor:not-allowed}
+/* Mínimo táctil de 44 px en celulares y pantallas táctiles. */
+@media (max-width:860px),(pointer:coarse){:host(.sm){min-height:44px}}
 :host-context([data-contrast="high"]):host(.sec){border-width:2px}
