@@ -1,50 +1,7 @@
 /*
- * Hoja global. El orden de importación replica la cascada de la maqueta:
- * tokens, base, átomos, moléculas, páginas y organismos, temas.
+ * Estilos globales: solo tokens de diseño, base tipográfica y transiciones de vista.
+ * Cada componente define sus propios estilos en su archivo .css.
  */
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/view-transitions.css";
-
-@import "./styles/atoms/button.css";
-@import "./styles/atoms/icon-button.css";
-@import "./styles/atoms/chip.css";
-@import "./styles/atoms/card.css";
-@import "./styles/atoms/input.css";
-@import "./styles/atoms/orb.css";
-@import "./styles/atoms/progress-ring.css";
-@import "./styles/atoms/progress-bar.css";
-@import "./styles/atoms/switch.css";
-@import "./styles/atoms/pill.css";
-@import "./styles/atoms/swatch.css";
-@import "./styles/atoms/typing.css";
-@import "./styles/atoms/avatar.css";
-@import "./styles/atoms/brand.css";
-
-@import "./styles/molecules/segmented.css";
-@import "./styles/molecules/tabs.css";
-@import "./styles/molecules/theme-switch.css";
-@import "./styles/molecules/tip.css";
-@import "./styles/molecules/timeline.css";
-@import "./styles/molecules/stepper.css";
-@import "./styles/molecules/application-card.css";
-@import "./styles/molecules/interview-row.css";
-@import "./styles/molecules/todo.css";
-@import "./styles/molecules/document-row.css";
-@import "./styles/molecules/mail-item.css";
-@import "./styles/molecules/key-value.css";
-@import "./styles/molecules/slot.css";
-@import "./styles/molecules/toggle-row.css";
-
-@import "./styles/pages/login.css";
-@import "./styles/organisms/shell.css";
-@import "./styles/pages/home.css";
-@import "./styles/pages/calendar.css";
-@import "./styles/pages/offers.css";
-@import "./styles/pages/messages.css";
-@import "./styles/pages/profile.css";
-@import "./styles/organisms/side-sheet.css";
-@import "./styles/organisms/notification-island.css";
-@import "./styles/organisms/assistant.css";
-
-@import "./styles/themes/high-contrast.css";
