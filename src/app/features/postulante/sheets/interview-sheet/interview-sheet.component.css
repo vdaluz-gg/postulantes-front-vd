@@ -1,0 +1,4 @@
+.chips{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0}
+.kv dt{color:var(--mut);font-size:13.5px}
+.kv dd{margin:0;font-weight:600}

@@ -7,7 +7,7 @@
   [nextTitle]="nextTitle()"
   [now]="store.now()"
   (join)="join($event)"
-  (details)="openInterview()"
+  (details)="openInterview($event)"
 ></section>
 
 <div class="grid2">
@@ -38,7 +38,7 @@
           appInterviewRow
           [interview]="interview"
           [applicationTitle]="titleOf(interview)"
-          (click)="openInterview()"
+          (click)="openInterview(interview)"
         ></button>
       } @empty {
         <div class="empty">Todavía no tenés reuniones agendadas.</div>

@@ -25,6 +25,8 @@ export abstract class InterviewsApi {
   abstract list(): Observable<Interview[]>;
   /** Confirma la asistencia a una entrevista pendiente. */
   abstract confirm(id: string): Observable<void>;
+  /** Pide pasar la entrevista a otro horario; la selectora responde por correo y WhatsApp. */
+  abstract requestReschedule(id: string, slot: Date, reason: string): Observable<void>;
 }
 
 export abstract class DocumentsApi {

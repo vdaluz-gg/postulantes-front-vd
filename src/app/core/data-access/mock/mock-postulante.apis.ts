@@ -54,6 +54,12 @@ export class MockInterviewsApi extends InterviewsApi {
     this.db.seed.interviews = this.db.seed.interviews.map((i) => (i.id === id ? { ...i, status: 'confirmed' } : i));
     return of(undefined);
   }
+  requestReschedule(id: string, slot: Date): Observable<void> {
+    this.db.seed.interviews = this.db.seed.interviews.map((i) =>
+      i.id === id ? { ...i, status: 'reschedule-requested', rescheduleRequestedFor: slot } : i,
+    );
+    return of(undefined);
+  }
 }
 
 @Injectable()

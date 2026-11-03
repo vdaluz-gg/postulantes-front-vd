@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Interview } from '../../../../core/models';
+import { SheetService } from '../../../../core/services/sheet.service';
 import { formatDate } from '../../../../core/utils/date-format';
 import { ButtonComponent } from '../../../../shared/ui/atoms/button/button.component';
 import { SectionHeaderComponent } from '../../../../shared/ui/molecules/section-header/section-header.component';
@@ -9,6 +10,7 @@ import { ApplicationTileComponent } from '../../components/application-tile/appl
 import { HomeHeroComponent } from '../../components/home-hero/home-hero.component';
 import { InterviewRowComponent } from '../../components/interview-row/interview-row.component';
 import { PortalActionsService } from '../../services/portal-actions.service';
+import { InterviewSheetComponent } from '../../sheets/interview-sheet/interview-sheet.component';
 import { PostulanteStore } from '../../state/postulante.store';
 import { HomeTodo, TodoAction, buildLead } from './home.view-model';
 
@@ -34,6 +36,7 @@ import { HomeTodo, TodoAction, buildLead } from './home.view-model';
 export class HomePage {
   protected readonly store = inject(PostulanteStore);
   private readonly actions = inject(PortalActionsService);
+  private readonly sheets = inject(SheetService);
   private readonly router = inject(Router);
 
   protected readonly today = computed(() => new Date(this.store.now()));
@@ -121,9 +124,8 @@ export class HomePage {
     this.actions.join(interview);
   }
 
-  /** El detalle de una reunión vive en el calendario. */
-  protected openInterview(): void {
-    void this.router.navigate(['/postulante/calendario']);
+  protected openInterview(interview: Interview): void {
+    this.sheets.open(InterviewSheetComponent, { interviewId: interview.id });
   }
 
   protected openApplication(): void {

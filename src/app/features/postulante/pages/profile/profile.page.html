@@ -1,0 +1,22 @@
+<app-page-header
+  heading="Mi perfil"
+  lead="Un perfil completo mejora tu match y acorta las entrevistas. Se guarda solo."
+/>
+
+<div class="stack">
+  <div class="empty">Estamos armando tu formulario de perfil. Pronto vas a poder completarlo desde acá.</div>
+
+  <section class="card session" aria-labelledby="t-session">
+    <app-section-header heading="Tu sesión" headingId="t-session" />
+    <div class="actions">
+      <a appButton routerLink="/">
+        <svg appIcon="arrow" [flip]="true"></svg>
+        Volver a la portada
+      </a>
+      <button appButton (click)="portalSession.logout()">
+        <svg appIcon="logout"></svg>
+        Salir
+      </button>
+    </div>
+  </section>
+</div>

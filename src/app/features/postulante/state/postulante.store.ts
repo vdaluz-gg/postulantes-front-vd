@@ -146,6 +146,32 @@ export class PostulanteStore {
     });
   }
 
+  interview(id: string): Interview | undefined {
+    return this.interviews().find((i) => i.id === id);
+  }
+
+  /** Pide otro horario para una reunión y lo registra en el historial de su postulación. */
+  requestReschedule(id: string, slot: Date, reason = ''): void {
+    const interview = this.interview(id);
+    if (!interview) return;
+    this.interviewsApi.requestReschedule(id, slot, reason).subscribe(() => {
+      this.interviews.update((list) =>
+        list.map((i) => (i.id === id ? { ...i, status: 'reschedule-requested', rescheduleRequestedFor: slot } : i)),
+      );
+      this.applications.update((list) =>
+        list.map((a) =>
+          a.id === interview.applicationId
+            ? {
+                ...a,
+                status: 'Reprogramación pedida',
+                history: [...a.history, { at: new Date(this.now()), text: 'Pediste cambiar el horario de la reunión.' }],
+              }
+            : a,
+        ),
+      );
+    });
+  }
+
   private startClock(): void {
     if (!this.isBrowser || this.clock) return;
     this.clock = setInterval(() => this.now.set(Date.now()), CLOCK_MS);

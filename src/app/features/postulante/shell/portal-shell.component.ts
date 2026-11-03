@@ -8,10 +8,12 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { SessionService } from '../../../core/services/session.service';
+import { SheetService } from '../../../core/services/sheet.service';
 import { SoundService } from '../../../core/services/sound.service';
+import { PortalSessionService } from '../services/portal-session.service';
 import { PostulanteStore } from '../state/postulante.store';
 import { NavBadge, PortalSection } from './portal-nav';
 import { SideNavComponent } from './side-nav/side-nav.component';
@@ -23,14 +25,15 @@ import { TopBarComponent } from './top-bar/top-bar.component';
  */
 @Component({
   selector: 'app-portal-shell',
-  imports: [RouterOutlet, SideNavComponent, TopBarComponent],
+  imports: [NgComponentOutlet, RouterOutlet, SideNavComponent, TopBarComponent],
   templateUrl: './portal-shell.component.html',
   styleUrl: './portal-shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortalShellComponent {
   protected readonly store = inject(PostulanteStore);
-  private readonly session = inject(SessionService);
+  protected readonly sheets = inject(SheetService);
+  private readonly portalSession = inject(PortalSessionService);
   private readonly sound = inject(SoundService);
   private readonly router = inject(Router);
   private readonly doc = inject(DOCUMENT);
@@ -70,9 +73,7 @@ export class PortalShellComponent {
   }
 
   protected logout(): void {
-    this.session.end();
-    this.store.reset();
-    void this.router.navigate(['/postulante/ingresar']);
+    this.portalSession.logout();
   }
 
   private focusHeading(): void {

@@ -42,11 +42,7 @@ export const POSTULANTE_ROUTES: Routes = [
         loadComponent: section,
         data: { heading: 'Mensajes y documentos', lead: 'Lo que te enviamos y lo que necesitamos de vos.' },
       },
-      {
-        path: 'perfil',
-        loadComponent: section,
-        data: { heading: 'Mi perfil', lead: 'Un perfil completo mejora tu match y acorta las entrevistas. Se guarda solo.' },
-      },
+      { path: 'perfil', loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage) },
     ],
   },
 ];
