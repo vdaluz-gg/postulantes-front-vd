@@ -52,6 +52,7 @@
 .topr{position:absolute;right:clamp(14px,3vw,32px);top:clamp(14px,3vh,28px);z-index:8;display:flex;align-items:center;gap:8px}
 .topportal{min-height:42px;padding:0 16px;font-size:13px;animation:slideIn .55s .3s cubic-bezier(.2,.8,.2,1) both}
 @keyframes slideIn{from{opacity:0;transform:translateX(18px)}}
+@media (pointer:coarse){.topportal{min-height:44px}}
 
 /* Figuras de los perfiles */
 .cast{position:absolute;left:50%;top:var(--cast-top);z-index:3;display:flex;align-items:flex-end;gap:var(--cast-gap);transform:translateX(-50%);transition:left .8s cubic-bezier(.2,.8,.2,1),top .8s cubic-bezier(.2,.8,.2,1),gap .6s}
@@ -75,6 +76,11 @@
 
 @media (max-width:760px){
   .intro{transition:opacity .28s,transform .4s cubic-bezier(.2,.8,.2,1)}
-  .open .cast{left:50%;top:7vh}
-  .info{left:16px;right:16px;width:auto;top:44vh;max-height:calc(56vh - 16px)}
+  /*
+   * Celular (maqueta): avatar arriba al centro y panel anclado abajo. El panel nunca sube más
+   * allá de los pies del avatar; si no entra, se desplaza por dentro.
+   */
+  .stage{--sel-top:max(7.5vh,100px);--sel-h:min(30vh,74vw)}
+  .open .cast{left:50%;top:var(--sel-top)}
+  .info{left:16px;right:16px;width:auto;top:auto;bottom:24px;max-height:min(58vh,calc(100vh - var(--sel-top) - var(--sel-h) - 36px))}
 }

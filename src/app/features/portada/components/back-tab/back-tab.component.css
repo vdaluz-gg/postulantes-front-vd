@@ -6,3 +6,8 @@ span{max-width:0;opacity:0;overflow:hidden;margin-left:0;transition:max-width .3
 :host(:hover) svg,:host(:focus-visible) svg{transform:translateX(-2px)}
 :host(:focus-visible){outline:2px solid var(--ink);outline-offset:-2px}
 @keyframes tabIn{from{opacity:0;transform:translate(-14px,-50%)}}
+/* Sin hover en pantallas táctiles: la pestaña queda con el ancho mínimo para tocarla. */
+@media (pointer:coarse){:host{min-width:44px;max-width:44px;padding-left:14px}}
+/* En celular el panel ocupa el ancho: la pestaña sube a la esquina superior izquierda, que queda libre. */
+@media (max-width:760px){:host{top:clamp(14px,3vh,28px);height:44px;transform:none;animation-name:tabInTop}}
+@keyframes tabInTop{from{opacity:0;transform:translateX(-14px)}}

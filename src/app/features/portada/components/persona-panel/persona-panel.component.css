@@ -4,6 +4,7 @@
 .frame::before{left:-1px;top:-14px;border-right:0;border-bottom:0}
 .frame::after{left:-1px;bottom:-14px;border-right:0;border-top:0}
 :host(.on) .frame{opacity:1;transition-delay:.45s}
+@media (max-width:760px){.frame{padding:18px 18px 16px}}
 
 .r{opacity:0;transform:translateX(18px);transition:opacity .45s,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:0s}
 :host(.on) .r{opacity:1;transform:none;transition-delay:calc(.55s + var(--i) * 75ms)}
@@ -30,4 +31,5 @@ h2 em{font-style:normal;color:var(--acc)}
 .btn:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
 .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
 
+@media (pointer:coarse){.sugg button,.chip{min-height:44px}}
 .foot{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--mut)}

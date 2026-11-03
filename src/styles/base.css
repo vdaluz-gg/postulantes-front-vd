@@ -9,7 +9,7 @@ a{color:var(--vio-t)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:8px}
 h1:focus{outline:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:12px;top:-60px;background:var(--vio);color:var(--on);padding:10px 14px;border-radius:10px;z-index:100;text-decoration:none}
+.skip{position:absolute;left:12px;top:-60px;display:inline-flex;align-items:center;min-height:44px;background:var(--vio);color:var(--on);padding:10px 14px;border-radius:10px;z-index:100;text-decoration:none}
 .skip:focus{top:12px}
 .eyebrow{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
 .mut{color:var(--mut)}

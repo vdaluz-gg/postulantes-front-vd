@@ -7,3 +7,4 @@ input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:500 15px
 input::placeholder{color:var(--mut)}
 .go{min-height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--acc);color:var(--on-acc);font:600 13px var(--font-display);cursor:pointer}
 .go:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media (pointer:coarse){input,.go{min-height:44px}.go{min-width:44px}}
