@@ -1,0 +1,6 @@
+<span class="head">
+  <b class="title">{{ application().title }}</b>
+  <span class="meta">{{ application().ref }} · {{ application().zone }}</span>
+</span>
+<ol appStepper [application]="application()" aria-hidden="true"></ol>
+<span appChip class="status" [tone]="tone()">{{ application().status }}</span>

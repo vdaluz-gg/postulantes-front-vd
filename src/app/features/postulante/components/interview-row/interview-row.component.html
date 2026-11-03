@@ -1,0 +1,9 @@
+<span class="dd">
+  <b>{{ interview().startsAt.getDate() }}</b>
+  <span>{{ interview().startsAt | appDate: 'monthShort' }}</span>
+</span>
+<span class="tx">
+  <b>{{ interview().title }}</b>
+  <span>{{ interview().startsAt | appDate: 'time' }} h · {{ applicationTitle() }}</span>
+</span>
+<span appChip [tone]="status().tone" [icon]="status().icon">{{ status().label }}</span>

@@ -1,0 +1,16 @@
+<div class="when">
+  <b>{{ interview().startsAt | appDate: 'time' }}</b>
+  <span>{{ interview().startsAt | appDate: 'dayShort' }}</span>
+</div>
+<div class="what">
+  <span appChip class="type" [tone]="tone()" [icon]="type().icon">{{ type().label }}</span>
+  <h3>{{ interview().title }} · {{ applicationTitle() }}</h3>
+  <p>{{ interview().with }} · {{ remaining() }} · {{ interview().durationMin }} min</p>
+</div>
+<div class="actions">
+  <button appButton variant="pri" (click)="join.emit()">
+    <svg appIcon="video"></svg>
+    Unirme a Teams
+  </button>
+  <button appButton (click)="details.emit()">Ver detalle</button>
+</div>

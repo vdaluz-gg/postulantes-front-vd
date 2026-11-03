@@ -1,3 +1,61 @@
-<section class="hero" aria-labelledby="h1">
-  <h1 id="h1" tabindex="-1">Hola, {{ store.firstName() }}.</h1>
-</section>
+<section
+  appHomeHero
+  [today]="today()"
+  [firstName]="store.firstName()"
+  [lead]="lead()"
+  [next]="store.nextInterview()"
+  [nextTitle]="nextTitle()"
+  [now]="store.now()"
+  (join)="join($event)"
+  (details)="openInterview()"
+></section>
+
+<div class="grid2">
+  <section class="card" aria-labelledby="t-todo">
+    <app-section-header heading="Para hacer ahora" headingId="t-todo" [count]="todos().length" />
+    @for (todo of todos(); track todo.id) {
+      <div
+        appTodo
+        [icon]="todo.icon"
+        [heading]="todo.heading"
+        [detail]="todo.detail"
+        [actionLabel]="todo.actionLabel"
+        [completes]="todo.completes"
+        (action)="runTodo(todo.id)"
+      ></div>
+    } @empty {
+      <div class="empty">No tenés nada pendiente.</div>
+    }
+  </section>
+
+  <section class="card" aria-labelledby="t-up">
+    <app-section-header heading="Próximas reuniones" headingId="t-up">
+      <a appButton variant="ghost" size="sm" routerLink="/postulante/calendario">Ver calendario</a>
+    </app-section-header>
+    <div class="stack">
+      @for (interview of upcoming(); track interview.id) {
+        <button
+          appInterviewRow
+          [interview]="interview"
+          [applicationTitle]="titleOf(interview)"
+          (click)="openInterview()"
+        ></button>
+      } @empty {
+        <div class="empty">Todavía no tenés reuniones agendadas.</div>
+      }
+    </div>
+  </section>
+
+  <section class="card wide" aria-labelledby="t-pp">
+    <app-section-header heading="Tus postulaciones en curso" headingId="t-pp">
+      <a appButton variant="ghost" size="sm" routerLink="/postulante/postulaciones">Ver todas</a>
+    </app-section-header>
+    <div class="grid3">
+      @for (application of store.activeApplications(); track application.id) {
+        <button appApplicationTile [application]="application" (click)="openApplication()"></button>
+      } @empty {
+        <div class="empty">Todavía no tenés postulaciones en curso.</div>
+      }
+    </div>
+  </section>
+</div>

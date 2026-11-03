@@ -1,5 +1,0 @@
-.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--surface2);color:var(--mut);white-space:nowrap}
-.chip svg.ic{width:14px;height:14px;stroke-width:2.2}
-.chip.ok{background:var(--tint-mint);color:var(--mint-t)}
-.chip.warn{background:var(--tint-fuc);color:var(--fuc-t)}
-.chip.vio{background:var(--tint-vio);color:var(--vio-t)}

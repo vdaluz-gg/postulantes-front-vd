@@ -1,0 +1,5 @@
+<h2 [id]="headingId()">{{ heading() }}</h2>
+@if (count() !== null) {
+  <span appChip [attr.aria-label]="count() + ' en total'">{{ shown() }}</span>
+}
+<ng-content />

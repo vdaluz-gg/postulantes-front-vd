@@ -1,0 +1,17 @@
+<div class="sr" role="status" aria-live="polite">{{ announcement() }}</div>
+@if (notice(); as n) {
+  @for (current of [n]; track current.id) {
+    <div
+      class="isl"
+      [class.in]="phase() !== 'born'"
+      [class.open]="phase() === 'open'"
+      [class.out]="phase() === 'out'"
+    >
+      <svg appIcon="check"></svg>
+      <span class="isl-t">{{ current.message }}</span>
+      @if (current.action; as action) {
+        <button type="button" (click)="runAction(current)">{{ action.label }}</button>
+      }
+    </div>
+  }
+}

@@ -1,0 +1,8 @@
+<span class="ti"><svg [appIcon]="state() === 'idle' ? icon() : 'check'"></svg></span>
+<div class="tx">
+  <b>{{ heading() }}</b>
+  @if (detail()) {
+    <span>{{ detail() }}</span>
+  }
+</div>
+<button appButton size="sm" [disabled]="state() !== 'idle'" (click)="run()">{{ actionLabel() }}</button>

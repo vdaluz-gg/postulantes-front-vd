@@ -1,0 +1,24 @@
+<span appAssistantSpace class="asis"></span>
+<div>
+  <p class="eyebrow">{{ today() | appDate: 'dayLong' }}</p>
+  <h1 id="h1" tabindex="-1">Hola, {{ firstName() }}.</h1>
+  <p class="lead">
+    @for (part of lead(); track $index) {
+      @if (part.strong) {
+        <b>{{ part.text }}</b>
+      } @else {
+        {{ part.text }}
+      }
+    }
+  </p>
+</div>
+@if (next(); as interview) {
+  <div
+    appNextInterview
+    [interview]="interview"
+    [applicationTitle]="nextTitle()"
+    [now]="now()"
+    (join)="join.emit(interview)"
+    (details)="details.emit(interview)"
+  ></div>
+}
