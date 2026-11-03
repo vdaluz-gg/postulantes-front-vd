@@ -1,0 +1,5 @@
+:host{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;font-size:16px}
+i{width:26px;height:26px;flex:none;border-radius:8px;background:linear-gradient(150deg,var(--gg-violet-100),var(--vio) 55%,var(--gg-violet-950));box-shadow:0 0 18px var(--glow1)}
+.bt{display:flex;flex-direction:column;align-items:flex-start;gap:4px;line-height:1.15}
+small{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--vio-t);background:var(--tint-vio);padding:3px 8px;border-radius:999px}
+@media (max-width:380px){.collapsible{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}

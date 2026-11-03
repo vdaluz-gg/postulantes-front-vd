@@ -46,6 +46,7 @@ export class PostulanteStore {
   private readonly session = inject(SessionService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly destroyRef = inject(DestroyRef);
+  private clock?: ReturnType<typeof setInterval>;
 
   /** Hora de referencia para todo lo relativo ("en 3 días", próximas reuniones). */
   readonly now = signal(Date.now());
@@ -110,6 +111,17 @@ export class PostulanteStore {
     this.startClock();
   }
 
+  /** Vacía el estado al cerrar sesión, para que otra persona no vea los datos anteriores. */
+  reset(): void {
+    this.profile.set(null);
+    this.applications.set([]);
+    this.interviews.set([]);
+    this.documents.set([]);
+    this.messages.set([]);
+    this.jobs.set([]);
+    this.loaded.set(false);
+  }
+
   application(id: string): Application | undefined {
     return this.applications().find((a) => a.id === id);
   }
@@ -135,8 +147,8 @@ export class PostulanteStore {
   }
 
   private startClock(): void {
-    if (!this.isBrowser) return;
-    const timer = setInterval(() => this.now.set(Date.now()), CLOCK_MS);
-    this.destroyRef.onDestroy(() => clearInterval(timer));
+    if (!this.isBrowser || this.clock) return;
+    this.clock = setInterval(() => this.now.set(Date.now()), CLOCK_MS);
+    this.destroyRef.onDestroy(() => clearInterval(this.clock));
   }
 }

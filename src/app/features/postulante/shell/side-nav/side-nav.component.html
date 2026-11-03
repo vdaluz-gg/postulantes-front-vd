@@ -1,0 +1,35 @@
+<aside class="side" aria-label="Navegación principal">
+  <app-brand class="side-brand" portal="Postulantes" />
+
+  <nav class="nav" aria-label="Secciones del portal">
+    @for (item of items; track item.section) {
+      <a
+        [routerLink]="['/postulante', item.section]"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        [class.desk-only]="!item.inBottomBar"
+      >
+        <svg [appIcon]="item.icon"></svg>
+        <span class="l-lg">{{ item.label }}</span>
+        <span class="l-sm" aria-hidden="true">{{ item.short }}</span>
+        @if (badges()[item.section]; as badge) {
+          <span class="bd" [class.soft]="badge.tone === 'soft'">
+            <span aria-hidden="true">{{ badge.count }}</span>
+            <span class="sr">{{ badge.label }}</span>
+          </span>
+        }
+      </a>
+    }
+  </nav>
+
+  <div class="side-foot">
+    <a appButton variant="ghost" size="sm" routerLink="/">
+      <svg appIcon="arrow" [flip]="true"></svg>
+      Volver a la portada
+    </a>
+    <button appButton variant="ghost" size="sm" (click)="logout.emit()">
+      <svg appIcon="logout"></svg>
+      Salir
+    </button>
+  </div>
+</aside>

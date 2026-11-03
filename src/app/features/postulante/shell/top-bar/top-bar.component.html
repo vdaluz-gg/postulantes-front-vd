@@ -1,0 +1,18 @@
+<header class="top">
+  <app-brand class="top-brand" [collapsible]="true" />
+  <div class="sp"></div>
+  <app-theme-switch />
+  <button
+    appIconButton
+    label="Accesibilidad y apariencia"
+    aria-haspopup="dialog"
+    disabled
+    title="Próximamente"
+  >
+    <svg appIcon="a11y"></svg>
+  </button>
+  <a appIconButton routerLink="/postulante/mensajes" [label]="messagesLabel()" [dot]="unread() > 0">
+    <svg appIcon="bell"></svg>
+  </a>
+  <a appAvatar routerLink="/postulante/perfil" [name]="name()" aria-label="Mi perfil"></a>
+</header>

@@ -1,4 +1,0 @@
-.ib{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;position:relative;color:var(--ink)}
-.ib:hover{background:var(--surface2)}
-.ib:active{transform:scale(.96)}
-.ib .dot{position:absolute;top:8px;right:9px;width:10px;height:10px;border-radius:50%;background:var(--fuc);border:2px solid var(--surface)}

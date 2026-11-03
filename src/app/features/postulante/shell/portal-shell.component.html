@@ -1,0 +1,10 @@
+<a class="skip" href="#main" (click)="skipToContent($event)">Saltar al contenido</a>
+<div class="portal">
+  <app-side-nav [badges]="badges()" (logout)="logout()" />
+  <div class="main">
+    <app-top-bar [name]="store.fullName()" [unread]="store.unreadCount()" />
+    <main class="view" id="main" tabindex="-1">
+      <router-outlet />
+    </main>
+  </div>
+</div>

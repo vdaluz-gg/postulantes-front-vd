@@ -1,0 +1,6 @@
+<i aria-hidden="true"></i>
+@if (portal(); as name) {
+  <span class="bt">Grupo Gestión<small>{{ name }}</small></span>
+} @else {
+  <span class="name" [class.collapsible]="collapsible()">Grupo Gestión</span>
+}
