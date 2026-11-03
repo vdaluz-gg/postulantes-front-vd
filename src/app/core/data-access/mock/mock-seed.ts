@@ -10,12 +10,12 @@ import {
 
 /** Datos de ejemplo de la maqueta. Las fechas se calculan relativas al momento de carga. */
 export interface MockSeed {
-  readonly profile: CandidateProfile;
-  readonly jobs: JobOpening[];
-  readonly applications: Application[];
-  readonly interviews: Interview[];
-  readonly documents: CandidateDocument[];
-  readonly messages: InboxMessage[];
+  profile: CandidateProfile;
+  jobs: JobOpening[];
+  applications: Application[];
+  interviews: Interview[];
+  documents: CandidateDocument[];
+  messages: InboxMessage[];
 }
 
 export function createSeed(now: Date = new Date()): MockSeed {
