@@ -1,4 +1,4 @@
-import { DOCUMENT, Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
+import { DOCUMENT, DestroyRef, Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { STORAGE_KEYS, StorageService } from './storage.service';
 
@@ -17,6 +17,7 @@ export class SoundService {
   private readonly doc = inject(DOCUMENT);
   private readonly storage = inject(StorageService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly enabled = signal(true);
 
@@ -30,11 +31,19 @@ export class SoundService {
     if (!this.isBrowser) return;
 
     const unlock = () => (this.unlocked = true);
-    for (const type of ['pointerdown', 'keydown', 'touchstart']) {
-      this.doc.addEventListener(type, unlock, true);
-    }
-    this.doc.addEventListener('pointerover', (e) => this.onPointerOver(e), true);
-    this.doc.addEventListener('click', (e) => this.onClick(e), true);
+    const over = (e: PointerEvent) => this.onPointerOver(e);
+    const click = (e: MouseEvent) => this.onClick(e);
+    const unlockEvents = ['pointerdown', 'keydown', 'touchstart'] as const;
+    unlockEvents.forEach((type) => this.doc.addEventListener(type, unlock, true));
+    this.doc.addEventListener('pointerover', over, true);
+    this.doc.addEventListener('click', click, true);
+
+    this.destroyRef.onDestroy(() => {
+      unlockEvents.forEach((type) => this.doc.removeEventListener(type, unlock, true));
+      this.doc.removeEventListener('pointerover', over, true);
+      this.doc.removeEventListener('click', click, true);
+      void this.context?.close().catch(() => undefined);
+    });
   }
 
   /** Activa o desactiva los sonidos. Desde un gesto del usuario confirma con un tono. */

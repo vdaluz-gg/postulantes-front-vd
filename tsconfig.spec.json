@@ -3,12 +3,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "vitest/globals"
-    ]
+    "module": "CommonJS",
+    "isolatedModules": true,
+    "types": ["jest", "node"]
   },
-  "include": [
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts"
-  ]
+  "include": ["setup-jest.ts", "src/**/*.d.ts", "src/**/*.spec.ts"]
 }
