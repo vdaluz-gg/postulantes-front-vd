@@ -1,0 +1,42 @@
+<article class="frame" [attr.aria-labelledby]="'pt-' + persona().id">
+  <p class="kick r" style="--i:0"><i aria-hidden="true"></i>{{ persona().kicker }}</p>
+  <h2 class="r" style="--i:1" [id]="'pt-' + persona().id">
+    {{ persona().title }} <em>{{ persona().highlight }}</em>
+  </h2>
+
+  <app-ai-prompt
+    class="r"
+    style="--i:2"
+    [inputId]="'q-' + persona().id"
+    [prompt]="persona().prompt"
+    [(value)]="query"
+  />
+
+  <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
+    @for (suggestion of persona().suggestions; track suggestion) {
+      <button type="button" (click)="useSuggestion(suggestion)">{{ suggestion }}</button>
+    }
+  </div>
+
+  <div class="chips r" style="--i:4" role="group" aria-label="Temas">
+    @for (chip of persona().chips; track chip) {
+      <button type="button" class="chip" [attr.aria-pressed]="activeChip() === chip" (click)="toggleChip(chip)">
+        {{ chip }}
+      </button>
+    }
+  </div>
+
+  <div class="cta r" style="--i:5">
+    @for (action of persona().actions; track action.label) {
+      @if (action.link) {
+        <a class="btn" [class.pri]="action.primary" [routerLink]="action.link">{{ action.label }}</a>
+      } @else {
+        <button type="button" class="btn" [class.pri]="action.primary" disabled title="Próximamente">
+          {{ action.label }}
+        </button>
+      }
+    }
+  </div>
+
+  <p class="foot r" style="--i:6">{{ persona().footnote }}</p>
+</article>

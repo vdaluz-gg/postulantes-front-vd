@@ -1,0 +1,38 @@
+<span class="halo" aria-hidden="true"></span>
+<span class="floor" aria-hidden="true"></span>
+
+<svg class="figure" viewBox="0 0 100 260" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient [attr.id]="'g-' + persona().id" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" class="tone-top" />
+      <stop offset=".58" class="tone-mid" />
+      <stop offset=".62" class="tone-band" />
+      <stop offset=".66" class="tone-mid" />
+      <stop offset="1" class="tone-bottom" />
+    </linearGradient>
+  </defs>
+  <g [attr.fill]="'url(#g-' + persona().id + ')'">
+    <ellipse cx="50" cy="27" rx="15" ry="18" />
+    <rect x="44" y="42" width="12" height="10" rx="4" />
+    <path d="M24 60c4-6 14-9 26-9s22 3 26 9l6 70c0 4-3 6-6 6H24c-3 0-6-2-6-6z" />
+    <path d="M18 64c-4 1-6 4-7 8L6 128c0 4 2 6 5 6s5-2 5-5l7-50z" />
+    <path d="M82 64c4 1 6 4 7 8l5 56c0 4-2 6-5 6s-5-2-5-5l-7-50z" />
+    <path d="M28 132h44l-4 112c0 5-3 8-7 8s-7-3-7-8l-4-86-4 86c0 5-3 8-7 8s-7-3-7-8z" />
+  </g>
+</svg>
+
+<div class="ask" aria-hidden="true">
+  <b>{{ persona().question }}</b>
+  <small>Click para entrar</small>
+</div>
+
+<button
+  type="button"
+  class="hit"
+  [attr.aria-label]="persona().name + ': ' + persona().question"
+  (mouseenter)="hovered.emit(true)"
+  (mouseleave)="hovered.emit(false)"
+  (focus)="hovered.emit(true)"
+  (blur)="hovered.emit(false)"
+  (click)="selected.emit()"
+></button>

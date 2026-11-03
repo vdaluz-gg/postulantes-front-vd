@@ -1,0 +1,57 @@
+:host{
+  --bg:var(--gg-night-700);--ink:var(--gg-mist-200);--mut:var(--gg-lilac-300);
+  --line:rgb(243 238 252 / .12);--soft:rgb(243 238 252 / .06);
+  --c-post:var(--gg-post-dark);--c-cli:var(--gg-cli-dark);--c-col:var(--gg-col-dark);
+  --on-acc:var(--gg-ink-950);
+  display:block;font-family:var(--font-display);color:var(--ink)
+}
+:host-context([data-theme="light"]){
+  --bg:var(--gg-mist-50);--ink:var(--gg-night-800);--mut:var(--gg-gray-650);
+  --line:rgb(26 19 40 / .14);--soft:rgb(26 19 40 / .05);
+  --c-post:var(--gg-post-light);--c-cli:var(--gg-cli-light);--c-col:var(--gg-col-light);
+  --on-acc:var(--gg-white)
+}
+
+.stage{position:fixed;inset:0;overflow:hidden;background:var(--bg);color:var(--ink);-webkit-user-select:none;user-select:none;transition:background .5s,color .5s}
+
+/* Portada */
+.intro{position:absolute;left:0;right:0;top:clamp(56px,12vh,120px);z-index:4;text-align:center;pointer-events:none;transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.logo{display:flex;justify-content:center;margin-bottom:22px}
+.logo img{height:clamp(30px,3.4vw,42px);width:auto}
+.logo .lc{display:none}
+:host-context([data-theme="light"]) .logo .lw{display:none}
+:host-context([data-theme="light"]) .logo .lc{display:block}
+.intro h1{font-size:clamp(30px,4.2vw,58px);font-weight:600;letter-spacing:-.035em;line-height:1.02}
+.open .intro{opacity:0;transform:translateY(-24px)}
+
+/* Barra superior: sonido, tema y acceso al portal */
+.topr{position:absolute;right:clamp(14px,3vw,32px);top:clamp(14px,3vh,28px);z-index:8;display:flex;align-items:center;gap:8px}
+.topportal{min-height:42px;padding:0 16px;font-size:13px;animation:slideIn .55s .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}}
+
+/* Figuras de los perfiles */
+.cast{position:absolute;left:50%;top:35vh;z-index:3;display:flex;align-items:flex-end;gap:clamp(48px,9vw,150px);transform:translateX(-50%);transition:left .8s cubic-bezier(.2,.8,.2,1),top .8s cubic-bezier(.2,.8,.2,1),gap .6s}
+.open .cast{left:26%;top:9vh;gap:0}
+
+/* Panel de información del perfil elegido */
+.info{position:absolute;z-index:6;left:52%;top:clamp(64px,9vh,110px);width:min(560px,44vw);max-height:calc(100vh - clamp(64px,9vh,110px) - 20px);overflow:hidden;pointer-events:none;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.open .info{pointer-events:auto;overflow:auto}
+
+/* Caja de la portada: "Contale a la IA qué buscás y te llevo" */
+.route{position:absolute;left:50%;bottom:clamp(22px,6vh,56px);z-index:6;width:min(560px,calc(100% - 32px));transform:translateX(-50%);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1);--acc:var(--c-post)}
+.open .route{opacity:0;pointer-events:none;transform:translate(-50%,20px)}
+.reply{display:flex;align-items:center;justify-content:center;gap:6px;min-height:18px;margin-top:8px;text-align:center;font:500 12.5px var(--font-display);color:var(--mut)}
+.reply b{color:var(--ink)}
+.reply .spark{width:12px;height:12px;color:var(--acc)}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+@media (max-width:760px){
+  .intro{transition:opacity .28s,transform .4s cubic-bezier(.2,.8,.2,1)}
+  .cast{top:38vh;gap:clamp(24px,6vw,48px)}
+  .open .cast{left:50%;top:7vh}
+  .info{left:16px;right:16px;width:auto;top:44vh;max-height:calc(56vh - 16px)}
+}

@@ -1,0 +1,13 @@
+<form class="ai" autocomplete="off" (submit)="submit($event)">
+  <span class="ai-tag"><svg appIcon="sparkFill" [filled]="true" class="spark"></svg>IA</span>
+  <label class="sr" [for]="inputId()">{{ prompt().label }}</label>
+  <input
+    #control
+    type="text"
+    [id]="inputId()"
+    [value]="value()"
+    [placeholder]="prompt().placeholder"
+    (input)="onInput($event)"
+  />
+  <button class="go" type="submit">{{ prompt().submit }}</button>
+</form>

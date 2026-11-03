@@ -1,0 +1,54 @@
+<main class="stage" [class.open]="selected()" [style.--acc]="accent()">
+  <div class="intro" [attr.aria-hidden]="selected() ? true : null">
+    <p class="logo">
+      <img class="lw" src="assets/brand/grupo-gestion-blanco.png" alt="Grupo Gestión" width="130" height="42" />
+      <img class="lc" src="assets/brand/grupo-gestion-color.svg" alt="Grupo Gestión" width="130" height="42" />
+    </p>
+    <h1>Bienvenido a donde<br />todo se une.</h1>
+  </div>
+
+  <div class="topr">
+    <button appSoundToggle></button>
+    <button appThemeToggle></button>
+    @if (selected()?.portalLink; as link) {
+      <a appPortalButton class="topportal" [routerLink]="link">Ingresar a tu portal</a>
+    }
+  </div>
+
+  @if (selected()) {
+    <button appBackTab (click)="close()"></button>
+    <button appHomeButton (click)="close()"></button>
+  }
+
+  <div class="cast">
+    @for (persona of personas; track persona.id) {
+      <app-persona-figure
+        [persona]="persona"
+        [state]="figureState(persona.id)"
+        (hovered)="onHover(persona.id, $event)"
+        (selected)="select(persona.id)"
+      />
+    }
+  </div>
+
+  <section class="info" aria-live="polite">
+    @if (selected(); as persona) {
+      <app-persona-panel [persona]="persona" [initialQuery]="pendingQuery()" />
+    }
+  </section>
+
+  <div class="route" [attr.inert]="selected() ? '' : null">
+    <app-ai-prompt inputId="q-route" [prompt]="routePrompt" [(value)]="routeQuery" (submitted)="routeTo($event)" />
+    <p class="reply" aria-live="polite">
+      @switch (reply()) {
+        @case ('thinking') {
+          <span class="typing" aria-label="Pensando"><i></i><i></i><i></i></span>
+        }
+        @case ('going') {
+          <svg appIcon="sparkFill" [filled]="true" class="spark"></svg>
+          Te llevo a <b>{{ goingTo() }}</b>…
+        }
+      }
+    </p>
+  </div>
+</main>

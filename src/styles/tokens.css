@@ -24,10 +24,21 @@
   --gg-night-500:#2b2448;
   --gg-gray-600:#5d5473;
   --gg-gray-300:#aca2c7;
+  --gg-lilac-300:#a99ec4;
+  --gg-gray-650:#5a5172;
   --gg-mist-50:#f7f5fc;
   --gg-mist-100:#f0ecf9;
   --gg-mist-200:#f3eefc;
   --gg-white:#fff;
+  --gg-ink-950:#0c0a12;
+
+  /* Acentos de la portada: uno por perfil (postulante, cliente, colaborador). */
+  --gg-post-dark:#a66bff;--gg-post-light:var(--gg-violet-600);
+  --gg-cli-dark:#ff79bd;--gg-cli-light:var(--gg-fuchsia-600);
+  --gg-col-dark:#79e8c3;--gg-col-light:var(--gg-mint-600);
+
+  --font-display:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
+  --font-mono:"DM Mono",ui-monospace,Consolas,monospace;
 
   --font:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
   --r:18px;--r-s:12px;--nav-w:272px;--bar-h:68px;

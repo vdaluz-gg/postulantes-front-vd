@@ -1,0 +1,7 @@
+:host{position:absolute;left:50%;top:clamp(14px,3vh,28px);z-index:8;margin-left:-21px;display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--line);background:none;color:var(--mut);opacity:.55;cursor:pointer;animation:dropIn .4s both;transition:transform .25s,border-color .25s,box-shadow .3s,opacity .3s,color .25s}
+svg{width:19px;height:19px}
+:host(:hover),:host(:focus-visible){opacity:1;transform:scale(1.14);color:var(--ink);border-color:var(--ink);box-shadow:0 0 0 4px color-mix(in srgb,var(--ink) 10%,transparent),0 0 26px color-mix(in srgb,var(--ink) 38%,transparent)}
+:host(:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
+:host(:active){transform:scale(1.02)}
+@keyframes dropIn{from{opacity:0;transform:translateY(-10px)}}
+@media (max-width:760px){:host{display:none}}
