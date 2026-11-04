@@ -102,21 +102,85 @@ describe('PortadaPage', () => {
     }
   });
 
-  it('el panel completa la consulta con una sugerencia y marca un tema', async () => {
-    figures()[0].querySelector<HTMLButtonElement>('.hit')!.click();
-    await render();
-    const suggestion = el.querySelector<HTMLButtonElement>('.sugg button')!;
-    suggestion.click();
-    await render();
-    expect(el.querySelector<HTMLInputElement>('#q-post')!.value).toBe(suggestion.textContent!.trim());
+  describe('panel del postulante', () => {
+    const chips = () => Array.from(el.querySelectorAll<HTMLButtonElement>('button[appTopicChip]'));
+    const pressed = () => chips().map((c) => c.getAttribute('aria-pressed'));
+    const peekTitle = () => el.querySelector('[appPeekPanel] .ph')?.textContent!.trim();
+    const hover = async (chip: HTMLElement) => {
+      chip.dispatchEvent(new Event('pointerenter'));
+      await render();
+    };
 
-    const chip = el.querySelector<HTMLButtonElement>('.chips .chip')!;
-    chip.click();
+    beforeEach(async () => {
+      figures()[0].querySelector<HTMLButtonElement>('.hit')!.click();
+      await render();
+    });
+
+    it('una sugerencia completa la consulta y queda resaltada', async () => {
+      const suggestion = el.querySelector<HTMLButtonElement>('button[appSuggestionPill]')!;
+      suggestion.click();
+      await render();
+      expect(el.querySelector<HTMLInputElement>('#q-post')!.value).toBe(suggestion.textContent!.trim());
+      expect(suggestion.classList).toContain('on');
+    });
+
+    it('al abrir muestra el mapa de ofertas cercanas, con las distancias como lista', () => {
+      expect(pressed()).toEqual(['true', 'false', 'false']);
+      expect(peekTitle()).toBe('Ordenado por cercanía a tu casa');
+      const pins = Array.from(el.querySelectorAll('[appNearbyMap] .pin'));
+      expect(pins.map((p) => p.textContent!.trim())).toEqual([
+        'Operario/a · 12 min',
+        'Autoelevador · 18 min',
+        'Chofer · 25 min',
+      ]);
+      expect(el.querySelectorAll('[appNearbyMap] path')).toHaveLength(3);
+      expect(pins[1].classList).toContain('flip');
+    });
+
+    it('al pasar por "Avisos por WhatsApp" muestra el aviso con "Sí, postulame" y "Ver más ofertas"', async () => {
+      await hover(chips()[1]);
+      expect(pressed()).toEqual(['false', 'true', 'false']);
+      expect(peekTitle()).toBe('Así te avisa la IA');
+      expect(el.querySelector('[appWhatsappPreview] .wa b')!.textContent).toBe('Operario/a de producción');
+      const replies = Array.from(el.querySelectorAll('[appWhatsappPreview] a[appPortadaButton]'));
+      expect(replies.map((a) => [a.textContent!.trim(), a.getAttribute('href'), a.classList.contains('pri')])).toEqual([
+        ['Sí, postulame', '/postulante/ofertas', true],
+        ['Ver más ofertas', '/postulante/ofertas', false],
+      ]);
+    });
+
+    it('al enfocar "Seguí cada postulación" muestra las etapas con la actual marcada', async () => {
+      chips()[2].dispatchEvent(new Event('focus'));
+      await render();
+      expect(peekTitle()).toBe('Tu postulación, en tiempo real');
+      const steps = Array.from(el.querySelectorAll('[appApplicationTracker] .step'));
+      expect(steps.map((s) => s.classList.contains('done'))).toEqual([true, true, false, false]);
+      expect(steps[2].getAttribute('aria-current')).toBe('step');
+    });
+
+    it('un tema tocado queda fijo aunque se pase por otro', async () => {
+      chips()[2].click();
+      await render();
+      await hover(chips()[0]);
+      expect(pressed()).toEqual(['false', 'false', 'true']);
+      expect(peekTitle()).toBe('Tu postulación, en tiempo real');
+      chips()[1].click();
+      await render();
+      expect(peekTitle()).toBe('Así te avisa la IA');
+    });
+
+    it('las acciones del panel usan el botón de la portada', () => {
+      const actions = Array.from(el.querySelectorAll('.cta a[appPortadaButton]'));
+      expect(actions.map((a) => a.textContent!.trim())).toEqual(['Ver todas las ofertas →', 'Dejar mi CV con IA']);
+      expect(actions[0].classList).toContain('pri');
+    });
+  });
+
+  it('los perfiles sin vista previa no muestran el recuadro', async () => {
+    figures()[1].querySelector<HTMLButtonElement>('.hit')!.click();
     await render();
-    expect(chip.getAttribute('aria-pressed')).toBe('true');
-    chip.click();
-    await render();
-    expect(chip.getAttribute('aria-pressed')).toBe('false');
+    expect(el.querySelector('[appPeekPanel]')).toBeNull();
+    expect(el.querySelectorAll('button[appTopicChip]')).toHaveLength(5);
   });
 
   it('los controles de la barra superior tienen nombre y estado accesibles', async () => {

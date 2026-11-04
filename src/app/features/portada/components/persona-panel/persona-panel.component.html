@@ -14,29 +14,58 @@
 
   <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
     @for (suggestion of persona().suggestions; track suggestion) {
-      <button type="button" (click)="useSuggestion(suggestion)">{{ suggestion }}</button>
-    }
-  </div>
-
-  <div class="chips r" style="--i:4" role="group" aria-label="Temas">
-    @for (chip of persona().chips; track chip) {
-      <button type="button" class="chip" [attr.aria-pressed]="activeChip() === chip" (click)="toggleChip(chip)">
-        {{ chip }}
+      <button appSuggestionPill [active]="query() === suggestion" (click)="useSuggestion(suggestion)">
+        {{ suggestion }}
       </button>
     }
   </div>
 
-  <div class="cta r" style="--i:5">
+  <div class="chips r" style="--i:4" role="group" aria-label="Temas">
+    @for (chip of persona().chips; track chip.id) {
+      <button
+        appTopicChip
+        [pressed]="activeChipId() === chip.id"
+        [attr.aria-controls]="chip.peek ? peekId() : null"
+        (pointerenter)="preview(chip)"
+        (focus)="preview(chip)"
+        (click)="pin(chip)"
+      >
+        {{ chip.label }}
+      </button>
+    }
+  </div>
+
+  @if (hasPeeks()) {
+    <div class="peek-slot r" style="--i:5" [id]="peekId()" aria-live="polite">
+      @if (activeChip()?.peek; as peek) {
+        <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()">
+          @switch (peek.kind) {
+            @case ('map') {
+              <div appNearbyMap [home]="peek.home" [pins]="peek.pins"></div>
+            }
+            @case ('whatsapp') {
+              <div appWhatsappPreview [sender]="peek.sender" [message]="peek.message" [actions]="peek.actions"></div>
+            }
+            @case ('tracker') {
+              <ol appApplicationTracker [steps]="peek.steps"></ol>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="cta r" style="--i:6">
     @for (action of persona().actions; track action.label) {
       @if (action.link) {
-        <a class="btn" [class.pri]="action.primary" [routerLink]="action.link">{{ action.label }}</a>
+        <a appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">{{ action.label }}</a>
       } @else {
-        <button type="button" class="btn" [class.pri]="action.primary" disabled title="Próximamente">
+        <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled title="Próximamente">
           {{ action.label }}
         </button>
       }
     }
   </div>
 
-  <p class="foot r" style="--i:6">{{ persona().footnote }}</p>
+  <p class="foot r" style="--i:7">{{ persona().footnote }}</p>
 </article>

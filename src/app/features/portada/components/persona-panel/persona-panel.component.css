@@ -15,21 +15,6 @@ h2{font-size:clamp(26px,2.8vw,40px);font-weight:600;letter-spacing:-.035em;line-
 h2 em{font-style:normal;color:var(--acc)}
 
 .sugg{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
-.sugg button{font:500 12px var(--font-display);color:var(--mut);background:none;border:1px dashed var(--line);border-radius:999px;padding:6px 11px;min-height:32px;cursor:pointer;transition:color .2s,border-color .2s}
-.sugg button:hover,.sugg button:focus-visible{color:var(--ink);border-color:var(--acc);outline:none}
-
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.chip{font:500 13px var(--font-display);color:var(--ink);padding:9px 12px;border-radius:10px;background:var(--soft);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
-.chip::before{content:"›";color:var(--acc);margin-right:8px;font-weight:700}
-.chip:hover,.chip:focus-visible,.chip[aria-pressed="true"]{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent);outline:none}
-.chip[aria-pressed="true"]{transform:translateY(-1px)}
-
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .cta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 13px;border-radius:12px;font:600 13px var(--font-display);text-decoration:none;color:var(--ink);border:1px solid var(--line);background:none;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
-.btn:hover{border-color:var(--acc);transform:translateY(-1px)}
-.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
-.btn:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
-.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
-
-@media (pointer:coarse){.sugg button,.chip{min-height:44px}}
 .foot{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--mut)}

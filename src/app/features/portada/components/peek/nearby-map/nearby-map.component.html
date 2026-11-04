@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  @for (route of routes(); track $index) {
+    <path [attr.d]="route" />
+  }
+</svg>
+<span class="home" aria-hidden="true" [style.left.%]="home().x" [style.top.%]="home().y"></span>
+<ul class="pins" aria-label="Ofertas cerca de tu casa">
+  @for (pin of placed(); track pin.label) {
+    <li class="pin" [class.flip]="pin.flip" [style.left.%]="pin.x" [style.top.%]="pin.y" [style.animation-delay]="pin.delay">
+      <small>{{ pin.label }}</small>
+    </li>
+  }
+</ul>

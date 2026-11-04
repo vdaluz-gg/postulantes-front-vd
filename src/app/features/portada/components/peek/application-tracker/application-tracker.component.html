@@ -1,0 +1,11 @@
+@for (step of steps(); track step.label; let i = $index) {
+  <li class="step" [class]="step.state" [style.animation-delay.ms]="i * 140" [attr.aria-current]="step.state === 'now' ? 'step' : null">
+    <i aria-hidden="true">
+      @if (step.state === 'done') {
+        <svg appIcon="check"></svg>
+      }
+    </i>
+    {{ step.label }}<span class="sr"> ({{ stateLabel[step.state] }})</span>
+    <small>{{ step.when }}</small>
+  </li>
+}

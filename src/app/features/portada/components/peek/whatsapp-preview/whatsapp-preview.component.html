@@ -1,0 +1,23 @@
+<div class="wa">
+  <small>{{ sender() }} <svg appIcon="check"></svg><span class="sr">(verificado)</span></small>
+  @for (part of message(); track $index) {
+    @if (part.strong) {
+      <b>{{ part.text }}</b>
+    } @else {
+      {{ part.text }}
+    }
+  }
+</div>
+@if (actions().length) {
+  <div class="replies">
+    @for (action of actions(); track action.label) {
+      @if (action.link) {
+        <a appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">
+          {{ action.label }}
+        </a>
+      } @else {
+        <button appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" disabled>{{ action.label }}</button>
+      }
+    }
+  </div>
+}
