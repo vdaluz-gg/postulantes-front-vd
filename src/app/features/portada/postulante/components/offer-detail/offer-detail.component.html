@@ -2,26 +2,26 @@
 <h2 #heading tabindex="-1" [id]="headingId()">{{ job().title }}</h2>
 
 <ul class="meta">
-  <li><svg appIcon="pin"></svg>{{ job().address }} · radio {{ job().radiusKm }} km</li>
-  <li><svg appIcon="user"></svg>{{ vacancies() }}</li>
-  <li><svg appIcon="brief"></svg>Salario {{ salary() }}</li>
+  <li><svg appIcon="pin"></svg>{{ job().zone }}</li>
+  <li><svg appIcon="clock"></svg>{{ job().schedule }}</li>
+  <li>Publicada el {{ publishedOn() }}</li>
 </ul>
 
 <p class="desc">{{ job().description }}</p>
 
 <div class="cols">
   <div>
-    <h3>Condiciones</h3>
+    <h3>Qué buscamos</h3>
     <ul>
-      @for (item of conditions(); track item) {
+      @for (item of job().requirements; track item) {
         <li>{{ item }}</li>
       }
     </ul>
   </div>
   <div>
-    <h3>Qué necesitás</h3>
+    <h3>Qué ofrecemos</h3>
     <ul>
-      @for (item of requirements(); track item) {
+      @for (item of job().benefits; track item) {
         <li>{{ item }}</li>
       }
     </ul>

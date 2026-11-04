@@ -20,7 +20,7 @@
     <li [style.--k]="i">
       <button type="button" class="job" (click)="open.emit(job)">
         <b>{{ job.title }}</b>
-        <small>{{ job.address }} · {{ job.area }}</small>
+        <small>{{ job.zone }} · {{ job.area }}</small>
         <span class="go" aria-hidden="true">Ver puesto →</span>
         <span class="sr">, ver puesto</span>
       </button>

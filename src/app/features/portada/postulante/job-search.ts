@@ -23,11 +23,11 @@ const terms = (query: string): string[] =>
     .filter((w) => w.length > 2 && !STOPWORDS.has(w));
 
 const searchableText = (job: JobPosting): string =>
-  normalize([job.title, job.description, job.area, job.address, job.branch, job.category, job.hiring].join(' '));
+  normalize([job.title, job.description, job.area, job.zone, ...job.requirements].join(' '));
 
 /**
  * Ofertas relacionadas con la consulta: todas las que comparten alguna palabra con el puesto,
- * la descripción, el área, el lugar, la rama o la categoría, de más a menos coincidencias.
+ * la descripción, el rubro, la zona o los requisitos, de más a menos coincidencias.
  * Sin consulta devuelve todas; sin coincidencias, también todas (matched: false).
  */
 export function searchJobs(query: string, offers: readonly JobPosting[]): JobSearchResult {

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, afterNextRender, computed, input, output, viewChild } from '@angular/core';
 import { IconComponent } from '../../../../../shared/ui/atoms/icon/icon.component';
 import { PortadaButtonComponent } from '../../../components/portada-button/portada-button.component';
-import { JobPosting, formatSalary } from '../../job-offer';
+import { JobPosting, formatDayMonth } from '../../job-offer';
 
 /**
- * Detalle de una oferta para el postulante: referencia, lugar y radio, vacantes, salario,
- * descripción, condiciones y requisitos. Al abrirse lleva el foco al título.
+ * Detalle de una oferta para el postulante: rubro y referencia, zona, horario, fecha de
+ * publicación, descripción, requisitos y beneficios. Al abrirse lleva el foco al título.
  */
 @Component({
   selector: 'section[appOfferDetail]',
@@ -21,23 +21,7 @@ export class OfferDetailComponent {
   readonly back = output<void>();
 
   protected readonly headingId = computed(() => `job-${this.job().ref}`);
-  protected readonly salary = computed(() => formatSalary(this.job().salary));
-  protected readonly vacancies = computed(() => {
-    const n = this.job().vacancies;
-    return n === 1 ? '1 vacante' : `${n} vacantes`;
-  });
-  protected readonly conditions = computed(() => {
-    const j = this.job();
-    return [`Contratación: ${j.hiring}`, `Rama: ${j.branch}`, `Categoría: ${j.category}`, `Convenio: ${j.agreement}`];
-  });
-  protected readonly requirements = computed(() => {
-    const j = this.job();
-    return [
-      j.experienceRequired ? 'Experiencia previa obligatoria' : 'Sin experiencia obligatoria',
-      j.medicalExamRequired ? 'Examen preocupacional' : 'Sin examen preocupacional',
-      j.uniformRequired ? 'Indumentaria propia' : 'No hace falta indumentaria propia',
-    ];
-  });
+  protected readonly publishedOn = computed(() => formatDayMonth(this.job().publishedOn));
 
   private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
 

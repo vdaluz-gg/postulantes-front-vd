@@ -1,11 +1,20 @@
 /**
  * Oferta tal como llega del mock (public/mock/ofertas.json) y, más adelante, de la API.
- * Refleja la ficha completa de la búsqueda, incluidos datos internos.
+ * Refleja la ficha completa de la búsqueda: los datos de la publicación y los internos.
  */
 export interface JobOfferDto {
   readonly codigo: string;
   readonly titulo: string;
   readonly descripcion: string;
+  /** Zona de trabajo como se publica: "Moreno / Parque Avellaneda". */
+  readonly zona: string;
+  /** Rubro publicado: "Logística", "RR. HH.". */
+  readonly rubro: string;
+  readonly horario: string;
+  /** Fecha ISO (AAAA-MM-DD). */
+  readonly fechaPublicacion: string;
+  readonly requisitos: readonly string[];
+  readonly beneficios: readonly string[];
   readonly vacantes: number;
   readonly salario: number;
   readonly domicilioExplotacion: { readonly direccion: string; readonly radioKm: number };
@@ -34,25 +43,19 @@ export interface JobOffersResponse {
 }
 
 /**
- * Oferta como la ve el postulante en la portada. Solo datos públicos: no incluye cliente,
- * gestionadora, prioridad, identificadores internos ni observaciones del cliente.
+ * Oferta como la ve el postulante en la portada: solo la publicación. Salario, vacantes,
+ * domicilio, cliente, convenio y el resto de la ficha interna no salen del mapeo.
  */
 export interface JobPosting {
   readonly ref: string;
   readonly title: string;
   readonly description: string;
-  readonly vacancies: number;
-  readonly salary: number;
-  readonly address: string;
-  readonly radiusKm: number;
+  readonly zone: string;
   readonly area: string;
-  readonly hiring: string;
-  readonly branch: string;
-  readonly agreement: string;
-  readonly category: string;
-  readonly experienceRequired: boolean;
-  readonly uniformRequired: boolean;
-  readonly medicalExamRequired: boolean;
+  readonly schedule: string;
+  readonly publishedOn: string;
+  readonly requirements: readonly string[];
+  readonly benefits: readonly string[];
 }
 
 export function toJobPosting(dto: JobOfferDto): JobPosting {
@@ -60,21 +63,14 @@ export function toJobPosting(dto: JobOfferDto): JobPosting {
     ref: dto.codigo,
     title: dto.titulo,
     description: dto.descripcion,
-    vacancies: dto.vacantes,
-    salary: dto.salario,
-    address: dto.domicilioExplotacion.direccion,
-    radiusKm: dto.domicilioExplotacion.radioKm,
-    area: dto.area,
-    hiring: dto.tipo,
-    branch: dto.rama,
-    agreement: dto.convenio,
-    category: dto.categoria,
-    experienceRequired: dto.experienciaObligatoria,
-    uniformRequired: dto.requiereIndumentaria,
-    medicalExamRequired: dto.examenPreocupacional,
+    zone: dto.zona,
+    area: dto.rubro,
+    schedule: dto.horario,
+    publishedOn: dto.fechaPublicacion,
+    requirements: dto.requisitos,
+    benefits: dto.beneficios,
   };
 }
 
-/** Salario en pesos con separador de miles: 912359 → "$ 912.359". */
-export const formatSalary = (amount: number): string =>
-  `$ ${amount.toLocaleString('es-AR', { maximumFractionDigits: 0 })}`;
+/** Día y mes de una fecha ISO: "2026-10-06" → "06/10". */
+export const formatDayMonth = (iso: string): string => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;

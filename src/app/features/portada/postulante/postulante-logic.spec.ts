@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { firstValueFrom } from 'rxjs';
 import { dniValidator, formatDni, fullNameValidator, whatsappValidator } from './candidate-validators';
-import { JobOffersResponse, JobPosting, formatSalary, toJobPosting } from './job-offer';
+import { JobOffersResponse, JobPosting, formatDayMonth, toJobPosting } from './job-offer';
 import { searchJobs } from './job-search';
 import { OFFERS_URL, OffersApi } from './offers.api';
 
@@ -15,25 +15,18 @@ const MOCK: JobOffersResponse = JSON.parse(readFileSync(join(process.cwd(), 'pub
 const offer = (over: Partial<JobPosting> = {}): JobPosting => ({ ...toJobPosting(MOCK.ofertas[0]), ...over });
 
 describe('mapeo de ofertas (mock JSON)', () => {
-  it('toma solo los datos que puede ver el postulante', () => {
-    const job = toJobPosting(MOCK.ofertas[0]);
-    expect(job).toEqual(
-      expect.objectContaining({
-        ref: 'CSYP1233113446',
-        title: 'Operario/a Pan 29',
-        vacancies: 1,
-        salary: 912359,
-        address: '9 de Julio 1450, El Talar Argentina',
-        radiusKm: 20,
-        area: 'Industrial / Tecnica / Produccion',
-        hiring: 'Temporarios',
-        experienceRequired: false,
-      }),
-    );
-    const values = JSON.stringify(job);
-    expect(values).not.toContain('BANK SA');
-    expect(values).not.toContain('@');
-    expect(values).not.toContain('ALTA');
+  it('toma solo los datos de la publicación', () => {
+    expect(toJobPosting(MOCK.ofertas[0])).toEqual({
+      ref: 'CSYP1233113446',
+      title: 'Operario/a Pan 29',
+      description: MOCK.ofertas[0].descripcion,
+      zone: 'Gral. Pacheco',
+      area: 'Logística',
+      schedule: 'Martes 24/06 · 12 a 18 h',
+      publishedOn: '2026-11-04',
+      requirements: ['Disponibilidad para la jornada del martes 24/06', 'Sin experiencia obligatoria'],
+      benefits: ['Pago al finalizar el mes'],
+    });
   });
 
   it('todas las ofertas del mock se mapean sin exponer datos internos', () => {
@@ -41,24 +34,27 @@ describe('mapeo de ofertas (mock JSON)', () => {
     for (const dto of MOCK.ofertas) {
       const job = toJobPosting(dto);
       expect(job.title).toBeTruthy();
-      expect(job.salary).toBeGreaterThan(0);
-      expect(job.vacancies).toBeGreaterThan(0);
+      expect(job.zone).toBeTruthy();
+      expect(job.publishedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(job.requirements.length).toBeGreaterThan(0);
+      expect(job.benefits.length).toBeGreaterThan(0);
       const values = JSON.stringify(job);
-      expect(values).not.toContain(dto.cliente);
-      expect(values).not.toContain('@');
+      for (const internal of [dto.cliente, dto.convenio, dto.domicilioExplotacion.direccion, String(dto.salario), '@']) {
+        expect(values).not.toContain(internal);
+      }
     }
   });
 
-  it('formatea el salario en pesos', () => {
-    expect(formatSalary(912359)).toBe('$ 912.359');
+  it('muestra la fecha de publicación como día y mes', () => {
+    expect(formatDayMonth('2026-10-06')).toBe('06/10');
   });
 });
 
 describe('searchJobs', () => {
   const offers = [
     offer({ ref: 'A', title: 'Operario/a de depósito', description: 'Carga y descarga' }),
-    offer({ ref: 'B', title: 'Chofer de reparto', description: 'Reparto en Moreno', area: 'Logística', address: 'Moreno' }),
-    offer({ ref: 'C', title: 'Analista administrativo', description: 'Trabajo de oficina', area: 'Administración', address: 'CABA' }),
+    offer({ ref: 'B', title: 'Chofer de reparto', description: 'Reparto en Moreno', area: 'Logística', zone: 'Moreno' }),
+    offer({ ref: 'C', title: 'Analista administrativo', description: 'Trabajo de oficina', area: 'Administración', zone: 'CABA' }),
   ];
 
   it('sin consulta devuelve todas', () => {

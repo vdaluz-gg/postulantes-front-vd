@@ -83,9 +83,10 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(el.querySelector('[appOfferResults] .say')!.textContent!.replace(/\s+/g, ' ')).toContain('Encontré 2 ofertas');
     const jobs = Array.from(el.querySelectorAll('[appOfferResults] .job'));
     expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Operario/a Pan 29', 'Chofer de camión chasis']);
-    expect(jobs[0].querySelector('small')!.textContent).toBe(
-      '9 de Julio 1450, El Talar Argentina · Industrial / Tecnica / Produccion',
-    );
+    expect(jobs.map((j) => j.querySelector('small')!.textContent)).toEqual([
+      'Gral. Pacheco · Logística',
+      'Moreno / Parque Avellaneda · Logística',
+    ]);
   });
 
   it('"Ver todas las ofertas" usa lo escrito en el buscador', async () => {
@@ -114,17 +115,21 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(2);
   });
 
-  it('el detalle muestra los datos públicos de la oferta y no los internos', async () => {
+  it('el detalle muestra solo la publicación de la oferta', async () => {
     await showOffers('Ver todas las ofertas');
-    el.querySelector<HTMLButtonElement>('[appOfferResults] .job')!.click();
+    el.querySelectorAll<HTMLButtonElement>('[appOfferResults] .job')[1].click();
     await render();
     const detail = el.querySelector('[appOfferDetail]')!;
-    expect(detail.querySelector('h2')!.textContent).toBe('Operario/a Pan 29');
-    expect(detail.querySelector('.kick')!.textContent).toContain('Ref. CSYP1233113446');
-    expect(detail.querySelector('.meta')!.textContent).toContain('Salario $ 912.359');
-    expect(detail.querySelector('.meta')!.textContent).toContain('1 vacante');
-    expect(detail.textContent).not.toContain('BANK SA');
-    expect(detail.textContent).not.toContain('@');
+    const texts = (selector: string) => Array.from(detail.querySelectorAll(selector)).map((n) => n.textContent!.trim());
+    expect(detail.querySelector('.kick')!.textContent).toBe('Oferta · Logística · Ref. LOG7712093');
+    expect(detail.querySelector('h2')!.textContent).toBe('Chofer de camión chasis');
+    expect(texts('.meta li')).toEqual(['Moreno / Parque Avellaneda', 'Lunes a viernes · 6 a 15 h', 'Publicada el 07/10']);
+    expect(texts('h3')).toEqual(['Qué buscamos', 'Qué ofrecemos']);
+    expect(texts('.cols div:first-child li')).toEqual(['Licencia profesional vigente', 'Experiencia en reparto (deseable)', 'Disponibilidad inmediata']);
+    expect(texts('.cols div:last-child li')).toEqual(['Obra social', 'Viáticos', 'Continuidad']);
+    for (const internal of ['CLIENTE DEMO', 'CCT', 'Av. Victorica', 'vacante', 'Salario', '1.185.000']) {
+      expect(detail.textContent).not.toContain(internal);
+    }
   });
 
   it('postularse desde el detalle: CV leído por la IA, formulario completo y postulación enviada', async () => {
