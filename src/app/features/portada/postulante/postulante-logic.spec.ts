@@ -36,6 +36,19 @@ describe('mapeo de ofertas (mock JSON)', () => {
     expect(values).not.toContain('ALTA');
   });
 
+  it('todas las ofertas del mock se mapean sin exponer datos internos', () => {
+    expect(new Set(MOCK.ofertas.map((o) => o.codigo)).size).toBe(MOCK.ofertas.length);
+    for (const dto of MOCK.ofertas) {
+      const job = toJobPosting(dto);
+      expect(job.title).toBeTruthy();
+      expect(job.salary).toBeGreaterThan(0);
+      expect(job.vacancies).toBeGreaterThan(0);
+      const values = JSON.stringify(job);
+      expect(values).not.toContain(dto.cliente);
+      expect(values).not.toContain('@');
+    }
+  });
+
   it('formatea el salario en pesos', () => {
     expect(formatSalary(912359)).toBe('$ 912.359');
   });
@@ -106,7 +119,7 @@ describe('OffersApi', () => {
     const first = firstValueFrom(api.list());
     http.expectOne(OFFERS_URL).flush(MOCK);
     const offers = await first;
-    expect(offers.map((o) => o.title)).toEqual(['Operario/a Pan 29']);
+    expect(offers.map((o) => o.title)).toEqual(MOCK.ofertas.map((o) => o.titulo));
     await firstValueFrom(api.list());
     http.expectNone(OFFERS_URL);
     http.verify();
@@ -120,6 +133,6 @@ describe('OffersApi', () => {
     await expect(failed).rejects.toBeTruthy();
     const retry = firstValueFrom(api.list());
     http.expectOne(OFFERS_URL).flush(MOCK);
-    await expect(retry).resolves.toHaveLength(1);
+    await expect(retry).resolves.toHaveLength(MOCK.ofertas.length);
   });
 });

@@ -9,9 +9,14 @@ import { MotionService } from '../../../core/services/motion.service';
 import { HoloAvatarLoaderService } from '../../../shared/three/holo-avatar-loader.service';
 import { PortadaPage } from '../portada.page';
 import { CandidacyApi, CandidateContact } from './candidacy.api';
+import { JobOffersResponse } from './job-offer';
 import { OFFERS_URL } from './offers.api';
 
-const MOCK = JSON.parse(readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'));
+/** Dos ofertas reales del mock: el flujo no depende de cuántas tenga el archivo. */
+const MOCK: JobOffersResponse = JSON.parse(readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'));
+const FIXTURE: JobOffersResponse = {
+  ofertas: ['CSYP1233113446', 'LOG7712093'].map((ref) => MOCK.ofertas.find((o) => o.codigo === ref)!),
+};
 const pendingLoader = { create: () => new Promise(() => undefined), loadModel: () => new Promise(() => undefined) };
 
 describe('Panel del postulante: ofertas, CV y formulario', () => {
@@ -37,7 +42,7 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
   const showOffers = async (text: string) => {
     button(text).click();
     await render();
-    http.expectOne(OFFERS_URL).flush(MOCK);
+    http.expectOne(OFFERS_URL).flush(FIXTURE);
     await render();
   };
 
@@ -75,9 +80,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
 
   it('"Ver todas las ofertas" muestra las ofertas del mock', async () => {
     await showOffers('Ver todas las ofertas');
-    expect(el.querySelector('[appOfferResults] .say')!.textContent!.replace(/\s+/g, ' ')).toContain('Encontré una oferta');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent!.replace(/\s+/g, ' ')).toContain('Encontré 2 ofertas');
     const jobs = Array.from(el.querySelectorAll('[appOfferResults] .job'));
-    expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Operario/a Pan 29']);
+    expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Operario/a Pan 29', 'Chofer de camión chasis']);
     expect(jobs[0].querySelector('small')!.textContent).toBe(
       '9 de Julio 1450, El Talar Argentina · Industrial / Tecnica / Produccion',
     );
@@ -91,13 +96,22 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(1);
   });
 
-  it('una sugerencia muestra las ofertas relacionadas y, sin coincidencias, todas', async () => {
+  it('una sugerencia muestra solo las ofertas relacionadas', async () => {
     button('Chofer cerca de Moreno').click();
     await render();
-    http.expectOne(OFFERS_URL).flush(MOCK);
+    http.expectOne(OFFERS_URL).flush(FIXTURE);
     await render();
-    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('No encontré ofertas para «Chofer cerca de Moreno»');
-    expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(1);
+    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('para «Chofer cerca de Moreno»');
+    const jobs = Array.from(el.querySelectorAll('[appOfferResults] .job'));
+    expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Chofer de camión chasis']);
+  });
+
+  it('sin coincidencias avisa y muestra todas las ofertas', async () => {
+    type('q-post', 'Desarrollador Frontend');
+    await render();
+    await showOffers('Ver todas las ofertas');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('No encontré ofertas para «Desarrollador Frontend»');
+    expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(2);
   });
 
   it('el detalle muestra los datos públicos de la oferta y no los internos', async () => {
@@ -191,8 +205,8 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(el.querySelector('.notice')!.textContent).toContain('No pudimos cargar las ofertas');
     button('Reintentar').click();
     await render();
-    http.expectOne(OFFERS_URL).flush(MOCK);
+    http.expectOne(OFFERS_URL).flush(FIXTURE);
     await render();
-    expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(1);
+    expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(2);
   });
 });
