@@ -46,3 +46,7 @@ Thumbs.db
 # Maqueta de referencia: binarios pesados extraídos del HTML original
 /maqueta/limpia/assets/
 /maqueta/*.html
+
+# Instrucciones de trabajo: no se versionan, solo el código
+/tools/instrucciones*
+/instrucciones/
