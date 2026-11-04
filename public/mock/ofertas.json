@@ -4,6 +4,17 @@
       "codigo": "CSYP1233113446",
       "titulo": "Operario/a Pan 29",
       "descripcion": "Importante empresa dedicada a la digitalización de archivos, ubicada en la zona de Garín, se encuentra en la búsqueda de sumar operarios as de carga y descarga Tareas a realizar: Tareas de recepción, preparación de pedidos, movimiento de mercadería y tareas generales de depósito logística. Jornada de trabajo: Martes 24 06 a las 12hs hasta las 18hs. Lugar de trabajo: Gral. Pacheco. Se liquida finalizado el mes. ¡Aguardamos tu postulación en caso de interesarte",
+      "zona": "Gral. Pacheco",
+      "rubro": "Logística",
+      "horario": "Martes 24/06 · 12 a 18 h",
+      "fechaPublicacion": "2026-11-04",
+      "requisitos": [
+        "Disponibilidad para la jornada del martes 24/06",
+        "Sin experiencia obligatoria"
+      ],
+      "beneficios": [
+        "Pago al finalizar el mes"
+      ],
       "vacantes": 1,
       "salario": 912359,
       "domicilioExplotacion": {
@@ -32,7 +43,21 @@
     {
       "codigo": "LOG7712093",
       "titulo": "Chofer de camión chasis",
-      "descripcion": "Reparto de mercadería en camión chasis por zona oeste y CABA, con carga y descarga en clientes. Horario: Lunes a viernes · 6 a 15 h. Buscamos: Licencia profesional vigente, Experiencia en reparto (deseable), Disponibilidad inmediata. Ofrecemos: Obra social, Viáticos, Continuidad.",
+      "descripcion": "Reparto de mercadería en camión chasis por zona oeste y CABA, con carga y descarga en clientes.",
+      "zona": "Moreno / Parque Avellaneda",
+      "rubro": "Logística",
+      "horario": "Lunes a viernes · 6 a 15 h",
+      "fechaPublicacion": "2026-10-07",
+      "requisitos": [
+        "Licencia profesional vigente",
+        "Experiencia en reparto (deseable)",
+        "Disponibilidad inmediata"
+      ],
+      "beneficios": [
+        "Obra social",
+        "Viáticos",
+        "Continuidad"
+      ],
       "vacantes": 3,
       "salario": 1185000,
       "domicilioExplotacion": {
@@ -61,7 +86,21 @@
     {
       "codigo": "IND3307418",
       "titulo": "Operario/a de producción · Feteados",
-      "descripcion": "Operación de líneas de feteado y envasado en planta de alimentos. Control de calidad básico y cumplimiento de BPM. Horario: Turno tarde · 14 a 22 h. Buscamos: Secundario completo, Experiencia en producción o alimentos, Disponibilidad para turno tarde. Ofrecemos: Comedor en planta, Transporte desde estación, Posibilidad de efectivización.",
+      "descripcion": "Operación de líneas de feteado y envasado en planta de alimentos. Control de calidad básico y cumplimiento de BPM.",
+      "zona": "Monte Grande",
+      "rubro": "Industria",
+      "horario": "Turno tarde · 14 a 22 h",
+      "fechaPublicacion": "2026-10-15",
+      "requisitos": [
+        "Secundario completo",
+        "Experiencia en producción o alimentos",
+        "Disponibilidad para turno tarde"
+      ],
+      "beneficios": [
+        "Comedor en planta",
+        "Transporte desde estación",
+        "Posibilidad de efectivización"
+      ],
       "vacantes": 6,
       "salario": 948000,
       "domicilioExplotacion": {
@@ -90,7 +129,20 @@
     {
       "codigo": "COM5520841",
       "titulo": "Auditor/a de canal masivo",
-      "descripcion": "Relevamiento de precios, góndolas y exhibiciones en comercios del canal masivo. Horario: Lunes a viernes · 9 a 17 h. Buscamos: Movilidad propia (deseable), Manejo de celular y apps, Buena comunicación. Ofrecemos: Celular corporativo, Viáticos.",
+      "descripcion": "Relevamiento de precios, góndolas y exhibiciones en comercios del canal masivo.",
+      "zona": "Corrientes Capital",
+      "rubro": "Comercial",
+      "horario": "Lunes a viernes · 9 a 17 h",
+      "fechaPublicacion": "2026-10-10",
+      "requisitos": [
+        "Movilidad propia (deseable)",
+        "Manejo de celular y apps",
+        "Buena comunicación"
+      ],
+      "beneficios": [
+        "Celular corporativo",
+        "Viáticos"
+      ],
       "vacantes": 2,
       "salario": 1020000,
       "domicilioExplotacion": {
@@ -119,7 +171,20 @@
     {
       "codigo": "LOG8803174",
       "titulo": "Maquinista de apiladora y autoelevador",
-      "descripcion": "Operación de autoelevador y apiladora en depósito: carga, descarga y ubicación de pallets. Horario: Rotativo · 3 turnos. Buscamos: Carnet de autoelevador vigente, 1 año de experiencia, Disponibilidad horaria. Ofrecemos: Plus por turno noche, Obra social.",
+      "descripcion": "Operación de autoelevador y apiladora en depósito: carga, descarga y ubicación de pallets.",
+      "zona": "Monte Grande",
+      "rubro": "Logística",
+      "horario": "Rotativo · 3 turnos",
+      "fechaPublicacion": "2026-10-12",
+      "requisitos": [
+        "Carnet de autoelevador vigente",
+        "1 año de experiencia",
+        "Disponibilidad horaria"
+      ],
+      "beneficios": [
+        "Plus por turno noche",
+        "Obra social"
+      ],
       "vacantes": 2,
       "salario": 1110000,
       "domicilioExplotacion": {
@@ -148,7 +213,20 @@
     {
       "codigo": "ADM5523105",
       "titulo": "Analista de pago a proveedores",
-      "descripcion": "Gestión de pagos a proveedores, conciliaciones y carga en SAP. Horario: Lunes a viernes · 8 a 17 h. Buscamos: Estudiante o graduado/a en Ciencias Económicas, Manejo de SAP, Excel intermedio. Ofrecemos: Esquema híbrido, Obra social.",
+      "descripcion": "Gestión de pagos a proveedores, conciliaciones y carga en SAP.",
+      "zona": "Tortuguitas",
+      "rubro": "Administración",
+      "horario": "Lunes a viernes · 8 a 17 h",
+      "fechaPublicacion": "2026-10-08",
+      "requisitos": [
+        "Estudiante o graduado/a en Ciencias Económicas",
+        "Manejo de SAP",
+        "Excel intermedio"
+      ],
+      "beneficios": [
+        "Esquema híbrido",
+        "Obra social"
+      ],
       "vacantes": 1,
       "salario": 1350000,
       "domicilioExplotacion": {
@@ -177,7 +255,20 @@
     {
       "codigo": "RRH5512135",
       "titulo": "Responsable de Recursos Humanos",
-      "descripcion": "Liderar los procesos de RR. HH. de la sede: selección, relaciones laborales y liquidación. Horario: Jornada completa. Buscamos: Licenciatura en RR. HH. o afines, 3 años de experiencia, Liderazgo de equipos. Ofrecemos: Prepaga, Bono anual.",
+      "descripcion": "Liderar los procesos de RR. HH. de la sede: selección, relaciones laborales y liquidación.",
+      "zona": "Salta",
+      "rubro": "RR. HH.",
+      "horario": "Jornada completa",
+      "fechaPublicacion": "2026-10-06",
+      "requisitos": [
+        "Licenciatura en RR. HH. o afines",
+        "3 años de experiencia",
+        "Liderazgo de equipos"
+      ],
+      "beneficios": [
+        "Prepaga",
+        "Bono anual"
+      ],
       "vacantes": 1,
       "salario": 2250000,
       "domicilioExplotacion": {
@@ -206,7 +297,20 @@
     {
       "codigo": "IND3640414",
       "titulo": "Operario/a metalúrgico",
-      "descripcion": "Operación de prensas y plegadoras en planta metalúrgica. Horario: Turno mañana · 6 a 14 h. Buscamos: Experiencia en metalúrgica, Lectura de planos (deseable), Secundario completo. Ofrecemos: Comedor en planta, Ropa de trabajo.",
+      "descripcion": "Operación de prensas y plegadoras en planta metalúrgica.",
+      "zona": "Villa Maipú",
+      "rubro": "Industria",
+      "horario": "Turno mañana · 6 a 14 h",
+      "fechaPublicacion": "2026-10-15",
+      "requisitos": [
+        "Experiencia en metalúrgica",
+        "Lectura de planos (deseable)",
+        "Secundario completo"
+      ],
+      "beneficios": [
+        "Comedor en planta",
+        "Ropa de trabajo"
+      ],
       "vacantes": 4,
       "salario": 1060000,
       "domicilioExplotacion": {
@@ -235,7 +339,21 @@
     {
       "codigo": "COM5844162",
       "titulo": "Jefe/a de Ventas",
-      "descripcion": "Conducción del equipo de ventas, objetivos y desarrollo de cartera en CABA. Horario: Jornada completa. Buscamos: Experiencia liderando equipos comerciales, Orientación a resultados, Disponibilidad para viajar. Ofrecemos: Auto, Comisiones, Prepaga.",
+      "descripcion": "Conducción del equipo de ventas, objetivos y desarrollo de cartera en CABA.",
+      "zona": "CABA",
+      "rubro": "Comercial",
+      "horario": "Jornada completa",
+      "fechaPublicacion": "2026-10-07",
+      "requisitos": [
+        "Experiencia liderando equipos comerciales",
+        "Orientación a resultados",
+        "Disponibilidad para viajar"
+      ],
+      "beneficios": [
+        "Auto",
+        "Comisiones",
+        "Prepaga"
+      ],
       "vacantes": 1,
       "salario": 2600000,
       "domicilioExplotacion": {
@@ -264,7 +382,20 @@
     {
       "codigo": "COM6012450",
       "titulo": "Repositor/a de supermercado",
-      "descripcion": "Reposición de góndolas, control de vencimientos y armado de exhibiciones en hipermercado. Horario: Lunes a sábados · turnos rotativos. Buscamos: Secundario completo, Disponibilidad horaria, Experiencia en reposición (deseable). Ofrecemos: Capacitación paga, Descuentos en comercios.",
+      "descripcion": "Reposición de góndolas, control de vencimientos y armado de exhibiciones en hipermercado.",
+      "zona": "Pilar",
+      "rubro": "Comercial",
+      "horario": "Lunes a sábados · turnos rotativos",
+      "fechaPublicacion": "2026-10-20",
+      "requisitos": [
+        "Secundario completo",
+        "Disponibilidad horaria",
+        "Experiencia en reposición (deseable)"
+      ],
+      "beneficios": [
+        "Capacitación paga",
+        "Descuentos en comercios"
+      ],
       "vacantes": 8,
       "salario": 905000,
       "domicilioExplotacion": {
@@ -293,7 +424,20 @@
     {
       "codigo": "ADM6034471",
       "titulo": "Analista de liquidación de sueldos",
-      "descripcion": "Liquidación mensual de sueldos, cargas sociales y atención de consultas de colaboradores. Horario: Lunes a viernes · 9 a 18 h. Buscamos: Experiencia en liquidación, Conocimiento de convenios, Excel avanzado. Ofrecemos: Esquema híbrido, Prepaga.",
+      "descripcion": "Liquidación mensual de sueldos, cargas sociales y atención de consultas de colaboradores.",
+      "zona": "Palermo, CABA",
+      "rubro": "Administración",
+      "horario": "Lunes a viernes · 9 a 18 h",
+      "fechaPublicacion": "2026-10-19",
+      "requisitos": [
+        "Experiencia en liquidación",
+        "Conocimiento de convenios",
+        "Excel avanzado"
+      ],
+      "beneficios": [
+        "Esquema híbrido",
+        "Prepaga"
+      ],
       "vacantes": 1,
       "salario": 1420000,
       "domicilioExplotacion": {
@@ -322,7 +466,19 @@
     {
       "codigo": "IND6045512",
       "titulo": "Operario/a de planta de alimentos",
-      "descripcion": "Operación de líneas de producción en planta de alimentos, con control de calidad y BPM. Horario: Turno mañana · 6 a 14 h. Buscamos: Secundario completo, Disponibilidad para turnos rotativos. Ofrecemos: Comedor en planta, Ropa de trabajo.",
+      "descripcion": "Operación de líneas de producción en planta de alimentos, con control de calidad y BPM.",
+      "zona": "Esteban Echeverría",
+      "rubro": "Industria",
+      "horario": "Turno mañana · 6 a 14 h",
+      "fechaPublicacion": "2026-10-21",
+      "requisitos": [
+        "Secundario completo",
+        "Disponibilidad para turnos rotativos"
+      ],
+      "beneficios": [
+        "Comedor en planta",
+        "Ropa de trabajo"
+      ],
       "vacantes": 10,
       "salario": 960000,
       "domicilioExplotacion": {
@@ -351,7 +507,20 @@
     {
       "codigo": "ADM6051903",
       "titulo": "Asistente administrativo/a",
-      "descripcion": "Atención telefónica, agenda, carga de facturas y apoyo administrativo a la gerencia. Horario: Lunes a viernes · 9 a 17 h. Buscamos: Estudios secundarios, Manejo de paquete Office, Buena comunicación. Ofrecemos: Obra social, Horario flexible.",
+      "descripcion": "Atención telefónica, agenda, carga de facturas y apoyo administrativo a la gerencia.",
+      "zona": "San Isidro",
+      "rubro": "Administración",
+      "horario": "Lunes a viernes · 9 a 17 h",
+      "fechaPublicacion": "2026-10-18",
+      "requisitos": [
+        "Estudios secundarios",
+        "Manejo de paquete Office",
+        "Buena comunicación"
+      ],
+      "beneficios": [
+        "Obra social",
+        "Horario flexible"
+      ],
       "vacantes": 1,
       "salario": 980000,
       "domicilioExplotacion": {
@@ -380,7 +549,19 @@
     {
       "codigo": "LOG6066320",
       "titulo": "Chofer de reparto utilitario",
-      "descripcion": "Reparto de pedidos en utilitario por zona sur, con rendición de cobranzas. Horario: Lunes a sábados · 7 a 16 h. Buscamos: Licencia de conducir vigente, Conocimiento de la zona sur. Ofrecemos: Viáticos, Obra social.",
+      "descripcion": "Reparto de pedidos en utilitario por zona sur, con rendición de cobranzas.",
+      "zona": "Quilmes",
+      "rubro": "Logística",
+      "horario": "Lunes a sábados · 7 a 16 h",
+      "fechaPublicacion": "2026-10-17",
+      "requisitos": [
+        "Licencia de conducir vigente",
+        "Conocimiento de la zona sur"
+      ],
+      "beneficios": [
+        "Viáticos",
+        "Obra social"
+      ],
       "vacantes": 3,
       "salario": 1090000,
       "domicilioExplotacion": {
@@ -409,7 +590,19 @@
     {
       "codigo": "COM6070245",
       "titulo": "Vendedor/a de salón",
-      "descripcion": "Atención de clientes en salón, asesoramiento y cierre de ventas con objetivos mensuales. Horario: Jornada completa. Buscamos: Experiencia en ventas, Orientación al cliente. Ofrecemos: Comisiones, Capacitación continua.",
+      "descripcion": "Atención de clientes en salón, asesoramiento y cierre de ventas con objetivos mensuales.",
+      "zona": "Rosario",
+      "rubro": "Comercial",
+      "horario": "Jornada completa",
+      "fechaPublicacion": "2026-10-16",
+      "requisitos": [
+        "Experiencia en ventas",
+        "Orientación al cliente"
+      ],
+      "beneficios": [
+        "Comisiones",
+        "Capacitación continua"
+      ],
       "vacantes": 2,
       "salario": 1015000,
       "domicilioExplotacion": {
