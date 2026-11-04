@@ -1,8 +1,7 @@
 # Grupo Gestión · Front
 
-Angular 22 (componentes standalone, signals, sin zone.js). Port a Angular de la maqueta de
-Grupo Gestión (`maqueta/limpia/`), siguiendo el sistema de diseño de los portales
-(skill `grupo-gestion-ui`).
+Angular 22 (componentes standalone, signals, sin zone.js). Front de Grupo Gestión, siguiendo
+el sistema de diseño de los portales (skill `grupo-gestion-ui`).
 
 ## Qué hay en la app
 

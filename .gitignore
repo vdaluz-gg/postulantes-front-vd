@@ -43,8 +43,8 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Maqueta de referencia: binarios pesados extraídos del HTML original
-/maqueta/limpia/assets/
+# Maqueta de referencia: queda solo en local
+/maqueta/limpia/
 /maqueta/*.html
 
 # Instrucciones de trabajo: no se versionan, solo el código
