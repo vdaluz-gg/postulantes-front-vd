@@ -8,11 +8,22 @@ export interface PersonaAvatar {
   readonly config: HoloAvatarConfig;
 }
 
+/** Acción que resuelve el propio panel, sin salir de la portada. */
+export type PanelCommand =
+  /** Buscar ofertas; con useInput toma lo escrito en el buscador, si no muestra todas. */
+  | { readonly kind: 'search'; readonly useInput?: boolean }
+  /** Dejar el CV para que la IA complete los datos. */
+  | { readonly kind: 'cv' }
+  /** Postularse a un puesto (abre la carga del CV con el puesto precargado). */
+  | { readonly kind: 'apply'; readonly position: string };
+
 export interface PersonaAction {
   readonly label: string;
   readonly primary?: boolean;
-  /** Ruta interna. Sin ruta, la acción todavía no está disponible. */
+  /** Ruta interna. */
   readonly link?: string;
+  /** Acción dentro del panel. Sin enlace ni comando, la acción todavía no está disponible. */
+  readonly command?: PanelCommand;
 }
 
 export interface PersonaPrompt {
@@ -124,8 +135,8 @@ export const PERSONAS: readonly Persona[] = [
             { text: ' en Monte Grande. ¿Querés que te postule?' },
           ],
           actions: [
-            { label: 'Sí, postulame', primary: true },
-            { label: 'Ver más ofertas' },
+            { label: 'Sí, postulame', primary: true, command: { kind: 'apply', position: 'Operario/a de producción' } },
+            { label: 'Ver más ofertas', command: { kind: 'search' } },
           ],
         },
       },
@@ -145,8 +156,8 @@ export const PERSONAS: readonly Persona[] = [
       },
     ],
     actions: [
-      { label: 'Ver todas las ofertas →', primary: true },
-      { label: 'Dejar mi CV con IA' },
+      { label: 'Ver todas las ofertas →', primary: true, command: { kind: 'search', useInput: true } },
+      { label: 'Dejar mi CV con IA', command: { kind: 'cv' } },
     ],
     footnote: 'Matching con IA · 14 sucursales en todo el país',
     portalLink: null,

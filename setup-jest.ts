@@ -4,6 +4,7 @@ setupZonelessTestEnv();
 
 /* APIs del navegador que jsdom no implementa. */
 window.scrollTo = (() => undefined) as typeof window.scrollTo;
+Element.prototype.scrollIntoView ??= () => undefined;
 window.matchMedia ??= ((query: string) => ({
   matches: false,
   media: query,

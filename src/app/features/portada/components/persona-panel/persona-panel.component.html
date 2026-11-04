@@ -1,71 +1,126 @@
-<article class="frame" [attr.aria-labelledby]="'pt-' + persona().id">
-  <p class="kick r" style="--i:0"><i aria-hidden="true"></i>{{ persona().kicker }}</p>
-  <h2 class="r" style="--i:1" [id]="'pt-' + persona().id">
-    {{ persona().title }} <em>{{ persona().highlight }}</em>
-  </h2>
-
-  <app-ai-prompt
-    class="r"
-    style="--i:2"
-    [inputId]="'q-' + persona().id"
-    [prompt]="persona().prompt"
-    [(value)]="query"
-  />
-
-  <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
-    @for (suggestion of persona().suggestions; track suggestion) {
-      <button appSuggestionPill [active]="query() === suggestion" (click)="useSuggestion(suggestion)">
-        {{ suggestion }}
-      </button>
-    }
+@if (detail(); as job) {
+  <div class="frame">
+    <section appOfferDetail [job]="job" (apply)="applyTo($event)" (back)="closeDetail()"></section>
   </div>
+} @else {
+  <article class="frame" [attr.aria-labelledby]="'pt-' + persona().id">
+    <p class="kick r" style="--i:0"><i aria-hidden="true"></i>{{ persona().kicker }}</p>
+    <h2 class="r" style="--i:1" [id]="'pt-' + persona().id">
+      {{ persona().title }} <em>{{ persona().highlight }}</em>
+    </h2>
 
-  <div class="chips r" style="--i:4" role="group" aria-label="Temas">
-    @for (chip of persona().chips; track chip.id) {
-      <button
-        appTopicChip
-        [pressed]="activeChipId() === chip.id"
-        [attr.aria-controls]="chip.peek ? peekId() : null"
-        (pointerenter)="preview(chip)"
-        (focus)="preview(chip)"
-        (click)="pin(chip)"
-      >
-        {{ chip.label }}
-      </button>
-    }
-  </div>
+    <app-ai-prompt
+      class="r"
+      style="--i:2"
+      [inputId]="'q-' + persona().id"
+      [prompt]="persona().prompt"
+      [(value)]="query"
+      (submitted)="search($event)"
+    />
 
-  @if (hasPeeks()) {
-    <div class="peek-slot r" style="--i:5" [id]="peekId()" aria-live="polite">
-      @if (activeChip()?.peek; as peek) {
-        <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()">
-          @switch (peek.kind) {
-            @case ('map') {
-              <div appNearbyMap [home]="peek.home" [pins]="peek.pins"></div>
-            }
-            @case ('whatsapp') {
-              <div appWhatsappPreview [sender]="peek.sender" [message]="peek.message" [actions]="peek.actions"></div>
-            }
-            @case ('tracker') {
-              <ol appApplicationTracker [steps]="peek.steps"></ol>
-            }
-          }
-        </div>
-      }
-    </div>
-  }
-
-  <div class="cta r" style="--i:6">
-    @for (action of persona().actions; track action.label) {
-      @if (action.link) {
-        <a appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">{{ action.label }}</a>
-      } @else {
-        <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled title="Próximamente">
-          {{ action.label }}
+    <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
+      @for (suggestion of persona().suggestions; track suggestion) {
+        <button appSuggestionPill [active]="query() === suggestion" (click)="useSuggestion(suggestion)">
+          {{ suggestion }}
         </button>
       }
-    }
-  </div>
+    </div>
 
-  <p class="foot r" style="--i:7">{{ persona().footnote }}</p>
-</article>
+    <div class="chips r" style="--i:4" role="group" aria-label="Temas">
+      @for (chip of persona().chips; track chip.id) {
+        <button
+          appTopicChip
+          [pressed]="flow().kind === 'topic' && activeChipId() === chip.id"
+          [attr.aria-controls]="chip.peek ? peekId() : null"
+          (pointerenter)="preview(chip)"
+          (focus)="preview(chip)"
+          (click)="pin(chip)"
+        >
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+
+    @if (showsPeek()) {
+      <div #peekSlot class="peek-slot r" style="--i:5" tabindex="-1" [id]="peekId()" aria-live="polite">
+        @switch (flow().kind) {
+          @case ('topic') {
+            @if (activeChip()?.peek; as peek) {
+              <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()">
+                @switch (peek.kind) {
+                  @case ('map') {
+                    <div appNearbyMap [home]="peek.home" [pins]="peek.pins"></div>
+                  }
+                  @case ('whatsapp') {
+                    <div
+                      appWhatsappPreview
+                      [sender]="peek.sender"
+                      [message]="peek.message"
+                      [actions]="peek.actions"
+                      (command)="run($event)"
+                    ></div>
+                  }
+                  @case ('tracker') {
+                    <ol appApplicationTracker [steps]="peek.steps"></ol>
+                  }
+                }
+              </div>
+            }
+          }
+          @default {
+            @let step = flow();
+            <div
+              appPeekPanel
+              [replayKey]="'flow-' + flowKey()"
+              [fit]="step.kind === 'results' || step.kind === 'form'"
+              [heading]="step.kind === 'cv' ? 'Dejá tu CV con IA' : step.kind === 'form' ? step.heading : null"
+            >
+              @switch (step.kind) {
+                @case ('thinking') {
+                  <p appAiThinking>{{ step.text }}</p>
+                }
+                @case ('notice') {
+                  <p class="notice" role="alert">{{ step.text }}</p>
+                  <button appPortadaButton size="mini" (click)="search(step.retry)">Reintentar</button>
+                }
+                @case ('results') {
+                  <div appOfferResults [result]="step.result" (open)="openDetail($event)"></div>
+                }
+                @case ('cv') {
+                  <div
+                    appCvUpload
+                    [failure]="step.error ?? ''"
+                    (selected)="readCv($event, step.position)"
+                    (manual)="fillManually(step.position)"
+                  ></div>
+                }
+                @case ('form') {
+                  <app-candidate-form [prefill]="step.prefill" [typed]="step.typed" (submitted)="send($event)" />
+                }
+                @case ('sent') {
+                  <div appApplicationSent [fullName]="step.contact.fullName" [position]="step.contact.position"></div>
+                }
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <div class="cta r" style="--i:6">
+      @for (action of persona().actions; track action.label) {
+        @if (action.command; as cmd) {
+          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" (click)="run(cmd)">{{ action.label }}</button>
+        } @else if (action.link) {
+          <a appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">{{ action.label }}</a>
+        } @else {
+          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled title="Próximamente">
+            {{ action.label }}
+          </button>
+        }
+      }
+    </div>
+
+    <p class="foot r" style="--i:7">{{ persona().footnote }}</p>
+  </article>
+}

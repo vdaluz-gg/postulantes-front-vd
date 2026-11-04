@@ -11,7 +11,11 @@
 @if (actions().length) {
   <div class="replies">
     @for (action of actions(); track action.label) {
-      @if (action.link) {
+      @if (action.command; as cmd) {
+        <button appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" (click)="command.emit(cmd)">
+          {{ action.label }}
+        </button>
+      } @else if (action.link) {
         <a appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">
           {{ action.label }}
         </a>

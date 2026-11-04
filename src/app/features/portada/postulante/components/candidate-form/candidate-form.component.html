@@ -1,0 +1,28 @@
+<form [formGroup]="form" novalidate (ngSubmit)="submit()" [attr.aria-busy]="busy()">
+  <div class="grid">
+    @for (field of fields; track field.name) {
+      <div class="field" [class.w]="field.wide">
+        <label [for]="'cf-' + field.name">{{ field.label }}</label>
+        <input
+          [id]="'cf-' + field.name"
+          [type]="field.type ?? 'text'"
+          [formControlName]="field.name"
+          [attr.autocomplete]="field.autocomplete"
+          [attr.inputmode]="field.inputmode ?? null"
+          [placeholder]="field.placeholder"
+          [readonly]="busy()"
+          [class.t]="typing() === field.name"
+          [class.f]="filled().has(field.name)"
+          [attr.aria-invalid]="errorFor(field.name) ? 'true' : null"
+          [attr.aria-describedby]="errorFor(field.name) ? 'cf-' + field.name + '-err' : null"
+          (blur)="field.name === 'dni' && formatDniOnBlur()"
+        />
+        @if (errorFor(field.name); as message) {
+          <p class="err" [id]="'cf-' + field.name + '-err'">{{ message }}</p>
+        }
+      </div>
+    }
+  </div>
+  <p class="summary" role="alert">{{ summary() }}</p>
+  <button appPortadaButton variant="pri" type="submit" [disabled]="busy()">Enviar postulación</button>
+</form>

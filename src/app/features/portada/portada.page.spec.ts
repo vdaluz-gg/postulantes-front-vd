@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { HoloAvatarLoaderService } from '../../shared/three/holo-avatar-loader.service';
@@ -30,7 +32,12 @@ describe('PortadaPage', () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [PortadaPage],
-      providers: [provideRouter([]), { provide: HoloAvatarLoaderService, useValue: pendingLoader }],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: HoloAvatarLoaderService, useValue: pendingLoader },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(PortadaPage);
     el = fixture.nativeElement;
@@ -144,8 +151,8 @@ describe('PortadaPage', () => {
       expect(el.querySelector('[appWhatsappPreview] .wa b')!.textContent).toBe('Operario/a de producción');
       const replies = Array.from(el.querySelectorAll<HTMLButtonElement>('[appWhatsappPreview] button[appPortadaButton]'));
       expect(replies.map((b) => [b.textContent!.trim(), b.disabled, b.classList.contains('pri')])).toEqual([
-        ['Sí, postulame', true, true],
-        ['Ver más ofertas', true, false],
+        ['Sí, postulame', false, true],
+        ['Ver más ofertas', false, false],
       ]);
     });
 
@@ -173,7 +180,7 @@ describe('PortadaPage', () => {
       const actions = Array.from(el.querySelectorAll<HTMLButtonElement>('.cta button[appPortadaButton]'));
       expect(actions.map((a) => a.textContent!.trim())).toEqual(['Ver todas las ofertas →', 'Dejar mi CV con IA']);
       expect(actions[0].classList).toContain('pri');
-      expect(actions.every((a) => a.disabled)).toBe(true);
+      expect(actions.every((a) => !a.disabled)).toBe(true);
     });
   });
 

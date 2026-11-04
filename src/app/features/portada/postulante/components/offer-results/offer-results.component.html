@@ -1,0 +1,29 @@
+<p class="say">
+  <svg appIcon="sparkFill" [filled]="true"></svg>
+  <span>
+    @if (result().matched) {
+      Encontré <b>{{ count() }}</b>
+      @if (result().query) {
+        para «{{ result().query }}»
+      }. Tocá una para ver el detalle:
+    } @else {
+      No encontré ofertas para «{{ result().query }}». Te muestro <b>todas las disponibles</b>:
+    }
+  </span>
+</p>
+<p class="note">
+  <svg appIcon="sparkFill" [filled]="true"></svg>
+  Tu match se calcula cuando te postulás: la IA lee tus datos y arma tu perfil.
+</p>
+<ul class="jobs">
+  @for (job of result().jobs; track job.ref; let i = $index) {
+    <li [style.--k]="i">
+      <button type="button" class="job" (click)="open.emit(job)">
+        <b>{{ job.title }}</b>
+        <small>{{ job.address }} · {{ job.area }}</small>
+        <span class="go" aria-hidden="true">Ver puesto →</span>
+        <span class="sr">, ver puesto</span>
+      </button>
+    </li>
+  }
+</ul>

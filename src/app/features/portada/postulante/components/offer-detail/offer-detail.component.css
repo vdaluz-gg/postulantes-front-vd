@@ -1,0 +1,23 @@
+:host{display:block}
+:host>*{animation:enter .55s cubic-bezier(.2,.8,.2,1) both}
+:host>:nth-child(2){animation-delay:.06s}:host>:nth-child(3){animation-delay:.12s}:host>:nth-child(4){animation-delay:.18s}
+:host>:nth-child(5){animation-delay:.24s}:host>:nth-child(6){animation-delay:.3s}:host>:nth-child(7){animation-delay:.36s}
+.kick{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+.kick i{flex:0 0 auto;width:28px;height:1px;background:var(--acc)}
+h2{font-size:clamp(26px,2.8vw,40px);font-weight:600;letter-spacing:-.035em;line-height:1.04;margin-bottom:18px}
+h2:focus{outline:none}
+.meta{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.meta li{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--font-display);padding:7px 10px;border-radius:9px;background:var(--soft);border:1px solid var(--line)}
+.meta svg{width:14px;height:14px;color:var(--acc)}
+.desc{font-size:15px;line-height:1.55;color:var(--mut);margin-bottom:18px;max-width:46ch}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+h3{font:500 10.5px var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.cols ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.cols li{font-size:13.5px;line-height:1.4;padding-left:16px;position:relative}
+.cols li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
+.aibox{display:flex;gap:10px;align-items:flex-start;padding:14px;border-radius:14px;margin-bottom:18px;background:color-mix(in srgb,var(--acc) 8%,transparent);border:1px solid color-mix(in srgb,var(--acc) 35%,transparent);font-size:13.5px;line-height:1.5}
+.aibox svg{width:12px;height:12px;flex:0 0 auto;color:var(--acc);margin-top:4px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.foot{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--mut)}
+@keyframes enter{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}

@@ -8,8 +8,9 @@ const ENTER: Keyframe[] = [
 ];
 
 /**
- * Recuadro de vista previa de un tema: título con destello, una línea de escaneo que lo recorre
- * y el contenido, que vuelve a entrar con un fundido cada vez que cambia el tema (replayKey).
+ * Recuadro de vista previa del panel: título opcional con destello, una línea de escaneo que lo
+ * recorre y el contenido, que vuelve a entrar con un fundido cada vez que cambia (replayKey).
+ * Con fit crece según el contenido (resultados, formulario) y se desplaza por dentro.
  */
 @Component({
   selector: 'div[appPeekPanel]',
@@ -17,10 +18,12 @@ const ENTER: Keyframe[] = [
   templateUrl: './peek-panel.component.html',
   styleUrl: './peek-panel.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.fit]': 'fit()' },
 })
 export class PeekPanelComponent {
-  readonly heading = input.required<string>();
+  readonly heading = input<string | null>(null);
   readonly replayKey = input<string | null>(null);
+  readonly fit = input(false);
 
   private readonly motion = inject(MotionService);
   private readonly content = viewChild.required<ElementRef<HTMLElement>>('content');

@@ -1,0 +1,4 @@
+:host{display:block}
+.say{display:flex;gap:8px;align-items:baseline;font-size:14px;line-height:1.5;margin-bottom:14px}
+.say svg{width:12px;height:12px;flex:0 0 auto;color:var(--acc)}
+.say b{color:var(--acc);font-weight:600}

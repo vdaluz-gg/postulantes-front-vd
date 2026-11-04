@@ -1,4 +1,6 @@
 <div #content class="in">
-  <p class="ph"><svg appIcon="sparkFill" [filled]="true"></svg>{{ heading() }}</p>
+  @if (heading(); as title) {
+    <p class="ph"><svg appIcon="sparkFill" [filled]="true"></svg>{{ title }}</p>
+  }
   <ng-content />
 </div>
