@@ -1,0 +1,33 @@
+{
+  "ofertas": [
+    {
+      "codigo": "CSYP1233113446",
+      "titulo": "Operario/a Pan 29",
+      "descripcion": "Importante empresa dedicada a la digitalización de archivos, ubicada en la zona de Garín, se encuentra en la búsqueda de sumar operarios as de carga y descarga Tareas a realizar: Tareas de recepción, preparación de pedidos, movimiento de mercadería y tareas generales de depósito logística. Jornada de trabajo: Martes 24 06 a las 12hs hasta las 18hs. Lugar de trabajo: Gral. Pacheco. Se liquida finalizado el mes. ¡Aguardamos tu postulación en caso de interesarte",
+      "vacantes": 1,
+      "salario": 912359,
+      "domicilioExplotacion": {
+        "direccion": "9 de Julio 1450, El Talar Argentina",
+        "radioKm": 20
+      },
+      "cliente": "BANK SA",
+      "gestionadora": "GESTION INTEGRAL S.A.",
+      "area": "Industrial / Tecnica / Produccion",
+      "puestoId": 83,
+      "tipo": "Temporarios",
+      "alcance": "No Calificados",
+      "prioridad": "ALTA",
+      "tipoBusquedaId": 2,
+      "modalidadId": 1,
+      "jerarquiaId": 1,
+      "convenio": "MAESTRANZA Y LIMPIEZA (Bs.As/Cap Fed)-CCT 281/96",
+      "rama": "Empleados - Jornada completa",
+      "categoria": "Oficial",
+      "experienciaObligatoria": false,
+      "bajaReincorporable": false,
+      "requiereIndumentaria": false,
+      "examenPreocupacional": false,
+      "observacionesCliente": "Pedido del cliente: eventuales Pan 29."
+    }
+  ]
+}
