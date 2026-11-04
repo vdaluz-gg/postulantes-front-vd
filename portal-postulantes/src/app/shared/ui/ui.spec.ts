@@ -2,18 +2,14 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ThemeService } from '../../core/services/theme.service';
 import { ButtonComponent } from './atoms/button/button.component';
-import { IconComponent } from './atoms/icon/icon.component';
-import { ICONS } from './atoms/icon/icons';
 import { TextFieldComponent } from './molecules/text-field/text-field.component';
 import { ThemeSwitchComponent } from './molecules/theme-switch/theme-switch.component';
 
 @Component({
-  imports: [ButtonComponent, IconComponent, TextFieldComponent, ThemeSwitchComponent],
+  imports: [ButtonComponent, TextFieldComponent, ThemeSwitchComponent],
   template: `
     <button appButton variant="pri" size="sm" id="b1">Confirmar</button>
     <a appButton variant="ghost" id="a1" href="/">Volver</a>
-    <svg appIcon="check" id="i1"></svg>
-    <svg appIcon="arrow" [flip]="true" id="i2"></svg>
     <app-text-field label="Código" inputId="code" [digitsOnly]="true" [(value)]="code" />
     <app-theme-switch />
   `,
@@ -22,7 +18,7 @@ class HostComponent {
   readonly code = signal('');
 }
 
-describe('UI compartida', () => {
+describe('UI del portal', () => {
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({ imports: [HostComponent] });
@@ -43,14 +39,6 @@ describe('UI compartida', () => {
     const link = el.querySelector('#a1')!;
     expect(link.classList).toContain('ghost');
     expect(link.hasAttribute('type')).toBe(false);
-  });
-
-  it('IconComponent dibuja el trazo del ícono, oculto para lectores de pantalla', () => {
-    const { el } = render();
-    const icon = el.querySelector('#i1')!;
-    expect(icon.getAttribute('aria-hidden')).toBe('true');
-    expect(icon.querySelector('path')!.getAttribute('d')).toBe(ICONS.check);
-    expect(el.querySelector('#i2')!.classList).toContain('flip');
   });
 
   it('TextFieldComponent asocia la etiqueta y descarta lo que no es dígito', () => {

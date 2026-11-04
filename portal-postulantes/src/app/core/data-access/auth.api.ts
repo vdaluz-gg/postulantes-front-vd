@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 
 export interface CodeRequestResult {
-  /** Solo en el prototipo: el código se muestra en pantalla en lugar de enviarse por correo. */
   readonly devCode?: string;
 }
 

@@ -124,8 +124,8 @@ export const PERSONAS: readonly Persona[] = [
             { text: ' en Monte Grande. ¿Querés que te postule?' },
           ],
           actions: [
-            { label: 'Sí, postulame', primary: true, link: '/postulante/ofertas' },
-            { label: 'Ver más ofertas', link: '/postulante/ofertas' },
+            { label: 'Sí, postulame', primary: true },
+            { label: 'Ver más ofertas' },
           ],
         },
       },
@@ -145,11 +145,11 @@ export const PERSONAS: readonly Persona[] = [
       },
     ],
     actions: [
-      { label: 'Ver todas las ofertas →', primary: true, link: '/postulante' },
-      { label: 'Dejar mi CV con IA', link: '/postulante' },
+      { label: 'Ver todas las ofertas →', primary: true },
+      { label: 'Dejar mi CV con IA' },
     ],
     footnote: 'Matching con IA · 14 sucursales en todo el país',
-    portalLink: '/postulante',
+    portalLink: null,
     avatar: { model: 'assets/models/postulante.glb', config: { rotD: 0, rotL: 0 } },
   },
   {

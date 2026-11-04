@@ -7,9 +7,5 @@ export const routes: Routes = [
     title: 'Grupo Gestión · Bienvenido',
     loadComponent: () => import('./features/portada/portada.page').then((m) => m.PortadaPage),
   },
-  {
-    path: 'postulante',
-    loadChildren: () => import('./features/postulante/postulante.routes').then((m) => m.POSTULANTE_ROUTES),
-  },
   { path: '**', redirectTo: '' },
 ];

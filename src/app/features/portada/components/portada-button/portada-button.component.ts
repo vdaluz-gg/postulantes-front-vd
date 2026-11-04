@@ -7,7 +7,7 @@ export type PortadaButtonSize = 'md' | 'lg' | 'mini';
 /**
  * Botón de la portada (radio 12, tipografía de portada, color del perfil en --acc).
  * Se aplica sobre <button> o <a> para conservar la semántica nativa:
- * <a appPortadaButton variant="pri" routerLink="/postulante">Ver ofertas</a>
+ * <a appPortadaButton variant="pri" routerLink="/destino">Ver ofertas</a>
  */
 @Component({
   selector: 'button[appPortadaButton], a[appPortadaButton]',

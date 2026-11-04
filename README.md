@@ -1,59 +1,33 @@
-# PostulantesFrontVd
+# Grupo Gestión · Front
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.5.
+Angular 22 (componentes standalone, signals, sin zone.js). Port a Angular de la maqueta de
+Grupo Gestión (`maqueta/limpia/`), siguiendo el sistema de diseño de los portales
+(skill `grupo-gestion-ui`).
 
-## Development server
+## Qué hay en la app
 
-To start a local development server, run:
+- **Portada** (`src/app/features/portada/`): elección de perfil (postulante, cliente,
+  colaborador), avatar holográfico 3D del postulante (`src/app/shared/three/`), panel de cada
+  perfil con consulta a la IA, sugerencias y vistas previas (mapa de ofertas cercanas, aviso por
+  WhatsApp, seguimiento de la postulación).
+- **Servicios comunes** (`src/app/core/services/`): tema, sonidos de interfaz, almacenamiento y
+  movimiento reducido.
+- **Estilos globales** (`src/styles/`): tokens de la paleta, base y transiciones de vista. Cada
+  componente tiene sus propios `.ts`, `.html` y `.css`.
 
-```bash
-ng serve
-```
+## Portal de postulantes
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El portal del postulante (login, Inicio, hojas, datos y sus átomos, moléculas y organismos) está
+**apartado en [`portal-postulantes/`](portal-postulantes/README.md)** para llevarlo a otro
+repositorio. No está conectado a esta app: sus enlaces en la portada quedan deshabilitados
+("Próximamente"). Ahí se explica qué contiene, qué dependencias compartidas usa y cómo volver a
+integrarlo.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Comandos
 
 ```bash
-ng build
+npm start            # servidor de desarrollo en http://localhost:4200
+npx ng build         # build de producción en dist/
+npm test             # chequeo de tipos + tests de la app (Jest)
+npm run test:portal  # chequeo de tipos + tests del portal separado
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
