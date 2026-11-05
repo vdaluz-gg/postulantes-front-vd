@@ -8,7 +8,7 @@ import { FigureState, PersonaFigureComponent } from './components/persona-figure
 import { PersonaPanelComponent } from './components/persona-panel/persona-panel.component';
 import { PortalButtonComponent } from './components/portal-button/portal-button.component';
 import { SoundToggleComponent } from './components/sound-toggle/sound-toggle.component';
-import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { ThemeToggleComponent } from '../../shared/ui/molecules/theme-toggle/theme-toggle.component';
 import { PERSONAS, PersonaId, PersonaPrompt, personaForQuery } from './portada.data';
 
 type RouteReply = 'idle' | 'thinking' | 'going';

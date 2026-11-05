@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ThemeService } from '../../../../core/services/theme.service';
-import { IconComponent } from '../../../../shared/ui/atoms/icon/icon.component';
+import { IconComponent } from '../../atoms/icon/icon.component';
 
-/** Interruptor de tema de la portada: un solo botón con sol, luna e indicador deslizante. */
+/** Interruptor de tema (portada y backoffice): un solo botón con sol, luna e indicador deslizante. */
 @Component({
   selector: 'button[appThemeToggle]',
   imports: [IconComponent],
