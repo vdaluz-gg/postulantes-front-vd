@@ -54,11 +54,14 @@ describe('PortadaPage', () => {
     expect(el.querySelector('#q-route')!.getAttribute('placeholder')).toBe('Contale a la IA qué buscás y te llevo');
   });
 
-  it('ilumina al postulante por defecto y al perfil que se señala', async () => {
-    expect(figures().map((f) => f.className)).toEqual(['lit', 'idle', 'idle']);
-    figures()[1].querySelector('.hit')!.dispatchEvent(new Event('mouseenter'));
+  it('las figuras arrancan oscuras y se ilumina solo la que se señala', async () => {
+    expect(figures().map((f) => f.className)).toEqual(['idle', 'idle', 'idle']);
+    figures()[0].querySelector('.hit')!.dispatchEvent(new Event('mouseenter'));
     await render();
-    expect(figures().map((f) => f.className)).toEqual(['idle', 'lit', 'idle']);
+    expect(figures().map((f) => f.className)).toEqual(['lit', 'idle', 'idle']);
+    figures()[0].querySelector('.hit')!.dispatchEvent(new Event('mouseleave'));
+    await render();
+    expect(figures().map((f) => f.className)).toEqual(['idle', 'idle', 'idle']);
   });
 
   it('al elegir el postulante abre su panel con acceso al portal y se cierra con Escape', async () => {

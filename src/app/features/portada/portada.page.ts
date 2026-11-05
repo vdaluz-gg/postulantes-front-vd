@@ -67,7 +67,7 @@ export class PortadaPage {
   protected figureState(id: PersonaId): FigureState {
     const selected = this.selectedId();
     if (selected) return selected === id ? 'selected' : 'away';
-    return (this.hovered() ?? 'post') === id ? 'lit' : 'idle';
+    return this.hovered() === id ? 'lit' : 'idle';
   }
 
   protected onHover(id: PersonaId, over: boolean): void {
