@@ -1,0 +1,53 @@
+{
+  // Usar el TypeScript del proyecto (el mismo que compila) en lugar del que trae una extensión
+  // o VS Code. Evita levantar una versión nightly distinta y duplicar memoria.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // Sin descarga automática de tipos para archivos JS sueltos (el motor 3D, la maqueta).
+  "typescript.disableAutomaticTypeAcquisition": true,
+
+  // Carpetas que cambian solas (cache de Angular, build) o que no se editan: fuera del watcher.
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.angular/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true,
+    "**/maqueta/**": true,
+    "**/tools/**": true
+  },
+
+  // Búsqueda: sin cache, build, binarios ni archivos minificados de una sola línea.
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.angular": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/maqueta/limpia/assets": true,
+    "**/maqueta/limpia/vendor": true,
+    "public/avatar/**": true,
+    "public/assets/models/**": true,
+    "**/package-lock.json": true
+  },
+  "search.followSymlinks": false,
+
+  // Ocultar del explorador lo que se regenera solo.
+  "files.exclude": {
+    "**/.angular": true
+  },
+
+  // El motor 3D es un bundle minificado de ~575 KB en una línea: nunca formatearlo ni validarlo.
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "js/ts.implicitProjectConfig.checkJs": false,
+
+  // Detectar scripts de npm solo al abrir el panel, no al iniciar.
+  "npm.autoDetect": "off",
+
+  // GitLens: sin anotaciones por línea ni CodeLens, que recalculan blame en cada cambio.
+  "gitlens.codeLens.enabled": false,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.hovers.currentLine.over": "line"
+}
