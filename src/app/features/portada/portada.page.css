@@ -57,7 +57,7 @@
 @media (pointer:coarse){.topportal{min-height:44px}}
 
 /* Figuras de los perfiles */
-.cast{position:absolute;left:50%;top:var(--cast-top);z-index:3;display:flex;align-items:flex-end;gap:var(--cast-gap);transform:translateX(-50%);transition:left .8s cubic-bezier(.2,.8,.2,1),top .8s cubic-bezier(.2,.8,.2,1),gap .6s}
+.cast{position:absolute;left:50%;top:var(--cast-top);z-index:3;display:flex;align-items:flex-end;gap:var(--cast-gap);transform:translateX(-50%);transition:left .8s,top .8s,gap .6s;transition-timing-function:cubic-bezier(.2,.8,.2,1)}
 .open .cast{left:30%;top:calc(50vh - var(--sel-fh) / 2);gap:0}
 
 /* Panel de información del perfil elegido */
@@ -65,16 +65,16 @@
 .open .info{pointer-events:auto;overflow:auto}
 
 /* Caja de la portada: "Contale a la IA qué buscás y te llevo" */
-.route{position:absolute;left:50%;bottom:var(--route-bottom);z-index:6;width:min(560px,calc(100% - 32px));transform:translateX(-50%);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1);--acc:var(--c-post)}
+.route{position:absolute;left:50%;bottom:var(--route-bottom);z-index:6;width:min(560px,100% - 32px);transform:translateX(-50%);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1);--acc:var(--c-post)}
 .open .route{opacity:0;pointer-events:none;transform:translate(-50%,20px)}
 .reply{display:flex;align-items:center;justify-content:center;gap:6px;min-height:18px;margin-top:8px;text-align:center;font:500 12.5px var(--font-display);color:var(--mut)}
 .reply b{color:var(--ink)}
 .reply .spark{width:12px;height:12px;color:var(--acc)}
 .typing{display:inline-flex;gap:4px}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:dot 1s infinite}
-.typing i:nth-child(2){animation-delay:.15s}
-.typing i:nth-child(3){animation-delay:.3s}
-@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.typing i+i{animation-delay:.15s}
+.typing i+i+i{animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.25;transform:none}50%{opacity:1;transform:translateY(-3px)}}
 
 @media (max-width:760px){
   .intro{transition:opacity .28s,transform .4s cubic-bezier(.2,.8,.2,1)}
