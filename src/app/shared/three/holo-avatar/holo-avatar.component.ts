@@ -22,6 +22,8 @@ export type HoloAvatarState = 'idle' | 'lit' | 'selected' | 'away';
 export type HoloAvatarStatus = 'ready' | 'failed';
 
 const WAVE_SECONDS = 2.8;
+/** Escala de la figura iluminada (la aplica el contenedor con CSS). */
+const LIT_SCALE = 1.22;
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 /**
@@ -150,7 +152,8 @@ export class HoloAvatarComponent {
     this.engine.frame({
       W: area.width,
       H: area.height,
-      dpr: Math.min(2, devicePixelRatio || 1),
+      // Iluminada, la figura se agranda con CSS: se dibuja con más resolución para que no se vea borrosa.
+      dpr: Math.min(2, devicePixelRatio || 1) * (this.state() === 'lit' ? LIT_SCALE : 1),
       cx: centerX - area.left,
       feetY: box.bottom - area.top,
       height,
