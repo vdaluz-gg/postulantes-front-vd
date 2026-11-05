@@ -64,6 +64,24 @@ describe('PortadaPage', () => {
     expect(figures().map((f) => f.className)).toEqual(['idle', 'idle', 'idle']);
   });
 
+  it('arrastrar la figura la gira sin abrir el perfil; un click sin arrastre lo abre', async () => {
+    const hit = figures()[0].querySelector<HTMLButtonElement>('.hit')!;
+    const press = (type: string, x: number) => hit.dispatchEvent(new MouseEvent(type, { clientX: x, clientY: 200, bubbles: true }));
+    press('pointerdown', 100);
+    press('pointermove', 160);
+    await render();
+    expect(figures()[0].classList).toContain('grabbing');
+    press('pointerup', 160);
+    hit.click();
+    await render();
+    expect(figures()[0].classList).not.toContain('grabbing');
+    expect(figures()[0].classList).not.toContain('selected');
+
+    hit.click();
+    await render();
+    expect(figures()[0].classList).toContain('selected');
+  });
+
   it('al elegir el postulante abre su panel con acceso al portal y se cierra con Escape', async () => {
     figures()[0].querySelector<HTMLButtonElement>('.hit')!.click();
     await render();

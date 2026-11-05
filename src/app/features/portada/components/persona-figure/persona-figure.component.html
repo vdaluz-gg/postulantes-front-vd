@@ -27,9 +27,21 @@
       [model]="avatar.model"
       [config]="avatar.config"
       [state]="state()"
+      [spin]="spin"
       (status)="avatarStatus.set($event)"
     />
   }
+}
+
+@if (state() === 'selected' && avatarStatus() === 'ready') {
+  <div
+    class="spin"
+    aria-hidden="true"
+    (pointerdown)="onPress($event)"
+    (pointermove)="onMove($event)"
+    (pointerup)="onRelease($event)"
+    (pointercancel)="onRelease($event)"
+  ></div>
 }
 
 <div class="ask" aria-hidden="true">
@@ -45,5 +57,10 @@
   (mouseleave)="hovered.emit(false)"
   (focus)="hovered.emit(true)"
   (blur)="hovered.emit(false)"
-  (click)="selected.emit()"
+  (pointerdown)="onPress($event)"
+  (pointermove)="onMove($event)"
+  (pointerup)="onRelease($event)"
+  (pointercancel)="onRelease($event)"
+  (keydown)="onKey($event)"
+  (click)="onClick()"
 ></button>

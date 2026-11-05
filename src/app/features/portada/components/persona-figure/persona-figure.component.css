@@ -20,8 +20,10 @@
 .ask small::before{content:"";display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);vertical-align:1px}
 :host(.lit) .ask{opacity:1;transform:translate(-50%,0)}
 
-.hit{position:absolute;inset:-6% -20%;z-index:2;border:0;background:none;border-radius:40%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hit{position:absolute;inset:-6% -20%;z-index:2;border:0;background:none;border-radius:40%;cursor:pointer;touch-action:pan-y;-webkit-tap-highlight-color:transparent}
 .hit:focus-visible{outline:1px dashed var(--line);outline-offset:6px}
+.spin{position:absolute;inset:0 -10%;z-index:2;cursor:grab;touch-action:pan-y}
+:host(.grabbing) .hit,:host(.grabbing) .spin{cursor:grabbing}
 
 :host(.selected){width:clamp(200px,24vw,320px);height:min(82vh,640px)}
 :host(.selected) .hit{display:none}

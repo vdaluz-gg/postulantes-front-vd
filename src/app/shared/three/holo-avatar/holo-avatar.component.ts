@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ThemeService } from '../../../core/services/theme.service';
+import { AvatarSpin } from '../avatar-spin';
 import { HoloAvatarLoaderService } from '../holo-avatar-loader.service';
 import { HoloAvatarConfig, HoloAvatarEngine } from '../holo-avatar.types';
 
@@ -26,8 +27,8 @@ const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(mi
 /**
  * Avatar holográfico de cuerpo entero renderizado con three.js. Ocupa la caja de su contenedor
  * (los pies quedan en el borde inferior) y dibuja con margen para que el saludo no se recorte.
- * Sigue al puntero con la mirada y el torso, flota, saluda al iluminarse y se ilumina o
- * apaga según el estado.
+ * Sigue al puntero con la mirada y el torso, flota, saluda al iluminarse, se ilumina o
+ * apaga según el estado y gira con el arrastre (spin).
  */
 @Component({
   selector: 'app-holo-avatar',
@@ -40,6 +41,8 @@ export class HoloAvatarComponent {
   readonly model = input.required<string>();
   readonly config = input.required<HoloAvatarConfig>();
   readonly state = input<HoloAvatarState>('idle');
+  /** Giro con el puntero; sin él, el cuerpo solo se orienta apenas hacia el cursor. */
+  readonly spin = input<AvatarSpin | null>(null);
   readonly status = output<HoloAvatarStatus>();
 
   private readonly loader = inject(HoloAvatarLoaderService);
@@ -127,7 +130,10 @@ export class HoloAvatarComponent {
           clamp((this.pointer.x - centerX) / (innerWidth * 0.3), -1, 1),
         ]
       : [0, 0];
-    const yawTarget = follow ? clamp((this.pointer.x - centerX) / (innerWidth * 0.35), -1, 1) * 0.32 : 0;
+    const spin = this.spin();
+    const turn = spin ? spin.step(dt, still) : 0;
+    const leans = follow && (!spin || (spin.facingFront && !spin.dragging));
+    const yawTarget = leans ? clamp((this.pointer.x - centerX) / (innerWidth * 0.35), -1, 1) * 0.32 : 0;
     this.bodyYaw += (yawTarget - this.bodyYaw) * (1 - Math.exp(-dt * 4));
 
     if (this.wavePending && this.wave < 0 && !still) {
@@ -158,7 +164,7 @@ export class HoloAvatarComponent {
       open: this.state() === 'selected',
       settled: true,
       fast: true,
-      yaw: this.bodyYaw,
+      yaw: this.bodyYaw + turn,
       dt,
       t,
     });
