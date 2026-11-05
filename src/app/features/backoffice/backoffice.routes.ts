@@ -8,12 +8,12 @@ export const BACKOFFICE_ROUTES: Routes = [
     children: [
       {
         path: 'ingresar',
-        title: 'Backoffice · Ingresar',
+        title: 'Administración · Ingresar',
         loadComponent: () => import('./pages/login/login.page').then((m) => m.LoginPage),
       },
       {
         path: '',
-        title: 'Backoffice · Editor',
+        title: 'Administración · Editor',
         canActivate: [backofficeAuthGuard],
         loadComponent: () => import('./pages/editor/editor.page').then((m) => m.EditorPage),
       },

@@ -66,7 +66,7 @@ describe('Backoffice', () => {
     await harness.navigateByUrl('/backoffice');
     await settle();
     expect(TestBed.inject(Router).url).toBe('/backoffice/ingresar?volver=%2Fbackoffice');
-    expect(el.querySelector('h1')!.textContent).toBe('Ingresá al backoffice');
+    expect(el.querySelector('h1')!.textContent).toBe('Ingresá como administrador');
 
     buttonByText('Ingresar').click();
     await settle();
