@@ -72,7 +72,7 @@
             <div
               appPeekPanel
               [replayKey]="'flow-' + flowKey()"
-              [fit]="step.kind === 'results' || step.kind === 'form'"
+              [fit]="step.kind === 'results' || step.kind === 'form' || step.kind === 'cv'"
               [heading]="step.kind === 'cv' ? 'Dejá tu CV con IA' : step.kind === 'form' ? step.heading : null"
             >
               @switch (step.kind) {
