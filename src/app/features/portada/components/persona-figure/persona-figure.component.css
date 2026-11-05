@@ -25,7 +25,7 @@
 .spin{position:absolute;inset:0 -10%;z-index:2;cursor:grab;touch-action:pan-y}
 :host(.grabbing) .hit,:host(.grabbing) .spin{cursor:grabbing}
 
-:host(.selected){width:clamp(200px,24vw,320px);height:min(82vh,640px)}
+:host(.selected){width:calc(var(--sel-fh,640px) * .42);height:var(--sel-fh,640px)}
 :host(.selected) .hit{display:none}
 @media (max-width:760px){:host(.selected){width:calc(var(--sel-h,30vh) * .42);height:var(--sel-h,30vh)}}
 :host(.away){width:0;opacity:0;pointer-events:none}

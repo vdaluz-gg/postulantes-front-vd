@@ -35,6 +35,8 @@
     clamp(120px,calc(100vh - var(--cast-top) - var(--bottom-reserve)),310px),
     calc((100vw - 2 * var(--cast-gap) - 80px) / 1.26)
   );
+  /* Figura elegida (escritorio), como en la maqueta: 80% del alto, limitada por el ancho. */
+  --sel-fh:min(80vh,64.6vw);
   position:fixed;inset:0;overflow:hidden;background:var(--bg);color:var(--ink);-webkit-user-select:none;user-select:none;transition:background .5s,color .5s
 }
 
@@ -56,7 +58,7 @@
 
 /* Figuras de los perfiles */
 .cast{position:absolute;left:50%;top:var(--cast-top);z-index:3;display:flex;align-items:flex-end;gap:var(--cast-gap);transform:translateX(-50%);transition:left .8s cubic-bezier(.2,.8,.2,1),top .8s cubic-bezier(.2,.8,.2,1),gap .6s}
-.open .cast{left:26%;top:9vh;gap:0}
+.open .cast{left:30%;top:calc(50vh - var(--sel-fh) / 2);gap:0}
 
 /* Panel de información del perfil elegido */
 .info{position:absolute;z-index:6;left:52%;top:clamp(64px,9vh,110px);width:min(560px,44vw);max-height:calc(100vh - clamp(64px,9vh,110px) - 20px);overflow:hidden;pointer-events:none;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
