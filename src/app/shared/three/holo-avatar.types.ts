@@ -1,6 +1,6 @@
 /**
- * Tipos del motor de avatares holográficos de la maqueta (public/vendor/gg-holo.js).
- * El motor es un bundle de three.js que expone window.GGMake.
+ * Tipos del motor de avatares holográficos de la maqueta (public/avatar/avatar-holo.js).
+ * El motor es un bundle de three.js que expone window.AvatarHolo.
  */
 
 /** Rotación de matiz del holograma para tema oscuro y claro (en grados). */
@@ -60,6 +60,6 @@ export type HoloAvatarFactory = (config: HoloAvatarConfig) => HoloAvatarEngine;
 
 declare global {
   interface Window {
-    GGMake?: HoloAvatarFactory;
+    AvatarHolo?: HoloAvatarFactory;
   }
 }

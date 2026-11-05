@@ -8,7 +8,7 @@ describe('HoloAvatarLoaderService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
   afterEach(() => {
     delete (globalThis as { fetch?: unknown }).fetch;
-    delete window.GGMake;
+    delete window.AvatarHolo;
   });
 
   it('descarga el modelo una sola vez y lo entrega en base64', async () => {
@@ -37,9 +37,9 @@ describe('HoloAvatarLoaderService', () => {
     const loader = TestBed.inject(HoloAvatarLoaderService);
     const created = loader.create({ rotD: 0, rotL: 0 });
 
-    const script = document.head.querySelector<HTMLScriptElement>('script[src="vendor/gg-holo.js"]')!;
+    const script = document.head.querySelector<HTMLScriptElement>('script[src="avatar/avatar-holo.js"]')!;
     expect(script).not.toBeNull();
-    window.GGMake = factory;
+    window.AvatarHolo = factory;
     script.onload!(new Event('load'));
 
     await expect(created).resolves.toBe(engine);

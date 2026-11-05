@@ -2,7 +2,7 @@ import { DOCUMENT, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HoloAvatarConfig, HoloAvatarEngine, HoloAvatarFactory } from './holo-avatar.types';
 
-const ENGINE_URL = 'vendor/gg-holo.js';
+const ENGINE_URL = 'avatar/avatar-holo.js';
 
 /**
  * Carga diferida del motor 3D (575 KB) y de los modelos GLB. Cada recurso se descarga una
@@ -44,14 +44,14 @@ export class HoloAvatarLoaderService {
 
     this.engine = new Promise<HoloAvatarFactory>((resolve, reject) => {
       const win = this.doc.defaultView;
-      if (win?.GGMake) {
-        resolve(win.GGMake);
+      if (win?.AvatarHolo) {
+        resolve(win.AvatarHolo);
         return;
       }
       const script = this.doc.createElement('script');
       script.src = ENGINE_URL;
       script.async = true;
-      script.onload = () => (win?.GGMake ? resolve(win.GGMake) : reject(new Error('El motor 3D no expuso GGMake')));
+      script.onload = () => (win?.AvatarHolo ? resolve(win.AvatarHolo) : reject(new Error('El motor 3D no expuso AvatarHolo')));
       script.onerror = () => reject(new Error('No se pudo cargar el motor 3D'));
       this.doc.head.appendChild(script);
     });
