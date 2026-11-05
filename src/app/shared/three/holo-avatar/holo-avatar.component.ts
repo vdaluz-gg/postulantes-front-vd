@@ -24,13 +24,18 @@ export type HoloAvatarStatus = 'ready' | 'failed';
 const WAVE_SECONDS = 2.8;
 /** Escala de la figura iluminada (la aplica el contenedor con CSS). */
 const LIT_SCALE = 1.22;
+/** Lo que tarda el contenedor en cambiar de tamaño al elegir o cerrar (persona-figure: .7 s). */
+const SETTLE_MS = 750;
+/** Tope para darse vuelta al cerrar, por si el motor no llega a avisar que terminó. */
+const LEAVE_MAX_MS = 2500;
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 /**
  * Avatar holográfico de cuerpo entero renderizado con three.js. Ocupa la caja de su contenedor
  * (los pies quedan en el borde inferior) y dibuja con margen para que el saludo no se recorte.
  * Sigue al puntero con la mirada y el torso, flota, saluda al iluminarse, se ilumina o
- * apaga según el estado y gira con el arrastre (spin).
+ * apaga según el estado y gira con el arrastre (spin). Al elegirla se disuelve y se rearma en
+ * su nuevo lugar; al cerrar el perfil se da vuelta, se disuelve y se rearma en la fila.
  */
 @Component({
   selector: 'app-holo-avatar',
@@ -67,6 +72,10 @@ export class HoloAvatarComponent {
   private wavePending = false;
   private fadeIn = 0;
   private announced = false;
+  /** Momento del último cambio de estado: al elegirla, se rearma recién cuando terminó de moverse. */
+  private changedAt = 0;
+  /** Al cerrar el perfil se da vuelta y se disuelve; después se vuelve a armar en su lugar. */
+  private leavingSince: number | null = null;
 
   constructor() {
     let previous: HoloAvatarState = 'idle';
@@ -76,6 +85,12 @@ export class HoloAvatarComponent {
         if ((next === 'lit' && previous === 'idle') || (next === 'selected' && previous !== 'selected')) {
           this.wavePending = true;
         }
+        if (previous === 'selected' && next !== 'selected' && next !== 'away' && !this.reducedMotion()) {
+          this.leavingSince = performance.now();
+          this.wavePending = false;
+        }
+        if (next === 'selected') this.leavingSince = null;
+        this.changedAt = performance.now();
         previous = next;
       });
     });
@@ -122,10 +137,18 @@ export class HoloAvatarComponent {
     const centerX = box.left + box.width / 2;
     const centerY = box.top + box.height / 2;
 
-    const lockTarget = this.state() === 'idle' ? 1 : 0;
+    // Termina de darse vuelta cuando quedó de espaldas y disuelta (o al llegar al tope).
+    if (this.leavingSince !== null) {
+      const turned = this.engine.faceBack && (this.engine.fd ?? 1) < 0.02;
+      if (turned || now - this.leavingSince > LEAVE_MAX_MS) this.leavingSince = null;
+    }
+    const leaving = this.leavingSince !== null;
+
+    // Mientras se da vuelta sigue iluminada; se oscurece al rearmarse en su lugar.
+    const lockTarget = this.state() === 'idle' && !leaving ? 1 : 0;
     this.lock += (lockTarget - this.lock) * (1 - Math.exp(-dt * 8));
 
-    const follow = this.pointer.on && !still;
+    const follow = this.pointer.on && !still && !leaving;
     const look: [number, number] = follow
       ? [
           clamp((this.pointer.y - (centerY - height * 0.36)) / (innerHeight * 0.45), -1, 1),
@@ -163,9 +186,10 @@ export class HoloAvatarComponent {
       look,
       wave: this.wave,
       walk: 0,
-      away: false,
+      away: leaving,
       open: this.state() === 'selected',
-      settled: true,
+      // Al elegirla se disuelve y se vuelve a armar recién cuando llegó a su lugar.
+      settled: still || now - this.changedAt > SETTLE_MS,
       fast: true,
       yaw: this.bodyYaw + turn,
       dt,

@@ -54,6 +54,8 @@ export interface HoloAvatarEngine {
   readonly fd?: number;
   /** Progreso de construcción de la figura (0 a 1). */
   readonly build?: number;
+  /** La figura terminó de darse vuelta (quedó de espaldas) con `away`. */
+  readonly faceBack?: boolean;
 }
 
 export type HoloAvatarFactory = (config: HoloAvatarConfig) => HoloAvatarEngine;
