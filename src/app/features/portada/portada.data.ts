@@ -190,6 +190,8 @@ export const PERSONAS: readonly Persona[] = [
     actions: [{ label: 'Armar mi propuesta con IA →', primary: true }, { label: 'Hablar con un asesor' }],
     footnote: 'Más de 700 empresas · 28 años · +120.000 puestos gestionados',
     portalLink: null,
+    /** Mismo motor que el postulante, con el matiz corrido al fucsia del cliente. */
+    avatar: { model: 'assets/models/cliente.glb', config: { rotD: -76, rotL: -69 } },
   },
   {
     id: 'col',
@@ -213,6 +215,8 @@ export const PERSONAS: readonly Persona[] = [
     actions: [{ label: 'Gestión Virtual' }, { label: 'Descargar la app' }],
     footnote: 'Atención al colaborador · (+54 9) 11-3853-5542',
     portalLink: null,
+    /** Matiz corrido al menta del colaborador. */
+    avatar: { model: 'assets/models/colaborador.glb', config: { rotD: 96, rotL: 98 } },
   },
 ];
 
