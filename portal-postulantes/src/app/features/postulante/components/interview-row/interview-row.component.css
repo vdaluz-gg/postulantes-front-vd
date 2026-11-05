@@ -1,8 +1,0 @@
-:host{display:flex;align-items:center;gap:14px;padding:12px;border-radius:var(--r-s);border:1px solid var(--line);background:transparent;width:100%;text-align:left;color:var(--ink);cursor:pointer}
-:host(:hover){background:var(--surface2)}
-.dd{min-width:54px;text-align:center;line-height:1.1}
-.dd b{display:block;font-size:22px}
-.dd span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
-.tx{flex:1;min-width:0}
-.tx b{display:block;font-weight:600;line-height:1.3}
-.tx span{color:var(--mut);font-size:13.5px}

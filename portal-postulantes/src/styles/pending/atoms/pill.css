@@ -1,7 +1,0 @@
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line2);background:transparent;font-weight:600;color:var(--mut)}
-.pill[aria-pressed="true"]{background:var(--tint-vio);border-color:var(--vio);color:var(--ink)}
-.pill .tpv{display:inline-block;width:22px;height:16px;border-radius:5px;margin-right:8px;vertical-align:-3px;border:1px solid var(--line2)}
-.tpv-dark{background:linear-gradient(135deg,var(--gg-night-700) 55%,var(--gg-violet-500) 55%)}
-.tpv-light{background:linear-gradient(135deg,var(--gg-mist-50) 55%,var(--gg-violet-600) 55%)}
-.tpv-hc{background:linear-gradient(135deg,#000 55%,#fff 55%)}

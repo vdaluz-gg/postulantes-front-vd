@@ -48,5 +48,8 @@ Thumbs.db
 /maqueta/*.html
 
 # Instrucciones de trabajo: no se versionan, solo el código
-/tools/instrucciones*
+/tools/
 /instrucciones/
+
+# Portal de postulantes: queda solo en local
+/portal-postulantes/

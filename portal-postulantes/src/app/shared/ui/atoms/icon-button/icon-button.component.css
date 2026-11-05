@@ -1,5 +1,0 @@
-:host{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;position:relative;color:var(--ink);padding:0;cursor:pointer}
-:host(:hover){background:var(--surface2)}
-:host(:active){transform:scale(.96)}
-.dot{position:absolute;top:8px;right:9px;width:10px;height:10px;border-radius:50%;background:var(--fuc);border:2px solid var(--surface)}
-:host-context([data-contrast="high"]){border-width:2px}

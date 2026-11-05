@@ -1,7 +1,0 @@
-.mail-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;align-items:start}
-.mails{display:flex;flex-direction:column;padding:8px}
-.mail-body{padding:26px}
-.mail-body h2{font-size:20px;letter-spacing:-.01em;margin:8px 0 14px}
-.mail-body .meta{color:var(--mut);font-size:13.5px;margin-bottom:18px}
-.mail-body .msg{display:flex;flex-direction:column;gap:12px;line-height:1.6}
-@media (max-width:1020px){.mail-wrap{grid-template-columns:minmax(0,1fr)}}

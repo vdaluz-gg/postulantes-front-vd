@@ -1,4 +1,0 @@
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
-.card.post,button.card{transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s,background .28s}
-button.card:hover,.card.post:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--vio) 55%,var(--line));box-shadow:0 16px 36px -18px var(--vio)}
-.empty{padding:26px;text-align:center;color:var(--mut);border:1px dashed var(--line2);border-radius:var(--r-s)}

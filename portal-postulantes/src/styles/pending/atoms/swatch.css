@@ -1,5 +1,0 @@
-.swatches{display:flex;gap:10px;flex-wrap:wrap}
-.swt{width:38px;height:38px;border-radius:50%;border:2px solid transparent;background:var(--c);box-shadow:0 0 0 1px var(--line2);cursor:pointer;position:relative;transition:transform .25s var(--ease),box-shadow .25s}
-.swt:hover{transform:scale(1.12)}
-.swt[aria-pressed="true"]{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--c),0 0 18px var(--c);transform:scale(1.06)}
-.swt:focus-visible{outline:2px solid var(--focus);outline-offset:4px}

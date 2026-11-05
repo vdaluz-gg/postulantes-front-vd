@@ -10,8 +10,7 @@
     "serve:ssr:postulantes-front-vd": "node dist/postulantes-front-vd/server/server.mjs",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
-    "test:portal": "tsc -p portal-postulantes/tsconfig.json && jest -c portal-postulantes/jest.config.cjs"
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit"
   },
   "private": true,
   "packageManager": "npm@11.20.0",

@@ -1,3 +1,0 @@
-.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:20px}
-.tabs button{min-height:46px;padding:0 16px;background:transparent;border:0;border-bottom:3px solid transparent;color:var(--mut);font-weight:600;margin-bottom:-1px}
-.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--vio)}

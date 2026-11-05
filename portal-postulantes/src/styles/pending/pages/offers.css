@@ -1,6 +1,0 @@
-.tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
-.tools .inp{max-width:360px}
-.offer{display:flex;flex-direction:column;gap:14px;transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s,background .28s}
-.offer:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--vio) 55%,var(--line));box-shadow:0 16px 36px -18px var(--vio)}
-.offer h3{font-size:17px;letter-spacing:-.01em}
-.tags{display:flex;flex-wrap:wrap;gap:6px}

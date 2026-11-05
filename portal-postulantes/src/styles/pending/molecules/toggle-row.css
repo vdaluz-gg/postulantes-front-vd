@@ -1,4 +1,0 @@
-.tog{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
-.tog:first-of-type{border-top:0}
-.tog .tx b{display:block;font-weight:600}
-.tog .tx span{color:var(--mut);font-size:13.5px}
