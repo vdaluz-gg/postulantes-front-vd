@@ -1,0 +1,36 @@
+@if (item(); as doc) {
+  <app-inspector-head kind="Documento" [title]="doc.name" [dataKey]="doc.id">
+    <button boIconButton icon="arrowUp" label="Subir en la lista" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
+    <button boIconButton icon="arrowDown" label="Bajar en la lista" size="sm" [disabled]="position().last" (click)="move(1)"></button>
+    <button boIconButton icon="trash" label="Borrar el documento" size="sm" (click)="remove()"></button>
+  </app-inspector-head>
+
+  <app-prop-group legend="Contenido">
+    <bo-text-field label="Nombre del documento" [compact]="true" [value]="doc.name" (valueChange)="set({ name: $event }, 'name')" [error]="doc.name.trim() ? '' : 'Escribí un nombre.'" />
+    <bo-text-field label="Ayuda" help="Una línea: para qué se pide o dónde se consigue." [compact]="true" [value]="doc.help ?? ''" (valueChange)="set({ help: $event || undefined }, 'help')" />
+  </app-prop-group>
+
+  <app-prop-group legend="Reglas">
+    <bo-switch label="Obligatorio" help="Sin este documento no se puede avanzar." [checked]="doc.required" (checkedChange)="set({ required: $event })" />
+    <bo-switch label="Tiene vencimiento" help="Pide la fecha y avisa antes de que venza." [checked]="doc.expires" (checkedChange)="set({ expires: $event })" />
+    <bo-text-field
+      label="Tamaño máximo (MB)"
+      type="number"
+      [help]="'Entre 1 y ' + maxMb + ' MB.'"
+      [compact]="true"
+      [value]="'' + doc.maxSizeMb"
+      (valueChange)="setSize($event)"
+    />
+  </app-prop-group>
+
+  <app-prop-group legend="Formatos aceptados">
+    <div class="pills" role="group" aria-label="Formatos aceptados">
+      @for (format of formats; track format) {
+        <button type="button" class="pill" [attr.aria-pressed]="doc.formats.includes(format)" (click)="toggleFormat(format)">{{ format.toUpperCase() }}</button>
+      }
+    </div>
+    @if (!doc.formats.length) {
+      <p class="warn" role="alert">Elegí al menos un formato.</p>
+    }
+  </app-prop-group>
+}

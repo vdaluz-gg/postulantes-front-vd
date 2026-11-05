@@ -1,0 +1,14 @@
+@let a = alert();
+<svg [appIcon]="a.level === 'warning' ? 'alert' : a.level === 'positive' ? 'check' : 'bell'"></svg>
+<span class="tx">
+  <b>
+    {{ a.title }}
+    @if (!a.active) {
+      <span class="flag">Apagado</span>
+    }
+  </b>
+  <span>{{ a.message }}</span>
+</span>
+@if (a.ctaLabel) {
+  <span class="cta">{{ a.ctaLabel }}</span>
+}

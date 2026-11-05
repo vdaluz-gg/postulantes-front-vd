@@ -1,0 +1,42 @@
+@if (item(); as alert) {
+  <app-inspector-head kind="Aviso" [title]="alert.title" [dataKey]="alert.id">
+    <button boIconButton icon="arrowUp" label="Subir el aviso" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
+    <button boIconButton icon="arrowDown" label="Bajar el aviso" size="sm" [disabled]="position().last" (click)="move(1)"></button>
+    <button boIconButton icon="trash" label="Borrar el aviso" size="sm" (click)="remove()"></button>
+  </app-inspector-head>
+
+  <app-prop-group legend="Estado">
+    <bo-switch label="Aviso encendido" help="Apagado no se muestra, pero queda guardado." [checked]="alert.active" (checkedChange)="set({ active: $event })" />
+    <bo-segmented label="Tono del aviso" [options]="levels" [value]="alert.level" (valueChange)="setLevel($event)" />
+  </app-prop-group>
+
+  <app-prop-group legend="Texto">
+    <bo-text-field label="Título" [compact]="true" [value]="alert.title" (valueChange)="set({ title: $event }, 'title')" />
+    <bo-text-field
+      label="Mensaje"
+      help="Corto y en segunda persona: «Te falta subir el certificado»."
+      [compact]="true"
+      [multiline]="true"
+      [value]="alert.message"
+      (valueChange)="set({ message: $event }, 'message')"
+      [error]="alert.active && !alert.message.trim() ? 'Escribí el mensaje o apagá el aviso.' : ''"
+    />
+  </app-prop-group>
+
+  <app-prop-group legend="Botón (opcional)">
+    <bo-text-field label="Texto del botón" help="Con verbo: «Subir documento»." [compact]="true" [value]="alert.ctaLabel ?? ''" (valueChange)="set({ ctaLabel: $event || undefined }, 'cta')" />
+    <bo-text-field label="A dónde lleva" placeholder="#documentacion o https://…" [compact]="true" [value]="alert.ctaHref ?? ''" (valueChange)="set({ ctaHref: $event || undefined }, 'href')" />
+  </app-prop-group>
+
+  <app-prop-group legend="Vigencia">
+    <div class="row2">
+      <bo-text-field label="Desde" type="date" [compact]="true" [value]="alert.startsOn ?? ''" (valueChange)="setDate('startsOn', $event)" />
+      <bo-text-field label="Hasta" type="date" [compact]="true" [value]="alert.endsOn ?? ''" (valueChange)="setDate('endsOn', $event)" />
+    </div>
+    @if (alert.startsOn && alert.endsOn && alert.endsOn < alert.startsOn) {
+      <p class="warn" role="alert">«Hasta» no puede ser anterior a «Desde».</p>
+    } @else {
+      <p class="note">Sin fechas, el aviso se muestra mientras esté encendido.</p>
+    }
+  </app-prop-group>
+}

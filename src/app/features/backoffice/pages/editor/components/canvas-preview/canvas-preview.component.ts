@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, computed, inject, input } from '@angular/core';
 import { MotionService } from '../../../../../../core/services/motion.service';
-import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
-import { IconName } from '../../../../../../shared/ui/atoms/icon/icons';
 import { EditorStore } from '../../../../data/editor.store';
-import { AUDIENCE_LABEL, ChannelKind } from '../../../../data/site-config.model';
+import { AUDIENCE_LABEL } from '../../../../data/site-config.model';
 import { Selection, sameSelection } from '../../../../data/site-config.ops';
-import { FieldPreviewComponent } from '../field-preview/field-preview.component';
+import { AlertPreviewComponent } from '../alert-preview/alert-preview.component';
+import { ChannelPreviewComponent } from '../channel-preview/channel-preview.component';
+import { DocumentPreviewComponent } from '../document-preview/document-preview.component';
 import { PreviewDevice } from '../editor-toolbar/editor-toolbar.component';
-
-const CHANNEL_ICON: Partial<Record<ChannelKind, IconName>> = { whatsapp: 'wa', phone: 'phone', email: 'mail', web: 'globe' };
+import { FieldPreviewComponent } from '../field-preview/field-preview.component';
 
 /**
  * Lienzo: el portal del público elegido con su color de sección. Cada aviso, texto, sección,
@@ -17,7 +16,7 @@ const CHANNEL_ICON: Partial<Record<ChannelKind, IconName>> = { whatsapp: 'wa', p
  */
 @Component({
   selector: 'app-canvas-preview',
-  imports: [IconComponent, FieldPreviewComponent],
+  imports: [AlertPreviewComponent, ChannelPreviewComponent, DocumentPreviewComponent, FieldPreviewComponent],
   templateUrl: './canvas-preview.component.html',
   styleUrl: './canvas-preview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,10 +49,6 @@ export class CanvasPreviewComponent {
   protected pick(selection: Selection, event?: Event): void {
     event?.stopPropagation();
     if (!this.clean()) this.store.select(selection);
-  }
-
-  protected channelIcon(kind: ChannelKind): IconName {
-    return CHANNEL_ICON[kind] ?? 'link';
   }
 
   protected copyLines(value: string): string[] {

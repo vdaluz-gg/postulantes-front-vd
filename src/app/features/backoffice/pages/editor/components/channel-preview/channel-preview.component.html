@@ -1,0 +1,7 @@
+<svg [appIcon]="icon()"></svg>
+<span class="tx">
+  <b>{{ channel().label }}</b>
+  @if (channel().note) {
+    <small>{{ channel().note }}</small>
+  }
+</span>

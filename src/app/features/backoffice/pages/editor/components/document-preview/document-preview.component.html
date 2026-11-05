@@ -1,0 +1,7 @@
+<span class="fi"><svg appIcon="file"></svg></span>
+<span class="tx">
+  <b>{{ doc().name }}</b>
+  <span>{{ rules() }}</span>
+</span>
+<span class="chip" [class.req]="doc().required">{{ doc().required ? 'Obligatorio' : 'Opcional' }}</span>
+<span class="up"><svg appIcon="up"></svg>Subir</span>

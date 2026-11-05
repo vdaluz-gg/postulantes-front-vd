@@ -1,0 +1,25 @@
+@if (item(); as channel) {
+  <app-inspector-head kind="Canal o red social" [title]="channel.label" [dataKey]="channel.id">
+    <button boIconButton icon="arrowUp" label="Subir en la lista" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
+    <button boIconButton icon="arrowDown" label="Bajar en la lista" size="sm" [disabled]="position().last" (click)="move(1)"></button>
+    <button boIconButton icon="trash" label="Borrar el canal" size="sm" (click)="remove()"></button>
+  </app-inspector-head>
+
+  <app-prop-group legend="Canal">
+    <bo-select-field label="Tipo" [compact]="true" [options]="kinds" [value]="channel.kind" (valueChange)="setKind($event)" />
+    <bo-text-field label="Nombre que se ve" [compact]="true" [value]="channel.label" (valueChange)="set({ label: $event }, 'label')" />
+    <bo-text-field
+      [label]="valueField().label"
+      [type]="valueField().type"
+      [placeholder]="valueField().placeholder"
+      [compact]="true"
+      [value]="channel.value"
+      (valueChange)="set({ value: $event }, 'value')"
+    />
+    <bo-text-field label="Horario o aclaración" placeholder="Lun a vie · 9 a 17 h" [compact]="true" [value]="channel.note ?? ''" (valueChange)="set({ note: $event || undefined }, 'note')" />
+  </app-prop-group>
+
+  <app-prop-group legend="Visibilidad">
+    <bo-switch label="Mostrar en el portal" [checked]="channel.visible" (checkedChange)="set({ visible: $event })" />
+  </app-prop-group>
+}

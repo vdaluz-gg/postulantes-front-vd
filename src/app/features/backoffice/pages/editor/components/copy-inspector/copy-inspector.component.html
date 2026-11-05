@@ -1,0 +1,23 @@
+@if (item(); as copy) {
+  <app-inspector-head kind="Texto" [title]="copy.label" [dataKey]="copy.id">
+    <button boIconButton icon="arrowUp" label="Subir en la lista" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
+    <button boIconButton icon="arrowDown" label="Bajar en la lista" size="sm" [disabled]="position().last" (click)="move(1)"></button>
+    <button boIconButton icon="trash" label="Borrar el texto" size="sm" (click)="remove()"></button>
+  </app-inspector-head>
+
+  <app-prop-group legend="Texto">
+    <bo-text-field
+      label="Lo que se lee en el portal"
+      [compact]="true"
+      [multiline]="copy.multiline"
+      [rows]="4"
+      [value]="copy.value"
+      (valueChange)="set({ value: $event }, 'value')"
+    />
+    <bo-switch label="Texto largo" help="Varias líneas: por ejemplo, una sugerencia por línea." [checked]="copy.multiline" (checkedChange)="set({ multiline: $event })" />
+  </app-prop-group>
+
+  <app-prop-group legend="Para el equipo">
+    <bo-text-field label="Nombre interno" help="Cómo aparece en Capas. No se ve en el portal." [compact]="true" [value]="copy.label" (valueChange)="set({ label: $event }, 'label')" />
+  </app-prop-group>
+}

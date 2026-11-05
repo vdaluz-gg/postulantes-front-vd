@@ -1,0 +1,6 @@
+:host{display:flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid var(--line2);border-radius:999px}
+:host(.off){opacity:.45;border-style:dashed}
+svg{flex:none;width:18px;height:18px;color:var(--pv-t)}
+.tx{display:flex;flex-direction:column}
+b{font-size:14px}
+small{font-size:12px;color:var(--mut)}

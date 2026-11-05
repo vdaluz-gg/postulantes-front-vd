@@ -22,5 +22,25 @@
         <app-section-inspector [sectionId]="sel.sectionId" />
       }
     }
+    @case ('documents') {
+      @if (sel.kind === 'documents') {
+        <app-document-inspector [itemId]="sel.id" />
+      }
+    }
+    @case ('alerts') {
+      @if (sel.kind === 'alerts') {
+        <app-alert-inspector [itemId]="sel.id" />
+      }
+    }
+    @case ('channels') {
+      @if (sel.kind === 'channels') {
+        <app-channel-inspector [itemId]="sel.id" />
+      }
+    }
+    @case ('copy') {
+      @if (sel.kind === 'copy') {
+        <app-copy-inspector [itemId]="sel.id" />
+      }
+    }
   }
 }
