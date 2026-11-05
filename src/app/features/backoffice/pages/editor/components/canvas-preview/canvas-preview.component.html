@@ -1,0 +1,142 @@
+@if (store.current(); as a) {
+  <div class="frame" [class]="'aud-' + a.audience + ' ' + device()" [class.clean]="clean()">
+    <header class="portal-top">
+      <span class="pmark" aria-hidden="true"></span>
+      <span class="pt"><b>Grupo Gestión</b><small>{{ audienceLabel() }}</small></span>
+    </header>
+
+    <div class="page">
+      @for (alert of alerts(); track alert.id) {
+        <button
+          type="button"
+          class="alert pick"
+          [class]="'lvl-' + alert.level"
+          [class.off]="!alert.active"
+          [attr.data-sel]="sel({ kind: 'alerts', audience: a.audience, id: alert.id })"
+          [attr.aria-label]="'Aviso: ' + alert.title"
+          (click)="pick({ kind: 'alerts', audience: a.audience, id: alert.id })"
+        >
+          <svg [appIcon]="alert.level === 'warning' ? 'alert' : alert.level === 'positive' ? 'check' : 'bell'"></svg>
+          <span class="atx">
+            <b>{{ alert.title }}@if (!alert.active) {<span class="flag">Apagado</span>}</b>
+            <span>{{ alert.message }}</span>
+          </span>
+          @if (alert.ctaLabel) {
+            <span class="acta">{{ alert.ctaLabel }}</span>
+          }
+        </button>
+      }
+
+      @if (a.copy.length) {
+        <section class="card">
+          <p class="eyebrow">Textos del portal</p>
+          <div class="copy">
+            @for (c of a.copy; track c.id) {
+              <button
+                type="button"
+                class="copy-item pick"
+                [attr.data-sel]="sel({ kind: 'copy', audience: a.audience, id: c.id })"
+                [attr.aria-label]="'Texto: ' + c.label"
+                (click)="pick({ kind: 'copy', audience: a.audience, id: c.id })"
+              >
+                <small>{{ c.label }}</small>
+                @for (line of copyLines(c.value); track $index) {
+                  <span>{{ line }}</span>
+                } @empty {
+                  <span class="mut">Sin texto</span>
+                }
+              </button>
+            }
+          </div>
+        </section>
+      }
+
+      @for (section of a.sections; track section.id) {
+        <section
+          class="card form pick"
+          [attr.data-sel]="sel({ kind: 'section', audience: a.audience, sectionId: section.id })"
+          (click)="pick({ kind: 'section', audience: a.audience, sectionId: section.id })"
+        >
+          <p class="eyebrow">{{ section.screen }}</p>
+          <h2>{{ section.title || 'Sin título' }}</h2>
+          @if (section.description) {
+            <p class="desc">{{ section.description }}</p>
+          }
+          <div class="fields">
+            @for (field of section.fields; track field.id) {
+              @if (!clean() || field.visible) {
+                <button
+                  type="button"
+                  class="field pick"
+                  [class.wide]="field.type === 'textarea' || field.type === 'chips' || field.type === 'switch'"
+                  [attr.data-sel]="sel({ kind: 'field', audience: a.audience, sectionId: section.id, id: field.id })"
+                  [attr.aria-label]="'Campo: ' + (field.label || 'sin etiqueta')"
+                  (click)="pick({ kind: 'field', audience: a.audience, sectionId: section.id, id: field.id }, $event)"
+                >
+                  <app-field-preview [field]="field" />
+                </button>
+              }
+            } @empty {
+              <p class="empty">Esta sección no tiene campos. Sumalos desde Capas.</p>
+            }
+          </div>
+        </section>
+      }
+
+      @if (a.documents.length) {
+        <section class="card">
+          <p class="eyebrow">Documentos</p>
+          <h2>Documentación para subir</h2>
+          <ul class="docs">
+            @for (doc of a.documents; track doc.id) {
+              <li>
+                <button
+                  type="button"
+                  class="doc pick"
+                  [attr.data-sel]="sel({ kind: 'documents', audience: a.audience, id: doc.id })"
+                  [attr.aria-label]="'Documento: ' + doc.name"
+                  (click)="pick({ kind: 'documents', audience: a.audience, id: doc.id })"
+                >
+                  <span class="fi"><svg appIcon="file"></svg></span>
+                  <span class="dtx">
+                    <b>{{ doc.name }}</b>
+                    <span>{{ doc.formats.join(', ').toUpperCase() }} · hasta {{ doc.maxSizeMb }} MB@if (doc.expires) { · con vencimiento}</span>
+                  </span>
+                  <span class="chip" [class.req]="doc.required">{{ doc.required ? 'Obligatorio' : 'Opcional' }}</span>
+                  <span class="up"><svg appIcon="up"></svg>Subir</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (channels().length) {
+        <section class="card">
+          <p class="eyebrow">Contacto</p>
+          <h2>Hablá con nosotros</h2>
+          <div class="channels">
+            @for (channel of channels(); track channel.id) {
+              <button
+                type="button"
+                class="channel pick"
+                [class.off]="!channel.visible"
+                [attr.data-sel]="sel({ kind: 'channels', audience: a.audience, id: channel.id })"
+                [attr.aria-label]="'Canal: ' + channel.label"
+                (click)="pick({ kind: 'channels', audience: a.audience, id: channel.id })"
+              >
+                <svg [appIcon]="channelIcon(channel.kind)"></svg>
+                <span class="ctx">
+                  <b>{{ channel.label }}</b>
+                  @if (channel.note) {
+                    <small>{{ channel.note }}</small>
+                  }
+                </span>
+              </button>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+}

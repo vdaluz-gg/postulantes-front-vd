@@ -1,0 +1,11 @@
+<div class="live" role="status" aria-live="polite">
+  @if (shown(); as message) {
+    <div class="isl" [class]="phase() + ' ' + message.tone">
+      <svg [appIcon]="message.tone === 'ok' ? 'check' : 'alert'"></svg>
+      <span class="tx">{{ message.text }}</span>
+      @if (message.actionLabel) {
+        <button type="button" (click)="act(message)">{{ message.actionLabel }}</button>
+      }
+    </div>
+  }
+</div>

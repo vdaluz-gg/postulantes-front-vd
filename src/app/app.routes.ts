@@ -7,5 +7,9 @@ export const routes: Routes = [
     title: 'Grupo Gestión · Bienvenido',
     loadComponent: () => import('./features/portada/portada.page').then((m) => m.PortadaPage),
   },
+  {
+    path: 'backoffice',
+    loadChildren: () => import('./features/backoffice/backoffice.routes').then((m) => m.BACKOFFICE_ROUTES),
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,39 @@
+<label [for]="inputId" [class.sr]="hideLabel()">
+  {{ label() }}
+  @if (required()) {
+    <span class="req" aria-hidden="true">*</span>
+  }
+</label>
+@if (multiline()) {
+  <textarea
+    [id]="inputId"
+    [rows]="rows()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.aria-describedby]="describedBy()"
+    (input)="onInput($event)"
+    (blur)="blurred.emit()"
+  ></textarea>
+} @else {
+  <input
+    [id]="inputId"
+    [type]="type()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [attr.autocomplete]="autocomplete()"
+    [attr.inputmode]="inputmode()"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.aria-describedby]="describedBy()"
+    (input)="onInput($event)"
+    (blur)="blurred.emit()"
+  />
+}
+@if (help()) {
+  <p class="help" [id]="inputId + '-help'">{{ help() }}</p>
+}
+@if (error()) {
+  <p class="err" [id]="inputId + '-err'" role="alert">{{ error() }}</p>
+}

@@ -1,0 +1,6 @@
+:host{display:block;height:100%;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.guide{display:flex;flex-direction:column;gap:10px;padding:18px 16px}
+.guide h2{font-size:17px;letter-spacing:-.01em}
+.guide p{font-size:13.5px;color:var(--mut)}
+.guide ul{margin:6px 0 0;padding:14px;list-style:none;display:flex;flex-direction:column;gap:10px;border-radius:var(--r-s);background:var(--surface2);font-size:13px;color:var(--mut)}
+.guide b{color:var(--ink)}

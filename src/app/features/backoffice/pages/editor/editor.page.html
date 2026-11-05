@@ -1,0 +1,29 @@
+<a class="skip" href="#bo-canvas">Ir a la vista previa</a>
+<app-editor-toolbar [(device)]="device" [(previewOnly)]="previewOnly" />
+
+@if (store.status() === 'error' && !ready()) {
+  <div class="state" role="alert">
+    <h1>No pudimos cargar la configuración</h1>
+    <p>{{ store.error() }}</p>
+    <button boButton variant="pri" (click)="store.load()">Reintentar</button>
+  </div>
+} @else if (!ready()) {
+  <div class="state" aria-busy="true">
+    <p>Cargando la configuración…</p>
+  </div>
+} @else {
+  <div class="work" [class.preview-only]="previewOnly()" [attr.data-pane]="pane()">
+    <aside class="layers" aria-label="Capas">
+      <app-layers-panel />
+    </aside>
+    <main class="canvas" id="bo-canvas" tabindex="-1" aria-label="Vista previa del portal">
+      <app-canvas-preview [device]="device()" [clean]="previewOnly()" />
+    </main>
+    <aside class="inspector" aria-label="Propiedades" aria-live="off">
+      <app-inspector-panel />
+    </aside>
+  </div>
+  <nav class="panes" aria-label="Paneles del editor">
+    <bo-segmented label="Panel" [options]="panes" [value]="pane()" (valueChange)="setPane($event)" />
+  </nav>
+}

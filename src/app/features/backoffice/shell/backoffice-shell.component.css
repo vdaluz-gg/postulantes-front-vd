@@ -1,0 +1,11 @@
+/* Color de sección del backoffice: azul de los acentos del sistema (02-tokens), AA en ambos temas. */
+:host{
+  display:block;min-height:100vh;min-height:100dvh;font:15px/1.5 var(--font);color:var(--ink);
+  --vio:#2f6fe8;--vio-t:#a9c8ff;--on:#fff;--focus:#a9c8ff;--tint-vio:rgba(47,111,232,.18);
+  background:var(--bg) radial-gradient(900px 500px at 8% -5%,rgba(47,111,232,.18),transparent 70%) fixed;
+}
+:host-context([data-theme="light"]){
+  --vio:#2158c4;--vio-t:#1b4aa6;--focus:#1b4aa6;--tint-vio:rgba(33,88,196,.10);
+  background:var(--bg) radial-gradient(900px 500px at 8% -5%,rgba(33,88,196,.09),transparent 70%) fixed;
+}
+:host-context([data-contrast="high"]){--vio:#6df0c3;--vio-t:#8ff7d2;--on:#000;--focus:#fff;background:#000}

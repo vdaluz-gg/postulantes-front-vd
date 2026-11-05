@@ -109,18 +109,22 @@ export class EditorStore {
     this.selection.set(null);
   }
 
-  save(): void {
-    this.persist('saving', (config, author) => this.api.save(config, author));
+  save(onDone?: () => void): void {
+    this.persist('saving', (config, author) => this.api.save(config, author), onDone);
   }
 
   /** Publica solo si no hay problemas pendientes. */
-  publish(): boolean {
+  publish(onDone?: () => void): boolean {
     if (this.issues().length) return false;
-    this.persist('publishing', (config, author) => this.api.publish(config, author));
+    this.persist('publishing', (config, author) => this.api.publish(config, author), onDone);
     return true;
   }
 
-  private persist(status: 'saving' | 'publishing', call: (config: SiteConfig, author: string) => ReturnType<SiteConfigApi['save']>): void {
+  private persist(
+    status: 'saving' | 'publishing',
+    call: (config: SiteConfig, author: string) => ReturnType<SiteConfigApi['save']>,
+    onDone?: () => void,
+  ): void {
     const config = this.config();
     if (!config) return;
     this.status.set(status);
@@ -132,6 +136,7 @@ export class EditorStore {
           // Si se siguió editando mientras guardaba, se conservan esos cambios.
           if (this.config() === config) this.config.set(stored);
           this.saved.set(this.config() === stored ? stored : config);
+          onDone?.();
         },
         error: (e) => this.fail(e),
       });

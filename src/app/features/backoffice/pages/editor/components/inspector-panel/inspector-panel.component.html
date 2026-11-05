@@ -1,0 +1,26 @@
+@let sel = store.selection();
+@if (!sel) {
+  <div class="guide">
+    <p class="eyebrow">Propiedades</p>
+    <h2>Elegí algo para editarlo</h2>
+    <p>Tocá un campo, un aviso o un documento en la vista previa, o buscalo en <b>Capas</b>.</p>
+    <ul>
+      <li><b>+</b> en Capas suma campos, documentos, avisos, redes y textos.</li>
+      <li><b>Ctrl+Z</b> deshace y <b>Ctrl+Shift+Z</b> rehace.</li>
+      <li><b>Guardar borrador</b> no cambia nada en los portales; <b>Publicar</b> sí.</li>
+    </ul>
+  </div>
+} @else {
+  @switch (sel.kind) {
+    @case ('field') {
+      @if (sel.kind === 'field') {
+        <app-field-inspector [sectionId]="sel.sectionId" [fieldId]="sel.id" />
+      }
+    }
+    @case ('section') {
+      @if (sel.kind === 'section') {
+        <app-section-inspector [sectionId]="sel.sectionId" />
+      }
+    }
+  }
+}

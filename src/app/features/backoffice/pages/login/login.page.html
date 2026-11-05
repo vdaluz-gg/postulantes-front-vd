@@ -1,0 +1,49 @@
+<header class="top">
+  <button appThemeToggle></button>
+</header>
+
+<main class="wrap">
+  <section class="card enter" aria-labelledby="bo-login-h">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="bt"><b>Grupo Gestión</b><small>Backoffice</small></span>
+    </div>
+
+    <h1 id="bo-login-h">Ingresá al backoffice</h1>
+    <p class="lead">Usá tu correo y contraseña de la empresa.</p>
+
+    <form novalidate (submit)="submit($event)">
+      <bo-text-field
+        label="Correo"
+        type="email"
+        autocomplete="username"
+        placeholder="nombre@empresa.com"
+        [required]="true"
+        [(value)]="email"
+        [error]="emailError()"
+      />
+      <div class="pw">
+        <bo-text-field
+          label="Contraseña"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="current-password"
+          [required]="true"
+          [(value)]="password"
+          [error]="passwordError()"
+        />
+        <button boButton variant="ghost" size="sm" type="button" [attr.aria-pressed]="showPassword()" (click)="showPassword.set(!showPassword())">
+          {{ showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña' }}
+        </button>
+      </div>
+
+      @if (formError()) {
+        <p class="form-err" role="alert">{{ formError() }}</p>
+      }
+
+      <button boButton variant="pri" type="submit" [busy]="busy()" [disabled]="busy()">
+        {{ busy() ? 'Ingresando…' : 'Ingresar' }}
+      </button>
+      <button boButton type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
+    </form>
+  </section>
+</main>

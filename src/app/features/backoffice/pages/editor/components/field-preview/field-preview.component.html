@@ -1,0 +1,48 @@
+@let f = field();
+@if (f.type === 'switch') {
+  <span class="sw-row">
+    <span class="lb">{{ f.label }}@if (f.required) {<span class="req">*</span>}</span>
+    <span class="sw" aria-hidden="true"></span>
+  </span>
+} @else {
+  <span class="lb">
+    {{ f.label || 'Sin etiqueta' }}
+    @if (f.required) {
+      <span class="req">*</span>
+    }
+    @if (!f.visible) {
+      <span class="flag">Oculto</span>
+    }
+  </span>
+  @switch (f.type) {
+    @case ('chips') {
+      <span class="chips">
+        @for (option of f.options ?? []; track $index; let first = $first) {
+          <span class="chip" [class.on]="first">{{ option.label }}</span>
+        }
+      </span>
+    }
+    @case ('select') {
+      <span class="ctl" [class.ro]="f.readonly">
+        <span class="ph">{{ selectText() }}</span>
+        <svg appIcon="chev" class="down"></svg>
+      </span>
+    }
+    @case ('textarea') {
+      <span class="ctl area" [class.ro]="f.readonly"><span class="ph">{{ f.placeholder }}</span></span>
+    }
+    @default {
+      <span class="ctl" [class.ro]="f.readonly">
+        <span class="ph">{{ f.placeholder || (f.type === 'date' ? 'dd/mm/aaaa' : '') }}</span>
+        @if (f.readonly) {
+          <svg appIcon="lock" class="lock"></svg>
+        } @else if (f.type === 'date') {
+          <svg appIcon="cal" class="lock"></svg>
+        }
+      </span>
+    }
+  }
+}
+@if (f.help) {
+  <span class="help">{{ f.help }}</span>
+}

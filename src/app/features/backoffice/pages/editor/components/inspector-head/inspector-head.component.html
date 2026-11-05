@@ -1,0 +1,13 @@
+<p class="eyebrow">
+  {{ kind() }}
+  @if (context()) {
+    <span> · {{ context() }}</span>
+  }
+</p>
+<h2 id="bo-inspector-title">{{ title() || 'Sin nombre' }}</h2>
+@if (dataKey()) {
+  <p class="key" title="Clave del dato en la API. No cambia al renombrar.">{{ dataKey() }}</p>
+}
+<div class="actions">
+  <ng-content />
+</div>

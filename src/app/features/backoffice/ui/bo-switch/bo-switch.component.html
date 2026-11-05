@@ -1,0 +1,14 @@
+<span class="tx">
+  <b [id]="labelId">{{ label() }}</b>
+  @if (help()) {
+    <small [id]="labelId + '-help'">{{ help() }}</small>
+  }
+</span>
+<button
+  type="button"
+  role="switch"
+  [attr.aria-checked]="checked()"
+  [attr.aria-labelledby]="labelId"
+  [attr.aria-describedby]="help() ? labelId + '-help' : null"
+  (click)="toggle()"
+></button>

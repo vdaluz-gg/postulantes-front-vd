@@ -1,0 +1,14 @@
+:host{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid transparent;font:600 14.5px/1 var(--font);text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .2s var(--ease),border-color .2s var(--ease),filter .2s var(--ease),transform .15s var(--ease)}
+:host(.sm){min-height:36px;padding:0 14px;font-size:13.5px}
+:host(:active){transform:scale(.96)}
+:host(.pri){background:var(--vio);color:var(--on)}
+:host(.pri:hover){filter:brightness(1.1)}
+:host(.sec){background:transparent;color:var(--ink);border-color:var(--line2)}
+:host(.sec:hover){background:var(--surface2)}
+:host(.ghost){background:transparent;color:var(--vio-t);padding:0 10px}
+:host(.ghost:hover){background:var(--tint-vio)}
+:host(.danger){background:transparent;color:var(--fuc-t);border-color:color-mix(in srgb,var(--fuc) 45%,var(--line2))}
+:host(.danger:hover){background:var(--tint-fuc)}
+:host([disabled]),:host([aria-busy="true"]){opacity:.5;cursor:not-allowed;transform:none}
+:host ::ng-deep svg{width:18px;height:18px}
+@media (pointer:coarse){:host(.sm){min-height:44px}}

@@ -1,0 +1,48 @@
+<div class="head">
+  <h2>Capas</h2>
+  <button boIconButton icon="plus" label="Sumar una sección de formulario" size="sm" (click)="addSection()"></button>
+</div>
+
+<div class="search">
+  <label class="sr" for="bo-layer-q">Buscar en las capas</label>
+  <input id="bo-layer-q" type="search" placeholder="Buscar campo, documento, aviso…" [value]="query()" (input)="query.set($any($event.target).value)" />
+</div>
+
+<div class="groups">
+  @for (group of groups(); track group.id) {
+    <section class="group" [attr.aria-labelledby]="'g-' + group.id">
+      <div class="gh">
+        @if (group.section; as section) {
+          <button type="button" class="gt" [id]="'g-' + group.id" [attr.aria-current]="isSelected(section) || null" (click)="store.select(section)">
+            {{ group.title }}
+          </button>
+        } @else {
+          <h3 class="gt plain" [id]="'g-' + group.id">{{ group.title }}</h3>
+        }
+        <button boIconButton icon="plus" [label]="group.add.label" size="sm" (click)="group.add.run()"></button>
+      </div>
+      @if (group.layers.length) {
+        <ul>
+          @for (layer of group.layers; track $index) {
+            <li>
+              <button type="button" class="layer" [class.muted]="layer.muted" [attr.aria-current]="isSelected(layer.selection) || null" (click)="store.select(layer.selection)">
+                <svg [appIcon]="layer.icon"></svg>
+                <span class="tx">
+                  <b>{{ layer.label }}</b>
+                  @if (layer.detail) {
+                    <small>{{ layer.detail }}</small>
+                  }
+                </span>
+                @if (layer.flag) {
+                  <span class="flag">{{ layer.flag }}</span>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">{{ query() ? 'Sin resultados.' : 'Todavía no hay nada. Sumalo con el +.' }}</p>
+      }
+    </section>
+  }
+</div>

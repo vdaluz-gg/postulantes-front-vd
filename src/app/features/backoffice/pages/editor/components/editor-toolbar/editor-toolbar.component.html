@@ -1,0 +1,62 @@
+<div class="brand">
+  <span class="mark" aria-hidden="true"></span>
+  <span class="bt"><b>Grupo Gestión</b><small>Backoffice</small></span>
+</div>
+
+<bo-segmented class="aud" label="Público que estás editando" [options]="audiences" [value]="store.audience()" (valueChange)="setAudience($event)" />
+
+<div class="hist" role="group" aria-label="Historial">
+  <button boIconButton icon="undo" label="Deshacer (Ctrl+Z)" size="sm" [disabled]="!store.canUndo()" (click)="store.undo()"></button>
+  <button boIconButton icon="redo" label="Rehacer (Ctrl+Shift+Z)" size="sm" [disabled]="!store.canRedo()" (click)="store.redo()"></button>
+</div>
+
+<p class="state" [class.dirty]="store.dirty()" [class.err]="store.status() === 'error'" aria-live="polite">{{ saveState() }}</p>
+
+<div class="view" role="group" aria-label="Vista previa">
+  <button boIconButton icon="desktop" label="Ver en escritorio" size="sm" [pressed]="device() === 'desktop'" (click)="device.set('desktop')"></button>
+  <button boIconButton icon="mobile" label="Ver en celular" size="sm" [pressed]="device() === 'mobile'" (click)="device.set('mobile')"></button>
+  <button
+    boIconButton
+    [icon]="previewOnly() ? 'layers' : 'eye'"
+    [label]="previewOnly() ? 'Volver a editar' : 'Ver sin paneles'"
+    size="sm"
+    [pressed]="previewOnly()"
+    (click)="previewOnly.set(!previewOnly())"
+  ></button>
+</div>
+
+<div class="actions">
+  @if (store.issues().length) {
+    <div class="pop-wrap">
+      <button type="button" class="issues" [attr.aria-expanded]="issuesOpen()" aria-controls="bo-issues" (click)="issuesOpen.set(!issuesOpen())">
+        {{ store.issues().length }} para revisar
+      </button>
+      @if (issuesOpen()) {
+        <div class="pop" id="bo-issues">
+          <p class="pop-t">Antes de publicar</p>
+          <ul>
+            @for (issue of store.issues(); track $index) {
+              <li><button type="button" (click)="goTo(issue)">{{ issue.message }}</button></li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+  <button boButton size="sm" [disabled]="busy() || !store.dirty()" (click)="save()">Guardar borrador</button>
+  <button boButton variant="pri" size="sm" [busy]="store.status() === 'publishing'" [disabled]="busy()" (click)="publish()">
+    {{ store.status() === 'publishing' ? 'Publicando…' : 'Publicar' }}
+  </button>
+  <button appThemeToggle></button>
+  <div class="pop-wrap">
+    <button type="button" class="avatar" [attr.aria-expanded]="menuOpen()" aria-controls="bo-user-menu" [attr.aria-label]="'Tu cuenta: ' + (admin()?.fullName ?? '')" (click)="menuOpen.set(!menuOpen())">
+      {{ initials() }}
+    </button>
+    @if (menuOpen()) {
+      <div class="pop right" id="bo-user-menu">
+        <p class="who"><b>{{ admin()?.fullName }}</b><span>{{ admin()?.email }}</span></p>
+        <button boButton size="sm" (click)="logout()">Salir</button>
+      </div>
+    }
+  </div>
+</div>

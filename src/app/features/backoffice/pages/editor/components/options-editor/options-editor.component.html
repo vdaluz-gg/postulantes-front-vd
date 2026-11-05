@@ -1,0 +1,14 @@
+<ol>
+  @for (option of options(); track $index; let i = $index, first = $first, last = $last) {
+    <li>
+      <label class="sr" [for]="'opt-' + i">Opción {{ i + 1 }} de {{ fieldLabel() }}</label>
+      <input [id]="'opt-' + i" [value]="option.label" (input)="rename(i, $any($event.target).value)" />
+      <button boIconButton icon="arrowUp" [label]="'Subir «' + option.label + '»'" size="sm" [disabled]="first" (click)="move(i, -1)"></button>
+      <button boIconButton icon="arrowDown" [label]="'Bajar «' + option.label + '»'" size="sm" [disabled]="last" (click)="move(i, 1)"></button>
+      <button boIconButton icon="x" [label]="'Quitar «' + option.label + '»'" size="sm" (click)="remove(i)"></button>
+    </li>
+  } @empty {
+    <li class="empty">Sin opciones. Sumá al menos una.</li>
+  }
+</ol>
+<button boButton variant="ghost" size="sm" (click)="add()">+ Sumar opción</button>

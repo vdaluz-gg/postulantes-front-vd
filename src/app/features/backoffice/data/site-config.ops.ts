@@ -21,6 +21,14 @@ export type Selection =
   | { readonly kind: 'field'; readonly audience: Audience; readonly sectionId: string; readonly id: string }
   | { readonly kind: ItemList; readonly audience: Audience; readonly id: string };
 
+/** Si dos selecciones apuntan al mismo elemento. */
+export function sameSelection(a: Selection | null, b: Selection | null): boolean {
+  if (!a || !b || a.kind !== b.kind || a.audience !== b.audience) return false;
+  if (a.kind === 'section' && b.kind === 'section') return a.sectionId === b.sectionId;
+  if (a.kind === 'field' && b.kind === 'field') return a.sectionId === b.sectionId && a.id === b.id;
+  return 'id' in a && 'id' in b && a.id === b.id;
+}
+
 const withAudience = (config: SiteConfig, audience: Audience, fn: (a: AudienceConfig) => AudienceConfig): SiteConfig => ({
   ...config,
   audiences: { ...config.audiences, [audience]: fn(config.audiences[audience]) },

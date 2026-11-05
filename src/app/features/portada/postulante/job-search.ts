@@ -1,3 +1,4 @@
+import { normalize } from '../../../shared/utils/text';
 import { JobPosting } from './job-offer';
 
 export interface JobSearchResult {
@@ -10,12 +11,6 @@ export interface JobSearchResult {
 
 /** Palabras que no ayudan a encontrar el tipo de trabajo. */
 const STOPWORDS = new Set(['algo', 'trabajo', 'empleo', 'cerca', 'busco', 'quiero', 'para', 'con', 'una', 'uno', 'del', 'las', 'los', 'que', 'por', 'mas']);
-
-export const normalize = (text: string): string =>
-  text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
 
 const terms = (query: string): string[] =>
   normalize(query)
