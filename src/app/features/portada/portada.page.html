@@ -10,8 +10,12 @@
   <div class="topr">
     <button appSoundToggle></button>
     <button appThemeToggle></button>
-    @if (selected()?.portalLink; as link) {
-      <a appPortalButton class="topportal" [routerLink]="link">Ingresar a tu portal</a>
+    @if (selected(); as persona) {
+      @if (persona.portalLink; as link) {
+        <a appPortalButton class="topportal" [routerLink]="link">Ingresar a tu portal</a>
+      } @else {
+        <button appPortalButton type="button" class="topportal" title="Próximamente">Ingresar a tu portal</button>
+      }
     }
   </div>
 

@@ -89,19 +89,22 @@ describe('PortadaPage', () => {
     expect(figures()[0].classList).toContain('selected');
     expect(figures()[1].classList).toContain('away');
     expect(el.querySelector('app-persona-panel h2')!.textContent).toContain('El trabajo de la Argentina');
-    expect(el.querySelector('.topportal')).toBeNull();
+    expect(el.querySelector('.topportal')!.textContent).toContain('Ingresar a tu portal');
     expect(el.querySelector('button[appBackTab]')).not.toBeNull();
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await render();
     expect(el.querySelector('.stage')!.classList).not.toContain('open');
     expect(el.querySelector('app-persona-panel')).toBeNull();
+    expect(el.querySelector('.topportal')).toBeNull();
   });
 
-  it('el perfil sin portal todavía no ofrece "Ingresar a tu portal" y sus acciones quedan deshabilitadas', async () => {
+  it('el perfil sin portal muestra el botón "Ingresar a tu portal" sin destino y sus acciones quedan deshabilitadas', async () => {
     figures()[1].querySelector<HTMLButtonElement>('.hit')!.click();
     await render();
-    expect(el.querySelector('.topportal')).toBeNull();
+    const portal = el.querySelector<HTMLElement>('.topportal')!;
+    expect(portal.tagName).toBe('BUTTON');
+    expect(portal.getAttribute('title')).toBe('Próximamente');
     const actions = Array.from(el.querySelectorAll<HTMLButtonElement>('app-persona-panel .cta button'));
     expect(actions.length).toBeGreaterThan(0);
     expect(actions.every((b) => b.disabled)).toBe(true);
