@@ -53,3 +53,6 @@ Thumbs.db
 
 # Portal de postulantes: queda solo en local
 /portal-postulantes/
+
+# Documentación de trabajo local: no se versiona
+/docs-local/
