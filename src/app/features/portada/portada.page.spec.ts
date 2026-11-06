@@ -99,15 +99,21 @@ describe('PortadaPage', () => {
     expect(el.querySelector('.topportal')).toBeNull();
   });
 
-  it('el perfil sin portal muestra el botón "Ingresar a tu portal" sin destino y sus acciones quedan deshabilitadas', async () => {
+  it('sin portal privado, "Ingresar a tu portal" lleva a la consulta del panel; todas las acciones funcionan', async () => {
     figures()[1].querySelector<HTMLButtonElement>('.hit')!.click();
     await render();
-    const portal = el.querySelector<HTMLElement>('.topportal')!;
+    const portal = el.querySelector<HTMLButtonElement>('.topportal')!;
     expect(portal.tagName).toBe('BUTTON');
-    expect(portal.getAttribute('title')).toBe('Próximamente');
+    expect(portal.hasAttribute('title')).toBe(false);
+    portal.click();
+    await render();
+    expect(document.activeElement).toBe(el.querySelector('#q-cli'));
+    expect(el.querySelector('p[appToast]')!.textContent!.trim()).toBe('Contale a la IA qué necesitás: lo resolvés desde acá.');
+    expect(el.querySelector('p[appToast]')!.classList).toContain('on');
     const actions = Array.from(el.querySelectorAll<HTMLButtonElement>('app-persona-panel .cta button'));
-    expect(actions.length).toBeGreaterThan(0);
-    expect(actions.every((b) => b.disabled)).toBe(true);
+    expect(actions.map((b) => b.textContent!.trim())).toEqual(['Armar mi propuesta con IA →', 'Hablar con un asesor']);
+    expect(actions.every((b) => !b.disabled)).toBe(true);
+    expect(el.innerHTML).not.toContain('Próximamente');
   });
 
   it('la caja de IA lleva al perfil que corresponde con la consulta precargada', async () => {
@@ -206,13 +212,6 @@ describe('PortadaPage', () => {
       expect(actions[0].classList).toContain('pri');
       expect(actions.every((a) => !a.disabled)).toBe(true);
     });
-  });
-
-  it('los perfiles sin vista previa no muestran el recuadro', async () => {
-    figures()[1].querySelector<HTMLButtonElement>('.hit')!.click();
-    await render();
-    expect(el.querySelector('[appPeekPanel]')).toBeNull();
-    expect(el.querySelectorAll('button[appTopicChip]')).toHaveLength(5);
   });
 
   it('los controles de la barra superior tienen nombre y estado accesibles', async () => {

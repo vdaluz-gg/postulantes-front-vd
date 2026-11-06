@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IconComponent } from '../../shared/ui/atoms/icon/icon.component';
@@ -8,6 +9,8 @@ import { FigureState, PersonaFigureComponent } from './components/persona-figure
 import { PersonaPanelComponent } from './components/persona-panel/persona-panel.component';
 import { PortalButtonComponent } from './components/portal-button/portal-button.component';
 import { SoundToggleComponent } from './components/sound-toggle/sound-toggle.component';
+import { ToastComponent } from './components/toast/toast.component';
+import { ToastService } from './components/toast/toast.service';
 import { ThemeToggleComponent } from '../../shared/ui/molecules/theme-toggle/theme-toggle.component';
 import { PERSONAS, PersonaId, PersonaPrompt, personaForQuery } from './portada.data';
 import { PortadaConfig, withCopy } from './published-config';
@@ -35,6 +38,7 @@ const GO_MS = 650;
     PortalButtonComponent,
     SoundToggleComponent,
     ThemeToggleComponent,
+    ToastComponent,
   ],
   templateUrl: './portada.page.html',
   styleUrl: './portada.page.css',
@@ -43,6 +47,8 @@ const GO_MS = 650;
 })
 export class PortadaPage {
   private readonly config = inject(PortadaConfig);
+  private readonly toast = inject(ToastService);
+  private readonly doc = inject(DOCUMENT);
   /** Perfiles con los textos que publicó el backoffice (por ahora, los del postulante). */
   protected readonly personas = computed(() =>
     PERSONAS.map((p) => (p.id === 'post' ? withCopy(p, this.config.postulantes().copy) : p)),
@@ -91,6 +97,15 @@ export class PortadaPage {
   protected close(): void {
     this.selectedId.set(null);
     this.pendingQuery.set('');
+  }
+
+  /**
+   * "Ingresar a tu portal" de un perfil cuyo portal privado todavía no está en esta app: lleva a la
+   * consulta del panel, que resuelve lo mismo con la IA.
+   */
+  protected askHere(id: PersonaId): void {
+    this.doc.getElementById(`q-${id}`)?.focus();
+    this.toast.show('Contale a la IA qué necesitás: lo resolvés desde acá.');
   }
 
   /** Interpreta la consulta, anuncia a qué perfil lleva y lo abre con la consulta precargada. */

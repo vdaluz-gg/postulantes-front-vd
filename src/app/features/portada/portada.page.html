@@ -14,7 +14,9 @@
       @if (persona.portalLink; as link) {
         <a appPortalButton class="topportal" [routerLink]="link">Ingresar a tu portal</a>
       } @else {
-        <button appPortalButton type="button" class="topportal" title="Próximamente">Ingresar a tu portal</button>
+        <button appPortalButton type="button" class="topportal" [attr.aria-controls]="'q-' + persona.id" (click)="askHere(persona.id)">
+          Ingresar a tu portal
+        </button>
       }
     }
   </div>
@@ -55,4 +57,5 @@
       }
     </p>
   </div>
+  <p appToast></p>
 </main>

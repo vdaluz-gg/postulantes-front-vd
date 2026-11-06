@@ -1,0 +1,4 @@
+<label class="drop" (dragover)="$event.preventDefault()" (drop)="drop($event)">
+  <input class="sr" type="file" [accept]="accept" capture="environment" (change)="pick($event)" />
+  <span><b>Sacale una foto a tu certificado</b><br />o tocá acá para subirlo</span>
+</label>

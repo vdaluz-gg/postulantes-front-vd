@@ -1,0 +1,9 @@
+<dl class="form" [attr.aria-busy]="!done()">
+  @for (row of rows(); track row.label; let i = $index) {
+    <div [class.w]="row.wide">
+      <dt>{{ row.label }}</dt>
+      <dd [class.t]="typing() === i" [class.f]="done() || typing() > i">{{ values()[i] ?? '' }}</dd>
+    </div>
+  }
+</dl>
+<button appPortadaButton size="mini" variant="pri" [disabled]="!done()" (click)="send.emit()">Enviar a un asesor</button>

@@ -15,7 +15,7 @@
       [inputId]="'q-' + persona().id"
       [prompt]="persona().prompt"
       [(value)]="query"
-      (submitted)="search($event)"
+      (submitted)="ask($event)"
     />
 
     <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
@@ -30,7 +30,7 @@
       @for (chip of persona().chips; track chip.id) {
         <button
           appTopicChip
-          [pressed]="flow().kind === 'topic' && activeChipId() === chip.id"
+          [pressed]="(flow().kind === 'topic' || flow().kind === 'recommend') && activeChipId() === chip.id"
           [attr.aria-controls]="chip.peek ? peekId() : null"
           (pointerenter)="preview(chip)"
           (focus)="preview(chip)"
@@ -46,8 +46,20 @@
         @switch (flow().kind) {
           @case ('topic') {
             @if (activeChip()?.peek; as peek) {
-              <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()">
+              <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()" [grow]="peek.kind === 'service'">
                 @switch (peek.kind) {
+                  @case ('service') {
+                    <div appServicePreview [service]="serviceById(peek.serviceId)"></div>
+                  }
+                  @case ('payday') {
+                    <div appPaydayCard></div>
+                  }
+                  @case ('receipts') {
+                    <div appReceiptList [signed]="signed()" (sign)="signReceipt($event)"></div>
+                  }
+                  @case ('certificate') {
+                    <div appCertificateDrop (selected)="uploadCertificate($event)"></div>
+                  }
                   @case ('map') {
                     <div appNearbyMap [home]="peek.home" [pins]="peek.pins"></div>
                   }
@@ -72,10 +84,45 @@
             <div
               appPeekPanel
               [replayKey]="'flow-' + flowKey()"
-              [fit]="step.kind === 'results' || step.kind === 'form' || step.kind === 'cv'"
-              [heading]="step.kind === 'cv' ? 'Dejá tu CV con IA' : step.kind === 'form' ? step.heading : null"
+              [fit]="fits(step)"
+              [heading]="headingOf(step)"
             >
               @switch (step.kind) {
+                @case ('say') {
+                  <p class="say">
+                    @for (part of step.parts; track $index) {
+                      @if (part.strong) {
+                        <b>{{ part.text }}</b>
+                      } @else {
+                        {{ part.text }}
+                      }
+                    }
+                  </p>
+                }
+                @case ('recommend') {
+                  <p class="say">Para «{{ step.query }}» te recomiendo <b>{{ step.service.title }}</b>.</p>
+                  <div appServicePreview [service]="step.service"></div>
+                  <button appPortadaButton class="next" size="mini" variant="pri" (click)="run({ kind: 'proposal' })">Armar la propuesta</button>
+                }
+                @case ('proposal') {
+                  <div appProposalForm [rows]="step.rows" (send)="sendProposal()"></div>
+                }
+                @case ('proposal-sent') {
+                  <p class="say"><b>Propuesta enviada.</b> Un asesor la revisa y te contacta hoy. Mientras tanto, te dejamos el detalle del servicio.</p>
+                  <div appServicePreview [service]="step.service"></div>
+                }
+                @case ('shortcuts') {
+                  <p class="say">En <b>Gestión Virtual</b> tenés todo lo tuyo. ¿Qué querés ver?</p>
+                  <div class="links">
+                    @for (chip of persona().chips; track chip.id) {
+                      <button appPortadaButton size="mini" (click)="pin(chip)">{{ chip.label }}</button>
+                    }
+                  </div>
+                }
+                @case ('app') {
+                  <p class="say">Con la app de <b>Gestión Virtual</b> ves tu cobro, firmás tus recibos y cargás certificados desde el celular.</p>
+                  <button appPortadaButton size="mini" variant="pri" (click)="sendAppLink()">Mandarme el enlace por WhatsApp</button>
+                }
                 @case ('thinking') {
                   <p appAiThinking>{{ step.text }}</p>
                 }
@@ -136,9 +183,7 @@
         } @else if (action.link) {
           <a appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">{{ action.label }}</a>
         } @else {
-          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled title="Próximamente">
-            {{ action.label }}
-          </button>
+          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled>{{ action.label }}</button>
         }
       }
     </div>

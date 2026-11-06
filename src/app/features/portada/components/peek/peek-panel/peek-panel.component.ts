@@ -18,12 +18,14 @@ const ENTER: Keyframe[] = [
   templateUrl: './peek-panel.component.html',
   styleUrl: './peek-panel.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.fit]': 'fit()' },
+  host: { '[class.fit]': 'fit()', '[class.grow]': 'grow()' },
 })
 export class PeekPanelComponent {
   readonly heading = input<string | null>(null);
   readonly replayKey = input<string | null>(null);
   readonly fit = input(false);
+  /** Mantiene la altura y la línea de escaneo, pero crece si el contenido no entra. */
+  readonly grow = input(false);
 
   private readonly motion = inject(MotionService);
   private readonly content = viewChild.required<ElementRef<HTMLElement>>('content');

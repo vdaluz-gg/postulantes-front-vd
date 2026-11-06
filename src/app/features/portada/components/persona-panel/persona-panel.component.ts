@@ -36,17 +36,34 @@ import { PortadaButtonComponent } from '../portada-button/portada-button.compone
 import { SuggestionPillComponent } from '../suggestion-pill/suggestion-pill.component';
 import { TopicChipComponent } from '../topic-chip/topic-chip.component';
 import { PanelCommand, Persona, PersonaChip } from '../../portada.data';
+import { COLLABORATOR_PHONE, Receipt, readCertificate, topicForQuestion } from '../../colaboradores/collaborator-data';
+import { ADVISOR_PHONE, CompanyService, draftProposal, recommendService, serviceById } from '../../empresas/company-services';
+import { ProposalFormComponent } from '../../empresas/proposal-form/proposal-form.component';
+import { CertificateDropComponent } from '../peek/certificate-drop/certificate-drop.component';
+import { PaydayCardComponent } from '../peek/payday-card/payday-card.component';
+import { ReceiptListComponent } from '../peek/receipt-list/receipt-list.component';
+import { ServicePreviewComponent } from '../peek/service-preview/service-preview.component';
+import { ToastService } from '../toast/toast.service';
 import { PortadaConfig } from '../../published-config';
 
-/** Pausa con la que la IA "piensa" antes de mostrar las ofertas (maqueta). */
+/** Pausas con las que la IA "piensa" (maqueta): ofertas y empresas, legajo, certificado. */
 const SEARCH_THINK_MS = 900;
+const LEDGER_THINK_MS = 800;
+const CERTIFICATE_READ_MS = 1300;
 
 /**
  * Panel de información de un perfil: titular, consulta a la IA, sugerencias, temas con vista
- * previa y acciones. Las sugerencias, el buscador y "Ver todas las ofertas" muestran ofertas
- * relacionadas; cada oferta abre su detalle; "Dejar mi CV con IA" y "Postularme" llevan al
- * formulario de contacto que completa la IA.
+ * previa y acciones.
+ * - Postulantes: las sugerencias, el buscador y "Ver todas las ofertas" muestran ofertas
+ *   relacionadas; cada oferta abre su detalle; "Dejar mi CV con IA" y "Postularme" llevan al
+ *   formulario de contacto que completa la IA.
+ * - Empresas: la IA recomienda un servicio para la consulta y arma la propuesta para un asesor.
+ * - Colaboradores: la IA responde desde el legajo (cobro, recibos, certificados, tarjeta).
+ * Empresas y colaboradores usan datos de ejemplo.
  */
+/** Foto o PDF, como acepta la carga del certificado. */
+const isCertificateFile = (file: File): boolean => file.type.startsWith('image/') || file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+
 @Component({
   selector: 'app-persona-panel',
   imports: [
@@ -56,12 +73,17 @@ const SEARCH_THINK_MS = 900;
     ApplicationSentComponent,
     ApplicationTrackerComponent,
     CandidateFormComponent,
+    CertificateDropComponent,
     CvUploadComponent,
     NearbyMapComponent,
     OfferDetailComponent,
     OfferResultsComponent,
+    PaydayCardComponent,
     PeekPanelComponent,
     PortadaButtonComponent,
+    ProposalFormComponent,
+    ReceiptListComponent,
+    ServicePreviewComponent,
     SuggestionPillComponent,
     TopicChipComponent,
     WhatsappPreviewComponent,
@@ -83,6 +105,7 @@ export class PersonaPanelComponent {
   private readonly offers = inject(OffersApi);
   private readonly motion = inject(MotionService);
   private readonly config = inject(PortadaConfig);
+  private readonly toast = inject(ToastService);
 
   /** Campos del formulario de postulación que publicó el backoffice. */
   protected readonly applicationFields = this.config.applicationFields;
@@ -111,6 +134,34 @@ export class PersonaPanelComponent {
     () => this.flow().kind !== 'topic' || this.persona().chips.some((c) => c.peek),
   );
   protected readonly peekId = computed(() => `peek-${this.persona().id}`);
+  protected readonly serviceById = serviceById;
+
+  /** Pasos con más contenido: el recuadro crece y se desplaza por dentro. */
+  protected fits(step: PanelFlow): boolean {
+    return ['results', 'form', 'cv', 'recommend', 'proposal', 'proposal-sent'].includes(step.kind);
+  }
+
+  protected headingOf(step: PanelFlow): string | null {
+    switch (step.kind) {
+      case 'cv':
+        return 'Dejá tu CV con IA';
+      case 'form':
+        return step.heading;
+      case 'proposal':
+        return 'Propuesta armada por la IA';
+      case 'shortcuts':
+        return 'Gestión Virtual';
+      case 'app':
+        return 'La app de Gestión Virtual';
+      default:
+        return null;
+    }
+  }
+  /** Recibos firmados en esta visita. */
+  protected readonly signed = signal<ReadonlySet<string>>(new Set());
+  /** Empresas: última consulta y servicio recomendado, para armar la propuesta. */
+  private readonly companyQuery = linkedSignal<Persona, string>({ source: this.persona, computation: () => '' });
+  private readonly recommended = linkedSignal<Persona, CompanyService | null>({ source: this.persona, computation: () => null });
   protected readonly shown = signal(false);
 
   private readonly peekSlot = viewChild<ElementRef<HTMLElement>>('peekSlot');
@@ -122,10 +173,25 @@ export class PersonaPanelComponent {
     inject(DestroyRef).onDestroy(() => this.cancelPending());
   }
 
-  /** Sugerencias dinámicas: cada una muestra las ofertas relacionadas. */
+  /** Sugerencias dinámicas: cada una responde como si se la hubiera escrito. */
   protected useSuggestion(text: string): void {
     this.query.set(text);
-    this.search(text);
+    this.ask(text);
+  }
+
+  /** Consulta a la IA: ofertas para postulantes, servicio para empresas, legajo para colaboradores. */
+  protected ask(query: string): void {
+    switch (this.persona().id) {
+      case 'post':
+        this.search(query);
+        break;
+      case 'cli':
+        this.recommend(query.trim() || '40 operarios para un pico de producción');
+        break;
+      case 'col':
+        this.answer(query.trim() || '¿Cuándo cobro?');
+        break;
+    }
   }
 
   /** Busca en las ofertas publicadas; espera a la vez la carga y la pausa en la que "piensa" la IA. */
@@ -142,9 +208,95 @@ export class PersonaPanelComponent {
     if (this.flow().kind === 'topic' && !this.pinned() && chip.peek) this.activeChipId.set(chip.id);
   }
 
+  /** Empresas: recomienda el servicio que mejor responde a la necesidad y lo deja marcado. */
+  private recommend(query: string): void {
+    this.go({ kind: 'thinking', text: 'La IA analiza tu necesidad…' });
+    this.pending = timer(this.think(SEARCH_THINK_MS)).subscribe(() => {
+      const service = recommendService(query);
+      this.companyQuery.set(query);
+      this.recommended.set(service);
+      this.activeChipId.set(service.id);
+      this.go({ kind: 'recommend', query, service });
+    });
+  }
+
+  /** Empresas: la IA arma la propuesta con la consulta y el servicio recomendado (o el tema abierto). */
+  private propose(): void {
+    const service = this.recommended() ?? serviceById(this.activeChipId() ?? '');
+    const query = this.companyQuery() || this.query().trim() || 'cubrir personal';
+    this.go({ kind: 'proposal', rows: draftProposal(query, service) });
+  }
+
+  protected sendProposal(): void {
+    const service = this.recommended() ?? serviceById(this.activeChipId() ?? '');
+    this.go({ kind: 'proposal-sent', service });
+    this.toast.show('Propuesta enviada ✓');
+  }
+
+  /** Colaboradores: busca la respuesta en el legajo y abre el tema; si no la encuentra, deriva a atención. */
+  private answer(question: string): void {
+    this.go({ kind: 'thinking', text: 'La IA busca en tu legajo…' });
+    this.pending = timer(this.think(LEDGER_THINK_MS)).subscribe(() => {
+      const topic = topicForQuestion(question);
+      if (topic) {
+        this.activeChipId.set(topic);
+        this.pinned.set(true);
+        this.go({ kind: 'topic' });
+        return;
+      }
+      this.go({
+        kind: 'say',
+        parts: [
+          { text: 'No encontré eso en tu legajo, pero te ayudo igual: llamá a ' },
+          { text: 'Atención al colaborador', strong: true },
+          { text: ` al ${COLLABORATOR_PHONE} o escribinos por WhatsApp.` },
+        ],
+      });
+    });
+  }
+
+  protected signReceipt(receipt: Receipt): void {
+    this.signed.update((set) => new Set([...set, receipt.id]));
+    this.toast.show('Recibo firmado ✓');
+  }
+
+  /** Colaboradores: la IA "lee" el certificado (es un ejemplo: el archivo no sale del navegador). */
+  protected uploadCertificate(file: File): void {
+    if (!isCertificateFile(file)) {
+      this.go({
+        kind: 'say',
+        parts: [{ text: 'Ese archivo no es una foto ni un PDF. ' }, { text: 'Sacale una foto al certificado', strong: true }, { text: ' o subilo en PDF.' }],
+      });
+      return;
+    }
+    this.go({ kind: 'thinking', text: 'La IA está leyendo tu certificado…' });
+    this.pending = timer(this.think(CERTIFICATE_READ_MS)).subscribe(() => {
+      this.go({
+        kind: 'say',
+        parts: [
+          { text: 'Certificado cargado.', strong: true },
+          { text: ' La IA lo reconoció como ' },
+          { text: readCertificate(new Date()), strong: true },
+          { text: ' y ya lo vio tu supervisor.' },
+        ],
+      });
+      this.toast.show('Certificado cargado ✓');
+    });
+  }
+
+  protected sendAppLink(): void {
+    this.toast.show('Te mandamos el enlace por WhatsApp ✓');
+  }
+
+  private think(ms: number): number {
+    return this.motion.reduced() ? 0 : ms;
+  }
+
   protected pin(chip: PersonaChip): void {
     this.activeChipId.set(chip.id);
     this.pinned.set(true);
+    // Empresas: elegir un servicio a mano reemplaza la recomendación anterior para la propuesta.
+    this.recommended.set(null);
     if (this.flow().kind !== 'topic') this.go({ kind: 'topic' });
   }
 
@@ -155,6 +307,18 @@ export class PersonaPanelComponent {
         break;
       case 'cv':
         this.go({ kind: 'cv', position: SPONTANEOUS_POSITION });
+        break;
+      case 'proposal':
+        this.propose();
+        break;
+      case 'advisor':
+        this.toast.show(`Un asesor te contacta hoy · ${ADVISOR_PHONE}`);
+        break;
+      case 'virtual':
+        this.go({ kind: 'shortcuts' });
+        break;
+      case 'app':
+        this.go({ kind: 'app' });
         break;
       case 'apply':
         this.go({ kind: 'cv', position: command.position });

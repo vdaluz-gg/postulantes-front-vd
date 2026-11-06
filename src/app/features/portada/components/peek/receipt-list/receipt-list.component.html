@@ -1,0 +1,15 @@
+@for (receipt of receipts; track receipt.id) {
+  <div class="card" [style.--k]="$index">
+    <div>
+      <b>{{ receipt.title }}</b>
+      <small>{{ receipt.signedOn ? 'Firmado el ' + receipt.signedOn : signed().has(receipt.id) ? 'Firmado hoy' : 'Listo para firmar' }}</small>
+    </div>
+    @if (receipt.signedOn || signed().has(receipt.id)) {
+      <span class="ok"><svg appIcon="check"></svg>firmado</span>
+    } @else {
+      <button appPortadaButton size="mini" variant="pri" [attr.aria-label]="'Firmar el ' + receipt.title.toLowerCase()" (click)="sign.emit(receipt)">
+        Firmar
+      </button>
+    }
+  </div>
+}

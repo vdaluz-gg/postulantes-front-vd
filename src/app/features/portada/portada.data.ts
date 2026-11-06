@@ -1,4 +1,6 @@
 import { HoloAvatarConfig } from '../../shared/three/holo-avatar.types';
+import { cardSteps } from './colaboradores/collaborator-data';
+import { COMPANY_SERVICES } from './empresas/company-services';
 
 export type PersonaId = 'post' | 'cli' | 'col';
 
@@ -15,7 +17,15 @@ export type PanelCommand =
   /** Dejar el CV para que la IA complete los datos. */
   | { readonly kind: 'cv' }
   /** Postularse a un puesto (abre la carga del CV con el puesto precargado). */
-  | { readonly kind: 'apply'; readonly position: string };
+  | { readonly kind: 'apply'; readonly position: string }
+  /** Empresas: la IA arma la propuesta con la última consulta. */
+  | { readonly kind: 'proposal' }
+  /** Empresas: pedir que llame un asesor. */
+  | { readonly kind: 'advisor' }
+  /** Colaboradores: accesos de Gestión Virtual. */
+  | { readonly kind: 'virtual' }
+  /** Colaboradores: descargar la app. */
+  | { readonly kind: 'app' };
 
 export interface PersonaAction {
   readonly label: string;
@@ -66,7 +76,15 @@ export type PeekContent =
       readonly message: readonly TextPart[];
       readonly actions: readonly PersonaAction[];
     }
-  | { readonly kind: 'tracker'; readonly title: string; readonly steps: readonly TrackerStep[] };
+  | { readonly kind: 'tracker'; readonly title: string; readonly steps: readonly TrackerStep[] }
+  /** Empresas: un servicio con su animación, descripción y qué incluye. */
+  | { readonly kind: 'service'; readonly title: string; readonly serviceId: string }
+  /** Colaboradores: próximo cobro y aguinaldo. */
+  | { readonly kind: 'payday'; readonly title: string }
+  /** Colaboradores: recibos para firmar. */
+  | { readonly kind: 'receipts'; readonly title: string }
+  /** Colaboradores: subir un certificado para que lo lea la IA. */
+  | { readonly kind: 'certificate'; readonly title: string };
 
 export interface PersonaChip {
   readonly id: string;
@@ -180,14 +198,15 @@ export const PERSONAS: readonly Persona[] = [
       'Un jefe de ventas para CABA',
       'Tercerizar la liquidación de sueldos',
     ],
-    chips: [
-      { id: 'eventual', label: 'Personal eventual' },
-      { id: 'seleccion', label: 'Búsqueda y selección' },
-      { id: 'rpo', label: 'RPO' },
-      { id: 'capital', label: 'Outsourcing de capital humano' },
-      { id: 'procesos', label: 'Outsourcing de procesos' },
+    chips: COMPANY_SERVICES.map((service, i): PersonaChip => ({
+      id: service.id,
+      label: service.title,
+      peek: { kind: 'service', title: `${String(i + 1).padStart(2, '0')} · ${service.title}`, serviceId: service.id },
+    })),
+    actions: [
+      { label: 'Armar mi propuesta con IA →', primary: true, command: { kind: 'proposal' } },
+      { label: 'Hablar con un asesor', command: { kind: 'advisor' } },
     ],
-    actions: [{ label: 'Armar mi propuesta con IA →', primary: true }, { label: 'Hablar con un asesor' }],
     footnote: 'Más de 700 empresas · 28 años · +120.000 puestos gestionados',
     portalLink: null,
     /** Mismo motor que el postulante, con el matiz corrido al fucsia del cliente. */
@@ -207,12 +226,15 @@ export const PERSONAS: readonly Persona[] = [
     },
     suggestions: ['¿Cuándo cobro?', 'Mi recibo de octubre', 'Cargar un certificado', '¿Y mi tarjeta?'],
     chips: [
-      { id: 'cobro', label: 'Fecha de cobro' },
-      { id: 'recibo', label: 'Recibos de sueldo' },
-      { id: 'cert', label: 'Ausencias y certificados' },
-      { id: 'tarjeta', label: 'Tarjeta de débito' },
+      { id: 'cobro', label: 'Fecha de cobro', peek: { kind: 'payday', title: 'Tu próximo cobro' } },
+      { id: 'recibo', label: 'Recibos de sueldo', peek: { kind: 'receipts', title: 'Tus recibos' } },
+      { id: 'cert', label: 'Ausencias y certificados', peek: { kind: 'certificate', title: 'La IA lo lee y lo carga por vos' } },
+      { id: 'tarjeta', label: 'Tarjeta de débito', peek: { kind: 'tracker', title: 'Tarjeta de débito', steps: cardSteps(new Date()) } },
     ],
-    actions: [{ label: 'Gestión Virtual' }, { label: 'Descargar la app' }],
+    actions: [
+      { label: 'Gestión Virtual', primary: true, command: { kind: 'virtual' } },
+      { label: 'Descargar la app', command: { kind: 'app' } },
+    ],
     footnote: 'Atención al colaborador · (+54 9) 11-3853-5542',
     portalLink: null,
     /** Matiz corrido al menta del colaborador. */
