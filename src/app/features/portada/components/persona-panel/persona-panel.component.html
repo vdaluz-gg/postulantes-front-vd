@@ -96,6 +96,7 @@
                 }
                 @case ('form') {
                   <app-candidate-form
+                    [fields]="applicationFields()"
                     [prefill]="step.prefill"
                     [typed]="step.typed"
                     [failure]="step.error ?? ''"
@@ -115,6 +116,17 @@
           }
         }
       </div>
+    }
+
+    @if (persona().id === 'post') {
+      @for (alert of alerts(); track alert.id) {
+        <p class="alert r" style="--i:6" [class]="'lv-' + alert.level" role="note">
+          <b>{{ alert.title }}</b> {{ alert.message }}
+          @if (alert.ctaLabel && alert.ctaHref) {
+            <a [href]="alert.ctaHref">{{ alert.ctaLabel }}</a>
+          }
+        </p>
+      }
     }
 
     <div class="cta r" style="--i:6">

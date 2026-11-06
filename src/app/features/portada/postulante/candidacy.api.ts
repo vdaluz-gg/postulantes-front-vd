@@ -3,6 +3,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay, switchMap, timer } from 'rxjs';
 import { API_BASE_URL } from '../../../core/api/api';
 
+/** Respuesta a un campo que el backoffice agregó al formulario. */
+export type AnswerValue = string | number | boolean | readonly string[];
+
 /** Datos de contacto del postulante (los completa la IA desde el CV y la persona los revisa). */
 export interface CandidateContact {
   readonly fullName: string;
@@ -11,6 +14,8 @@ export interface CandidateContact {
   readonly whatsapp: string;
   readonly zone: string;
   readonly position: string;
+  /** Respuestas a los campos agregados desde el backoffice, por clave del campo. */
+  readonly answers?: Readonly<Record<string, AnswerValue>>;
 }
 
 /** Resultado de leer el CV: el archivo queda guardado con `cvId` y vuelven los datos que se pudieron extraer. */
@@ -127,6 +132,7 @@ export class HttpCandidacyApi extends CandidacyApi {
           ...(zoneId && { zoneId }),
           ...(target.offerRef && { offerCode: target.offerRef }),
           ...(target.cvId && { cvId: target.cvId }),
+          ...(contact.answers && { answers: contact.answers }),
         }),
       ),
       map(({ trackingCode, position }) => ({ trackingCode, position })),

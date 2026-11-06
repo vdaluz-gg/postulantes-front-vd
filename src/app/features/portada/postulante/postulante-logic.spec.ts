@@ -219,6 +219,15 @@ describe('HttpCandidacyApi', () => {
     await result;
   });
 
+  it('manda las respuestas a los campos agregados desde el backoffice', async () => {
+    const result = firstValueFrom(api.apply({ ...contact, answers: { middleName: 'Sofía', days: ['lun'] } }, {}));
+    http.expectOne('http://api/zones').flush([]);
+    const req = http.expectOne('http://api/applications');
+    expect(req.request.body.answers).toEqual({ middleName: 'Sofía', days: ['lun'] });
+    req.flush({ trackingCode: 'GG-XYZ789', position: contact.position });
+    await result;
+  });
+
   it('compara zonas sin tildes ni mayúsculas', () => {
     expect(zoneKey('  San  Martín ')).toBe(zoneKey('san martin'));
   });

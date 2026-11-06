@@ -25,7 +25,7 @@
   }
 
   <div class="cast">
-    @for (persona of personas; track persona.id) {
+    @for (persona of personas(); track persona.id) {
       <app-persona-figure
         [persona]="persona"
         [state]="figureState(persona.id)"

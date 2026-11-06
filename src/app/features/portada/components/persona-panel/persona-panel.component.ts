@@ -36,6 +36,7 @@ import { PortadaButtonComponent } from '../portada-button/portada-button.compone
 import { SuggestionPillComponent } from '../suggestion-pill/suggestion-pill.component';
 import { TopicChipComponent } from '../topic-chip/topic-chip.component';
 import { PanelCommand, Persona, PersonaChip } from '../../portada.data';
+import { PortadaConfig } from '../../published-config';
 
 /** Pausa con la que la IA "piensa" antes de mostrar las ofertas (maqueta). */
 const SEARCH_THINK_MS = 900;
@@ -81,6 +82,12 @@ export class PersonaPanelComponent {
   private readonly candidacy = inject(CandidacyApi);
   private readonly offers = inject(OffersApi);
   private readonly motion = inject(MotionService);
+  private readonly config = inject(PortadaConfig);
+
+  /** Campos del formulario de postulación que publicó el backoffice. */
+  protected readonly applicationFields = this.config.applicationFields;
+  /** Avisos publicados para postulantes (activos y en fecha). */
+  protected readonly alerts = this.config.alerts;
 
   protected readonly query = linkedSignal(() => this.initialQuery());
   /** Tema elegido: al abrir, el primero que tenga vista previa. */

@@ -1,24 +1,105 @@
-<form [formGroup]="form" novalidate (ngSubmit)="submit()" [attr.aria-busy]="busy()">
+<form [formGroup]="form()" novalidate (ngSubmit)="submit()" [attr.aria-busy]="busy()">
   <div class="grid">
-    @for (field of fields; track field.name) {
-      <div class="field" [class.w]="field.wide">
-        <label [for]="'cf-' + field.name">{{ field.label }}</label>
-        <input
-          [id]="'cf-' + field.name"
-          [type]="field.type ?? 'text'"
-          [formControlName]="field.name"
-          [attr.autocomplete]="field.autocomplete"
-          [attr.inputmode]="field.inputmode ?? null"
-          [placeholder]="field.placeholder"
-          [readonly]="busy()"
-          [class.t]="typing() === field.name"
-          [class.f]="filled().has(field.name)"
-          [attr.aria-invalid]="errorFor(field.name) ? 'true' : null"
-          [attr.aria-describedby]="errorFor(field.name) ? 'cf-' + field.name + '-err' : null"
-          (blur)="field.name === 'dni' && formatDniOnBlur()"
-        />
-        @if (errorFor(field.name); as message) {
-          <p class="err" [id]="'cf-' + field.name + '-err'">{{ message }}</p>
+    @for (field of shown(); track field.config.id) {
+      @let f = field.config;
+      @let id = 'cf-' + f.id;
+      <div class="field" [class.w]="field.wide" [class]="'tone-' + f.tone">
+        @switch (f.type) {
+          @case ('chips') {
+            <span class="lb" [id]="id + '-lb'">{{ f.label }}@if (!field.required) {<span class="opt"> (opcional)</span>}</span>
+            <div
+              class="chips"
+              role="group"
+              [id]="id"
+              tabindex="-1"
+              [attr.aria-labelledby]="id + '-lb'"
+              [attr.aria-describedby]="describedBy(field)"
+            >
+              @for (option of f.options ?? []; track option.value) {
+                <button
+                  type="button"
+                  class="chip"
+                  [attr.aria-pressed]="isPicked(f.id, option.value)"
+                  [disabled]="busy() || f.readonly"
+                  (click)="toggleChip(f.id, option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          }
+          @case ('switch') {
+            <label class="sw">
+              <input
+                type="checkbox"
+                role="switch"
+                [id]="id"
+                [formControlName]="f.id"
+                [attr.aria-invalid]="errorFor(field) ? 'true' : null"
+                [attr.aria-describedby]="describedBy(field)"
+                [attr.disabled]="busy() || f.readonly ? '' : null"
+              />
+              <span class="track" aria-hidden="true"></span>
+              {{ f.label }}
+            </label>
+          }
+          @default {
+            <label [for]="id">{{ f.label }}@if (!field.required && !f.readonly) {<span class="opt"> (opcional)</span>}</label>
+            @switch (f.type) {
+              @case ('textarea') {
+                <textarea
+                  [id]="id"
+                  rows="3"
+                  [formControlName]="f.id"
+                  [placeholder]="f.placeholder ?? ''"
+                  [readonly]="busy() || f.readonly"
+                  [attr.maxlength]="f.validation?.maxLength ?? null"
+                  [attr.aria-invalid]="errorFor(field) ? 'true' : null"
+                  [attr.aria-describedby]="describedBy(field)"
+                ></textarea>
+              }
+              @case ('select') {
+                <select
+                  [id]="id"
+                  [formControlName]="f.id"
+                  [attr.aria-invalid]="errorFor(field) ? 'true' : null"
+                  [attr.aria-describedby]="describedBy(field)"
+                  [attr.disabled]="busy() || f.readonly ? '' : null"
+                >
+                  <option value="">{{ f.placeholder || 'Elegí una opción' }}</option>
+                  @for (option of f.options ?? []; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              }
+              @default {
+                <input
+                  [id]="id"
+                  [type]="f.type === 'tel' || f.type === 'email' || f.type === 'number' || f.type === 'date' ? f.type : 'text'"
+                  [formControlName]="f.id"
+                  [attr.autocomplete]="field.autocomplete"
+                  [attr.inputmode]="field.inputmode"
+                  [attr.min]="f.validation?.min ?? null"
+                  [attr.max]="f.validation?.max ?? null"
+                  [attr.step]="f.validation?.step ?? null"
+                  [attr.maxlength]="f.validation?.maxLength ?? null"
+                  [placeholder]="f.placeholder ?? ''"
+                  [readonly]="busy() || f.readonly"
+                  [class.t]="typing() === f.id"
+                  [class.f]="filled().has(f.id)"
+                  [attr.aria-invalid]="errorFor(field) ? 'true' : null"
+                  [attr.aria-describedby]="describedBy(field)"
+                  (blur)="f.id === 'dni' && formatDniOnBlur()"
+                />
+              }
+            }
+          }
+        }
+        @if (f.help) {
+          <p class="help" [id]="id + '-help'">{{ f.help }}</p>
+        }
+        @if (errorFor(field); as message) {
+          <p class="err" [id]="id + '-err'">{{ message }}</p>
         }
       </div>
     }

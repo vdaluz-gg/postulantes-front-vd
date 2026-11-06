@@ -17,5 +17,10 @@ h2 em{font-style:normal;color:var(--acc)}
 .sugg{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .notice{font-size:14px;line-height:1.5;margin-bottom:12px}
+.alert{margin:0 0 14px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);border-left:3px solid var(--acc);background:var(--soft);font-size:13px;line-height:1.45;max-width:52ch}
+.alert.lv-positive{border-left-color:var(--mint)}
+.alert.lv-warning{border-left-color:var(--err)}
+.alert b{font-weight:600}
+.alert a{margin-left:4px;color:inherit;font-weight:600;text-underline-offset:3px}
 .cta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .foot{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--mut)}

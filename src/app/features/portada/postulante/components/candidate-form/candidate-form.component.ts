@@ -5,64 +5,140 @@ import {
   ElementRef,
   afterNextRender,
   computed,
-  linkedSignal,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MotionService } from '../../../../../core/services/motion.service';
+import { APPLICATION_SECTION, FieldConfig } from '../../../../backoffice/data/site-config.model';
+import { SITE_CONFIG_SEED } from '../../../../backoffice/data/site-config.seed';
 import { PortadaButtonComponent } from '../../../components/portada-button/portada-button.component';
-import { CandidateContact } from '../../candidacy.api';
+import { AnswerValue, CandidateContact } from '../../candidacy.api';
 import { dniValidator, emailValidator, formatDni, fullNameValidator, whatsappValidator } from '../../candidate-validators';
 
-type FieldName = keyof CandidateContact;
+/** Datos propios del formulario: viajan como datos del postulante; el resto son respuestas extra. */
+type CoreName = 'fullName' | 'email' | 'dni' | 'whatsapp' | 'zone' | 'position';
 
-interface FieldConfig {
-  readonly name: FieldName;
-  readonly label: string;
+interface CoreMeta {
   readonly autocomplete: string;
   readonly inputmode?: string;
-  readonly type?: string;
-  readonly placeholder: string;
-  /** Ocupa las dos columnas. */
+  readonly validators: ValidatorFn[];
+  /** Siempre obligatorio y visible: sin este dato el backend no registra la postulación. */
+  readonly locked?: boolean;
   readonly wide?: boolean;
+  /** Mensajes por error: qué pasó y cómo seguir. */
+  readonly messages: Readonly<Record<string, string>>;
 }
 
-const FIELDS: readonly FieldConfig[] = [
-  { name: 'fullName', label: 'Nombre y apellido', autocomplete: 'name', placeholder: 'Martina Rodríguez' },
-  { name: 'dni', label: 'DNI', autocomplete: 'off', inputmode: 'numeric', placeholder: '38.412.907' },
-  { name: 'email', label: 'Email', autocomplete: 'email', inputmode: 'email', type: 'email', placeholder: 'martina@ejemplo.com', wide: true },
-  { name: 'whatsapp', label: 'WhatsApp', autocomplete: 'tel', inputmode: 'tel', type: 'tel', placeholder: '11 5555-0142' },
-  { name: 'zone', label: 'Zona', autocomplete: 'address-level2', placeholder: 'Monte Grande' },
-  { name: 'position', label: 'Puesto', autocomplete: 'off', placeholder: 'Postulación espontánea', wide: true },
-];
-
-/** Mensajes por campo y error: qué pasó y cómo seguir. */
-const MESSAGES: Record<FieldName, Record<string, string>> = {
+const CORE: Readonly<Record<CoreName, CoreMeta>> = {
   fullName: {
-    required: 'Escribí tu nombre y apellido.',
-    invalidChars: 'Usá solo letras en tu nombre.',
-    missingLastName: 'Sumá tu apellido.',
+    autocomplete: 'name',
+    validators: [fullNameValidator],
+    locked: true,
+    messages: { required: 'Escribí tu nombre y apellido.', invalidChars: 'Usá solo letras en tu nombre.', missingLastName: 'Sumá tu apellido.' },
   },
-  email: { required: 'Escribí tu email.', email: 'Revisá el email, por ejemplo martina@ejemplo.com.' },
-  dni: { required: 'Escribí tu DNI.', dni: 'Revisá el DNI: son 7 u 8 números.' },
+  dni: { autocomplete: 'off', inputmode: 'numeric', validators: [dniValidator], locked: true, messages: { required: 'Escribí tu DNI.', dni: 'Revisá el DNI: son 7 u 8 números.' } },
+  email: {
+    autocomplete: 'email',
+    inputmode: 'email',
+    validators: [emailValidator],
+    locked: true,
+    wide: true,
+    messages: { required: 'Escribí tu email.', email: 'Revisá el email, por ejemplo nombre@ejemplo.com.' },
+  },
   whatsapp: {
-    required: 'Escribí tu celular.',
-    whatsapp: 'Revisá el número: son 10 dígitos con el código de área, por ejemplo 11 5555-0142.',
+    autocomplete: 'tel',
+    inputmode: 'tel',
+    validators: [whatsappValidator],
+    locked: true,
+    messages: { required: 'Escribí tu celular.', whatsapp: 'Revisá el número: son 10 dígitos con el código de área, por ejemplo 11 5555-0142.' },
   },
-  zone: { required: 'Contanos en qué zona vivís.', minlength: 'Escribí el nombre completo de tu zona.' },
-  position: { required: 'Escribí el puesto o dejá «Postulación espontánea».' },
+  zone: {
+    autocomplete: 'address-level2',
+    validators: [Validators.minLength(2)],
+    messages: { required: 'Contanos en qué zona vivís.', minlength: 'Escribí el nombre completo de tu zona.' },
+  },
+  position: { autocomplete: 'off', validators: [], wide: true, messages: { required: 'Escribí el puesto o dejá «Postulación espontánea».' } },
 };
+
+const isCore = (id: string): id is CoreName => id in CORE;
+
+const SEED_FIELDS = SITE_CONFIG_SEED.audiences.postulantes.sections.find((s) => s.id === APPLICATION_SECTION)!.fields;
+
+/** Campo listo para mostrar: la configuración publicada más lo que agrega el formulario. */
+export interface FormField {
+  readonly config: FieldConfig;
+  readonly core: boolean;
+  readonly required: boolean;
+  readonly visible: boolean;
+  readonly wide: boolean;
+  readonly autocomplete: string;
+  readonly inputmode: string | null;
+}
+
+/** Arma la lista de campos: respeta orden, textos y reglas publicadas; los datos básicos no se pueden quitar. */
+export function formFields(configs: readonly FieldConfig[]): FormField[] {
+  const list = [...configs];
+  for (const seed of SEED_FIELDS) if (!list.some((f) => f.id === seed.id)) list.push({ ...seed, visible: seed.id === 'position' ? false : seed.visible });
+  return list.map((config) => {
+    const core = isCore(config.id) ? CORE[config.id] : null;
+    const visible = !!core?.locked || config.visible;
+    // Lo oculto nunca es obligatorio: la persona no podría completarlo.
+    const required = !!core?.locked || (visible && !config.readonly && (config.id === 'position' || config.required));
+    return {
+      config,
+      core: !!core,
+      required,
+      visible,
+      wide: core?.wide ?? (config.type === 'textarea' || config.type === 'chips'),
+      autocomplete: core?.autocomplete ?? 'off',
+      inputmode: core?.inputmode ?? (config.type === 'number' ? 'decimal' : config.type === 'tel' ? 'tel' : config.type === 'email' ? 'email' : null),
+    };
+  });
+}
+
+type ControlValue = string | boolean | string[];
+
+/** Las expresiones de formato las escribe el backoffice: si alguna no compila, no se aplica. */
+function safePattern(pattern: string | undefined): ValidatorFn | null {
+  if (!pattern) return null;
+  try {
+    new RegExp(pattern);
+    return Validators.pattern(pattern);
+  } catch {
+    return null;
+  }
+}
+
+function validatorsFor(field: FormField): ValidatorFn[] {
+  const { config } = field;
+  const rules = config.validation ?? {};
+  const list: ValidatorFn[] = [];
+  if (field.required) list.push(config.type === 'switch' ? Validators.requiredTrue : Validators.required);
+  if (isCore(config.id)) return [...list, ...CORE[config.id].validators];
+  if (config.type === 'email') list.push(emailValidator);
+  if (rules.maxLength) list.push(Validators.maxLength(rules.maxLength));
+  if (rules.min !== undefined) list.push(Validators.min(rules.min));
+  if (rules.max !== undefined) list.push(Validators.max(rules.max));
+  const pattern = safePattern(rules.pattern);
+  if (pattern && config.type !== 'number') list.push(pattern);
+  return list;
+}
+
+const emptyValue = (field: FormField): ControlValue => (field.config.type === 'chips' ? [] : field.config.type === 'switch' ? false : '');
 
 /** Velocidad del tipeo de la IA (maqueta): 18 ms por letra y 120 ms entre campos. */
 const TYPE_CHAR_MS = 18;
 const TYPE_FIELD_MS = 120;
 
 /**
- * Formulario de contacto del postulante. Si llegan datos del CV, la IA los escribe campo por
- * campo; después la persona puede corregirlos. Valida al enviar y al salir de cada campo.
+ * Formulario de contacto del postulante, armado con los campos que publicó el backoffice (orden,
+ * etiquetas, textos de ejemplo, ayudas, reglas y campos nuevos). Si llegan datos del CV, la IA los
+ * escribe campo por campo; después la persona puede corregirlos. Valida al enviar y al salir de
+ * cada campo.
  */
 @Component({
   selector: 'app-candidate-form',
@@ -72,6 +148,8 @@ const TYPE_FIELD_MS = 120;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CandidateFormComponent {
+  /** Campos publicados del formulario de postulación. */
+  readonly fieldConfigs = input<readonly FieldConfig[]>(SEED_FIELDS, { alias: 'fields' });
   /** Datos para precargar (los que leyó la IA o el puesto elegido). */
   readonly prefill = input<Partial<CandidateContact>>({});
   /** Escribir la precarga letra por letra. */
@@ -83,18 +161,27 @@ export class CandidateFormComponent {
   private readonly motion = inject(MotionService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
-  protected readonly fields = FIELDS;
-  protected readonly form = new FormGroup({
-    fullName: new FormControl('', { nonNullable: true, validators: [Validators.required, fullNameValidator] }),
-    email: new FormControl('', { nonNullable: true, validators: [Validators.required, emailValidator] }),
-    dni: new FormControl('', { nonNullable: true, validators: [Validators.required, dniValidator] }),
-    whatsapp: new FormControl('', { nonNullable: true, validators: [Validators.required, whatsappValidator] }),
-    zone: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
-    position: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+  protected readonly fields = computed(() => formFields(this.fieldConfigs()));
+  protected readonly shown = computed(() => this.fields().filter((f) => f.visible));
+  /** Si cambian los campos publicados, se rearma el formulario conservando lo escrito. */
+  protected readonly form = linkedSignal<FormField[], FormGroup<Record<string, FormControl<ControlValue>>>>({
+    source: this.fields,
+    computation: (fields, previous) =>
+      new FormGroup(
+        Object.fromEntries(
+          fields.map((f) => [
+            f.config.id,
+            new FormControl<ControlValue>(previous?.value.controls[f.config.id]?.value ?? emptyValue(f), {
+              nonNullable: true,
+              validators: validatorsFor(f),
+            }),
+          ]),
+        ),
+      ),
   });
 
-  protected readonly typing = signal<FieldName | null>(null);
-  protected readonly filled = signal<ReadonlySet<FieldName>>(new Set());
+  protected readonly typing = signal<string | null>(null);
+  protected readonly filled = signal<ReadonlySet<string>>(new Set());
   protected readonly busy = signal(false);
   protected readonly attempted = signal(false);
   protected readonly summary = signal('');
@@ -109,55 +196,100 @@ export class CandidateFormComponent {
     inject(DestroyRef).onDestroy(() => this.timers.forEach(clearTimeout));
   }
 
-  protected errorFor(name: FieldName): string | null {
-    const control = this.form.controls[name];
+  protected control(id: string): AbstractControl<ControlValue> {
+    return this.form().controls[id];
+  }
+
+  protected errorFor(field: FormField): string | null {
+    const control = this.control(field.config.id);
     if (!control.errors || !(control.touched || this.attempted())) return null;
     const [key, detail] = Object.entries(control.errors)[0];
+    const label = field.config.label;
+    const custom = field.config.validation?.message?.trim();
+    if (key === 'required') return isCore(field.config.id) ? CORE[field.config.id].messages['required'] : `Completá «${label}».`;
+    if (!isCore(field.config.id)) return custom || `Revisá «${label}».`;
+    // En los datos básicos vale el mensaje del backoffice solo si lo cambiaron respecto del inicial.
+    const seedMessage = SEED_FIELDS.find((f) => f.id === field.config.id)?.validation?.message;
+    if (custom && custom !== seedMessage) return custom;
     const code = typeof detail === 'string' ? detail : key;
-    return MESSAGES[name][code] ?? MESSAGES[name]['required'];
+    return CORE[field.config.id].messages[code] ?? CORE[field.config.id].messages['required'];
+  }
+
+  protected describedBy(field: FormField): string | null {
+    const ids = [field.config.help ? `cf-${field.config.id}-help` : '', this.errorFor(field) ? `cf-${field.config.id}-err` : ''].filter(Boolean);
+    return ids.length ? ids.join(' ') : null;
+  }
+
+  protected isPicked(id: string, value: string): boolean {
+    const current = this.control(id).value;
+    return Array.isArray(current) && current.includes(value);
+  }
+
+  protected toggleChip(id: string, value: string): void {
+    const control = this.control(id);
+    const current = Array.isArray(control.value) ? control.value : [];
+    control.setValue(current.includes(value) ? current.filter((v) => v !== value) : [...current, value]);
+    control.markAsTouched();
   }
 
   protected formatDniOnBlur(): void {
-    const control = this.form.controls.dni;
-    if (!control.errors) control.setValue(formatDni(control.value));
+    const control = this.control('dni');
+    if (control && !control.errors) control.setValue(formatDni(String(control.value)));
   }
 
   protected submit(): void {
     this.attempted.set(true);
     this.serverError.set('');
-    this.form.markAllAsTouched();
-    if (this.form.invalid) {
-      const invalid = FIELDS.filter((f) => this.form.controls[f.name].invalid);
+    const form = this.form();
+    form.markAllAsTouched();
+    if (form.invalid) {
+      const invalid = this.fields().filter((f) => form.controls[f.config.id].invalid);
       this.summary.set(invalid.length === 1 ? 'Revisá 1 campo.' : `Revisá ${invalid.length} campos.`);
-      this.host.querySelector<HTMLInputElement>(`#cf-${invalid[0].name}`)?.focus();
+      this.host.querySelector<HTMLElement>(`#cf-${invalid[0].config.id}`)?.focus();
       return;
     }
     this.summary.set('');
-    const value = this.form.getRawValue();
+    const value = form.getRawValue();
+    const text = (id: CoreName) => String(value[id] ?? '').trim();
+    const answers: Record<string, AnswerValue> = {};
+    for (const f of this.fields()) {
+      if (f.core || !f.visible || f.config.readonly) continue;
+      const v = value[f.config.id];
+      if (v === '' || (Array.isArray(v) && !v.length)) continue;
+      answers[f.config.id] = f.config.type === 'number' ? Number(v) : typeof v === 'string' ? v.trim() : v;
+    }
     this.submitted.emit({
-      ...value,
-      fullName: value.fullName.trim(),
-      email: value.email.trim().toLowerCase(),
-      dni: formatDni(value.dni),
+      fullName: text('fullName'),
+      email: text('email').toLowerCase(),
+      dni: formatDni(text('dni')),
+      whatsapp: text('whatsapp'),
+      zone: text('zone'),
+      position: text('position'),
+      ...(Object.keys(answers).length && { answers }),
     });
   }
 
   private load(data: Partial<CandidateContact>): void {
-    const entries = FIELDS.map((f) => [f.name, data[f.name] ?? ''] as const).filter(([, v]) => v);
+    const form = this.form();
+    if (data.answers) form.patchValue(data.answers as Record<string, ControlValue>);
+    const entries = this.fields()
+      .filter((f) => f.core)
+      .map((f) => [f.config.id, String(data[f.config.id as CoreName] ?? '')] as const)
+      .filter(([, v]) => v);
     if (!this.typed() || this.motion.reduced()) {
-      this.form.patchValue(Object.fromEntries(entries));
-      this.filled.set(new Set(entries.map(([name]) => name)));
+      form.patchValue(Object.fromEntries(entries));
+      this.filled.set(new Set(entries.map(([id]) => id)));
       return;
     }
     this.busy.set(true);
     let at = 0;
-    for (const [name, text] of entries) {
-      this.later(at, () => this.typing.set(name));
+    for (const [id, text] of entries) {
+      this.later(at, () => this.typing.set(id));
       for (let i = 1; i <= text.length; i++) {
-        this.later(at + i * TYPE_CHAR_MS, () => this.form.controls[name].setValue(text.slice(0, i)));
+        this.later(at + i * TYPE_CHAR_MS, () => form.controls[id].setValue(text.slice(0, i)));
       }
       at += text.length * TYPE_CHAR_MS + TYPE_FIELD_MS;
-      this.later(at, () => this.filled.update((set) => new Set([...set, name])));
+      this.later(at, () => this.filled.update((set) => new Set([...set, id])));
     }
     this.later(at, () => {
       this.typing.set(null);

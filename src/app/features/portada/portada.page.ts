@@ -10,6 +10,7 @@ import { PortalButtonComponent } from './components/portal-button/portal-button.
 import { SoundToggleComponent } from './components/sound-toggle/sound-toggle.component';
 import { ThemeToggleComponent } from '../../shared/ui/molecules/theme-toggle/theme-toggle.component';
 import { PERSONAS, PersonaId, PersonaPrompt, personaForQuery } from './portada.data';
+import { PortadaConfig, withCopy } from './published-config';
 
 type RouteReply = 'idle' | 'thinking' | 'going';
 
@@ -41,7 +42,11 @@ const GO_MS = 650;
   host: { '(document:keydown.escape)': 'close()' },
 })
 export class PortadaPage {
-  protected readonly personas = PERSONAS;
+  private readonly config = inject(PortadaConfig);
+  /** Perfiles con los textos que publicó el backoffice (por ahora, los del postulante). */
+  protected readonly personas = computed(() =>
+    PERSONAS.map((p) => (p.id === 'post' ? withCopy(p, this.config.postulantes().copy) : p)),
+  );
   protected readonly routePrompt: PersonaPrompt = {
     label: 'Qué te trae por acá',
     placeholder: 'Contale a la IA qué buscás y te llevo',
@@ -55,13 +60,17 @@ export class PortadaPage {
   protected readonly reply = signal<RouteReply>('idle');
   protected readonly goingTo = signal('');
 
-  protected readonly selected = computed(() => PERSONAS.find((p) => p.id === this.selectedId()) ?? null);
+  protected readonly selected = computed(() => this.personas().find((p) => p.id === this.selectedId()) ?? null);
   protected readonly accent = computed(() => `var(--c-${this.selectedId() ?? this.hovered() ?? 'post'})`);
 
   private readonly timers: ReturnType<typeof setTimeout>[] = [];
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.timers.forEach(clearTimeout));
+    const loading = this.config.load();
+    inject(DestroyRef).onDestroy(() => {
+      loading.unsubscribe();
+      this.timers.forEach(clearTimeout);
+    });
   }
 
   protected figureState(id: PersonaId): FigureState {
