@@ -7,8 +7,7 @@ Tiene dos partes:
 - **Portada**: los postulantes, clientes y colaboradores eligen su perfil.
 - **Backoffice**: el equipo administra lo que esos tres públicos ven y completan.
 
-Las ofertas y la postulación (datos y CV) ya usan la API de [`postulantes-back-vd`](#conexión-con-el-backend).
-El ingreso al backoffice también. La configuración del backoffice sigue simulada, porque el backend no tiene esos endpoints. Cada servicio cambia de simulado a HTTP sin tocar pantallas.
+Las ofertas, la postulación (datos, CV y campos agregados), el ingreso al backoffice y la configuración que publica el backoffice usan la API de [`postulantes-back-vd`](#conexión-con-el-backend). Cada servicio cambia de simulado a HTTP sin tocar pantallas.
 
 ---
 
@@ -83,9 +82,29 @@ src/
 - **Perfiles:** postulante, cliente y colaborador. El postulante tiene avatar 3D: arranca oscuro, se ilumina con el hover y gira al arrastrarlo.
 - **Panel del postulante:**
   - Búsqueda de ofertas con IA y detalle de la oferta. Solo se muestran los campos públicos.
-  - Carga del CV y formulario de contacto validado (nombre, DNI, email, WhatsApp, zona y puesto).
+  - Carga del CV y formulario de contacto validado. Los campos, su orden, etiquetas, textos de ejemplo, ayudas y reglas salen de lo publicado en el backoffice (ver [Lo que publica el backoffice](#lo-que-publica-el-backoffice)).
   - Al enviar, muestra el código de seguimiento. Si el backend rechaza la postulación, vuelve al formulario con el motivo.
   - Vistas previas de los temas: ofertas cercanas, aviso por WhatsApp y seguimiento de la postulación.
+- **Panel de Empresas** (datos de ejemplo, como la maqueta):
+  - Cada servicio (personal eventual, búsqueda y selección, RPO, outsourcing de capital humano y de procesos) tiene su vista previa animada, descripción y qué incluye.
+  - La consulta o una sugerencia recomiendan el servicio que corresponde. "Armar mi propuesta" escribe la propuesta (servicio, dotación, zona y plazo) y "Enviar a un asesor" la confirma.
+  - "Hablar con un asesor" muestra el teléfono de atención.
+- **Panel de Colaboradores** (datos de ejemplo; las fechas se calculan desde hoy):
+  - Fecha de cobro, recibos para firmar, carga de un certificado (foto o PDF; no sale del navegador) y seguimiento de la tarjeta de débito.
+  - La consulta abre el tema que corresponde o deriva a atención al colaborador.
+  - "Gestión Virtual" muestra los accesos y "Descargar la app" ofrece mandar el enlace.
+- **"Ingresar a tu portal":** los portales privados no están en esta app (el del postulante vive en otro repo). Mientras tanto, el botón lleva a la consulta con la IA del panel.
+- **Avisos:** la confirmación de cada acción aparece abajo, en un aviso breve que también lee el lector de pantalla.
+
+### Lo que publica el backoffice
+
+La portada pide `GET /site-config/postulantes` cada vez que se abre (`PublishedConfigApi`, `published-config.ts`). Si todavía no se publicó nada, usa la configuración inicial.
+
+- **Formulario de postulación** (sección `application`): campos nuevos de cualquier tipo (texto, correo, teléfono, número, fecha, texto largo, lista, píldoras y sí/no), orden, etiqueta, texto de ejemplo, ayuda, obligatorio, visible, solo lectura, color y validación.
+  - Nombre y apellido, DNI, email y WhatsApp siempre se piden: el backend los necesita. El backoffice no deja publicar si se ocultan o se vuelven opcionales.
+  - Las respuestas a los campos nuevos viajan como `answers` en `POST /applications` y quedan guardadas con la postulación.
+- **Textos del panel:** etiqueta superior, título (se resalta lo que sigue a la última coma), texto del buscador, sugerencias y pie.
+- **Avisos:** los activos y en fecha aparecen en el panel del postulante.
 - **Ofertas:** con el backend salen de `GET /job-offers`. En modo simulado, de `public/mock/ofertas.json`, que tiene el formato de la ficha interna; `toJobPosting` deja solo lo que ve el postulante.
 
 ---
@@ -187,7 +206,8 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 | `OffersApi` | `MockOffersApi` (`public/mock/ofertas.json`) | `HttpOffersApi` | `GET /job-offers` | Backend |
 | `CandidacyApi` | `MockCandidacyApi` | `HttpCandidacyApi` | `POST /cv`, `GET /zones`, `POST /applications` | Backend |
 | `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login`, `GET /auth/me` | Backend |
-| `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` (**a crear**) | Simulado |
+| `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` | Backend |
+| `PublishedConfigApi` | `MockPublishedConfigApi` (lo publicado en `localStorage`) | `HttpPublishedConfigApi` | `GET /site-config/:audience` | Backend |
 
 **Cómo se elige**
 
@@ -196,9 +216,15 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 
 **Qué guarda la postulación**
 
-1. **CV:** `POST /cv` guarda el archivo y devuelve un `cvId` y los datos que leyó la IA.
+1. **CV:** `POST /cv` guarda el archivo y devuelve un `cvId` y los datos que encontró en el texto del archivo (nombre, mail, DNI, WhatsApp y zona). Un PDF escaneado no trae texto: el formulario queda para completar a mano.
 2. **Zona:** el texto se busca en `GET /zones`, sin tildes ni mayúsculas. Se envía `zoneId` solo si coincide.
-3. **Postulación:** `POST /applications` crea o actualiza al postulante y vincula la oferta (`offerCode`) y el CV (`cvId`). Devuelve el código de seguimiento (`GG-XXXXXX`).
+3. **Postulación:** `POST /applications` crea o actualiza al postulante y vincula la oferta (`offerCode`) y el CV (`cvId`). Las respuestas a los campos agregados desde el backoffice van en `answers`; el backend las revisa contra lo publicado y las guarda con su etiqueta. Devuelve el código de seguimiento (`GG-XXXXXX`).
+
+**Configuración del backoffice**
+
+- **Guardar** crea una versión nueva (borrador) y **Publicar** crea una versión publicada: queda el historial completo.
+- Si otra persona guardó mientras se editaba, el backend responde 409 y el editor muestra el motivo: hay que recargar.
+- Si todavía no se guardó nada, `GET /backoffice/site-config` da 404 y el editor arranca de la configuración inicial.
 
 **Pasos para levantarlo**
 
@@ -207,7 +233,6 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 
 **Pendiente del lado del backend** (hoy no existe):
 
-- **Configuración:** el módulo `site-config`, con el contrato documentado en `data/site-config.model.ts`.
 - **Rol `marketing`:**
   - Hoy los roles son `admin` y `superadmin`, y `POST /auth/register` siempre crea `admin`.
   - Falta sumar `marketing` a `ADMIN_ROLES` (`auth/entities/admin.entity.ts`) y una forma de elegir el rol al dar el alta (por ejemplo, que solo un `superadmin` pueda hacerlo).
@@ -230,6 +255,8 @@ Jest 30 con `jest-preset-angular` (zoneless):
 | `features/backoffice/data/backoffice-data.spec.ts` | Login, API simulada, interceptor y estado del editor (deshacer y guardado). |
 | `features/backoffice/backoffice-ui.spec.ts` | Ingreso, guard, edición desde el panel y deshacer desde el aviso. |
 | `features/portada/**/*.spec.ts` | Portada, ofertas, CV, formulario y postulación (simulada y HTTP). |
+| `features/portada/published-config.spec.ts` | Campos, textos y avisos publicados en el backoffice, y el envío de las respuestas. |
+| `features/portada/empresas-colaboradores.spec.ts` | Paneles de Empresas y Colaboradores. |
 
 ---
 
