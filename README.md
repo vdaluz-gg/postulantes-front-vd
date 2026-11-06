@@ -101,7 +101,9 @@ src/
 La portada pide `GET /site-config/postulantes` cada vez que se abre (`PublishedConfigApi`, `published-config.ts`). Si todavía no se publicó nada, usa la configuración inicial.
 
 - **Formulario de postulación** (sección `application`): campos nuevos de cualquier tipo (texto, correo, teléfono, número, fecha, texto largo, lista, píldoras y sí/no), orden, etiqueta, texto de ejemplo, ayuda, obligatorio, visible, solo lectura, color y validación.
-  - Nombre y apellido, DNI, email y WhatsApp siempre se piden: el backend los necesita. El backoffice no deja publicar si se ocultan o se vuelven opcionales.
+  - Nombre, apellido, DNI, email y WhatsApp siempre se piden: el backend los necesita. El backoffice no deja publicar si se ocultan o se vuelven opcionales.
+  - El CUIL es opcional. Se valida con su dígito verificador y tiene que coincidir con el DNI.
+  - Una configuración guardada antes de separar nombre y apellido se pone al día sola al abrirla (`site-config.upgrade.ts`): "Nombre y apellido" pasa a ser "Nombre" y "Apellido", y se suma el CUIL después del DNI.
   - Las respuestas a los campos nuevos viajan como `answers` en `POST /applications` y quedan guardadas con la postulación.
 - **Textos del panel:** etiqueta superior, título (se resalta lo que sigue a la última coma), texto del buscador, sugerencias y pie.
 - **Avisos:** los activos y en fecha aparecen en el panel del postulante.
@@ -216,7 +218,7 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 
 **Qué guarda la postulación**
 
-1. **CV:** `POST /cv` guarda el archivo y devuelve un `cvId` y los datos que encontró en el texto del archivo (nombre, mail, DNI, WhatsApp y zona). Un PDF escaneado no trae texto: el formulario queda para completar a mano.
+1. **CV:** `POST /cv` guarda el archivo y devuelve un `cvId` y los datos que encontró en el texto del archivo (nombre, apellido, mail, DNI, CUIL, WhatsApp y zona). Un PDF escaneado no trae texto: el formulario queda para completar a mano.
 2. **Zona:** el texto se busca en `GET /zones`, sin tildes ni mayúsculas. Se envía `zoneId` solo si coincide.
 3. **Postulación:** `POST /applications` crea o actualiza al postulante y vincula la oferta (`offerCode`) y el CV (`cvId`). Las respuestas a los campos agregados desde el backoffice van en `answers`; el backend las revisa contra lo publicado y las guarda con su etiqueta. Devuelve el código de seguimiento (`GG-XXXXXX`).
 
