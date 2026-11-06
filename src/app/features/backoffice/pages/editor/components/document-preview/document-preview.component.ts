@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 import { DocumentRequirement } from '../../../../data/site-config.model';
 
 /** Fila de documento para subir: nombre, formatos, tamaño, si es obligatorio y el botón. */
 @Component({
   selector: 'app-document-preview',
-  imports: [IconComponent],
+  imports: [IconComponent, MatButtonModule],
   templateUrl: './document-preview.component.html',
   styleUrl: './document-preview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

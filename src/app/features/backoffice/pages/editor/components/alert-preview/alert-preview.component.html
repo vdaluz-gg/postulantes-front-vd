@@ -10,5 +10,5 @@
   <span>{{ a.message }}</span>
 </span>
 @if (a.ctaLabel) {
-  <span class="cta">{{ a.ctaLabel }}</span>
+  <a mat-stroked-button class="cta bo-sm" tabindex="-1" aria-hidden="true">{{ a.ctaLabel }}</a>
 }

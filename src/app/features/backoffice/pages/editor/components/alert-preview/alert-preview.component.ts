@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 import { AlertConfig } from '../../../../data/site-config.model';
 
 /** Aviso como se ve arriba del portal, con su tono y botón. */
 @Component({
   selector: 'app-alert-preview',
-  imports: [IconComponent],
+  imports: [IconComponent, MatButtonModule],
   templateUrl: './alert-preview.component.html',
   styleUrl: './alert-preview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
