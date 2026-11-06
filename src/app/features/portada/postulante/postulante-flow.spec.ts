@@ -4,11 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { MotionService } from '../../../core/services/motion.service';
 import { HoloAvatarLoaderService } from '../../../shared/three/holo-avatar-loader.service';
 import { PortadaPage } from '../portada.page';
-import { CandidacyApi, CandidateContact } from './candidacy.api';
+import { ApplicationTarget, CandidacyApi, CandidateContact } from './candidacy.api';
 import { JobOffersResponse } from './job-offer';
 import { OFFERS_URL } from './offers.api';
 
@@ -23,7 +23,8 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
   let fixture: ComponentFixture<PortadaPage>;
   let el: HTMLElement;
   let http: HttpTestingController;
-  let applied: CandidateContact[];
+  let applied: { contact: CandidateContact; target: ApplicationTarget }[];
+  let rejectNext: boolean;
 
   const render = async () => {
     fixture.detectChanges();
@@ -48,6 +49,7 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
 
   beforeEach(async () => {
     applied = [];
+    rejectNext = false;
     await TestBed.configureTestingModule({
       imports: [PortadaPage],
       providers: [
@@ -59,10 +61,18 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
         {
           provide: CandidacyApi,
           useValue: {
-            readCv: () => of({ fullName: 'Martina Rodríguez', dni: '38.412.907', whatsapp: '11 5555-0142', zone: 'Monte Grande' }),
-            apply: (contact: CandidateContact) => {
-              applied.push(contact);
-              return of(undefined);
+            readCv: () =>
+              of({
+                cvId: 'cv-1',
+                prefill: { fullName: 'Martina Rodríguez', dni: '38.412.907', whatsapp: '11 5555-0142', zone: 'Monte Grande' },
+              }),
+            apply: (contact: CandidateContact, target: ApplicationTarget) => {
+              if (rejectNext) {
+                rejectNext = false;
+                return throwError(() => ({ statusCode: 409, error: 'Conflict', message: 'Ya te postulaste a esta oferta' }));
+              }
+              applied.push({ contact, target });
+              return of({ trackingCode: 'GG-ABC123', position: contact.position });
             },
           },
         },
@@ -152,10 +162,51 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
 
     button('Enviar postulación').click();
     await render();
+    expect(applied).toEqual([]);
+    expect(el.querySelector('#cf-email-err')!.textContent).toBe('Escribí tu email.');
+
+    type('cf-email', ' Martina@Ejemplo.com ');
+    await render();
+    button('Enviar postulación').click();
+    await render();
     expect(applied).toEqual([
-      { fullName: 'Martina Rodríguez', dni: '38.412.907', whatsapp: '11 5555-0142', zone: 'Monte Grande', position: 'Operario/a Pan 29' },
+      {
+        contact: {
+          fullName: 'Martina Rodríguez',
+          email: 'martina@ejemplo.com',
+          dni: '38.412.907',
+          whatsapp: '11 5555-0142',
+          zone: 'Monte Grande',
+          position: 'Operario/a Pan 29',
+        },
+        target: { offerRef: 'CSYP1233113446', cvId: 'cv-1' },
+      },
     ]);
-    expect(el.querySelector('[appApplicationSent]')!.textContent).toContain('¡Listo, Martina!');
+    const sent = el.querySelector('[appApplicationSent]')!.textContent!;
+    expect(sent).toContain('¡Listo, Martina!');
+    expect(sent).toContain('GG-ABC123');
+  });
+
+  it('si el servidor rechaza la postulación, vuelve al formulario con los datos y el motivo', async () => {
+    button('Dejar mi CV con IA').click();
+    await render();
+    button('Prefiero completar mis datos a mano').click();
+    await render();
+    type('cf-fullName', 'Martina Rodríguez');
+    type('cf-dni', '38412907');
+    type('cf-email', 'martina@ejemplo.com');
+    type('cf-whatsapp', '11 5555-0142');
+    type('cf-zone', 'Monte Grande');
+    await render();
+    rejectNext = true;
+    button('Enviar postulación').click();
+    await render();
+    expect(el.querySelector('.summary')!.textContent).toBe('Ya te postulaste a esta oferta');
+    expect(el.querySelector<HTMLInputElement>('#cf-email')!.value).toBe('martina@ejemplo.com');
+    button('Enviar postulación').click();
+    await render();
+    expect(applied.map((a) => a.target)).toEqual([{ offerRef: undefined }]);
+    expect(el.querySelector('[appApplicationSent]')).not.toBeNull();
   });
 
   it('el CV tiene que ser PDF o Word', async () => {
@@ -183,7 +234,7 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     await render();
 
     expect(applied).toEqual([]);
-    expect(el.querySelector('.summary')!.textContent).toBe('Revisá 4 campos.');
+    expect(el.querySelector('.summary')!.textContent).toBe('Revisá 5 campos.');
     expect(el.querySelector('#cf-fullName')!.getAttribute('aria-invalid')).toBe('true');
     expect(el.querySelector('#cf-fullName-err')!.textContent).toBe('Sumá tu apellido.');
     expect(el.querySelector('#cf-dni-err')!.textContent).toBe('Revisá el DNI: son 7 u 8 números.');

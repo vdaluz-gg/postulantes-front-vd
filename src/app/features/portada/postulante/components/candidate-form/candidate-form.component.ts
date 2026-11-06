@@ -4,6 +4,8 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  computed,
+  linkedSignal,
   inject,
   input,
   output,
@@ -13,7 +15,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MotionService } from '../../../../../core/services/motion.service';
 import { PortadaButtonComponent } from '../../../components/portada-button/portada-button.component';
 import { CandidateContact } from '../../candidacy.api';
-import { dniValidator, formatDni, fullNameValidator, whatsappValidator } from '../../candidate-validators';
+import { dniValidator, emailValidator, formatDni, fullNameValidator, whatsappValidator } from '../../candidate-validators';
 
 type FieldName = keyof CandidateContact;
 
@@ -31,6 +33,7 @@ interface FieldConfig {
 const FIELDS: readonly FieldConfig[] = [
   { name: 'fullName', label: 'Nombre y apellido', autocomplete: 'name', placeholder: 'Martina Rodríguez' },
   { name: 'dni', label: 'DNI', autocomplete: 'off', inputmode: 'numeric', placeholder: '38.412.907' },
+  { name: 'email', label: 'Email', autocomplete: 'email', inputmode: 'email', type: 'email', placeholder: 'martina@ejemplo.com', wide: true },
   { name: 'whatsapp', label: 'WhatsApp', autocomplete: 'tel', inputmode: 'tel', type: 'tel', placeholder: '11 5555-0142' },
   { name: 'zone', label: 'Zona', autocomplete: 'address-level2', placeholder: 'Monte Grande' },
   { name: 'position', label: 'Puesto', autocomplete: 'off', placeholder: 'Postulación espontánea', wide: true },
@@ -43,6 +46,7 @@ const MESSAGES: Record<FieldName, Record<string, string>> = {
     invalidChars: 'Usá solo letras en tu nombre.',
     missingLastName: 'Sumá tu apellido.',
   },
+  email: { required: 'Escribí tu email.', email: 'Revisá el email, por ejemplo martina@ejemplo.com.' },
   dni: { required: 'Escribí tu DNI.', dni: 'Revisá el DNI: son 7 u 8 números.' },
   whatsapp: {
     required: 'Escribí tu celular.',
@@ -72,6 +76,8 @@ export class CandidateFormComponent {
   readonly prefill = input<Partial<CandidateContact>>({});
   /** Escribir la precarga letra por letra. */
   readonly typed = input(false);
+  /** Error del último envío (lo devuelve el servidor). */
+  readonly failure = input('');
   readonly submitted = output<CandidateContact>();
 
   private readonly motion = inject(MotionService);
@@ -80,6 +86,7 @@ export class CandidateFormComponent {
   protected readonly fields = FIELDS;
   protected readonly form = new FormGroup({
     fullName: new FormControl('', { nonNullable: true, validators: [Validators.required, fullNameValidator] }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, emailValidator] }),
     dni: new FormControl('', { nonNullable: true, validators: [Validators.required, dniValidator] }),
     whatsapp: new FormControl('', { nonNullable: true, validators: [Validators.required, whatsappValidator] }),
     zone: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
@@ -91,6 +98,9 @@ export class CandidateFormComponent {
   protected readonly busy = signal(false);
   protected readonly attempted = signal(false);
   protected readonly summary = signal('');
+  /** Error del servidor; se borra al volver a enviar. */
+  private readonly serverError = linkedSignal(() => this.failure());
+  protected readonly message = computed(() => this.summary() || this.serverError());
 
   private timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -114,6 +124,7 @@ export class CandidateFormComponent {
 
   protected submit(): void {
     this.attempted.set(true);
+    this.serverError.set('');
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       const invalid = FIELDS.filter((f) => this.form.controls[f.name].invalid);
@@ -123,7 +134,12 @@ export class CandidateFormComponent {
     }
     this.summary.set('');
     const value = this.form.getRawValue();
-    this.submitted.emit({ ...value, fullName: value.fullName.trim(), dni: formatDni(value.dni) });
+    this.submitted.emit({
+      ...value,
+      fullName: value.fullName.trim(),
+      email: value.email.trim().toLowerCase(),
+      dni: formatDni(value.dni),
+    });
   }
 
   private load(data: Partial<CandidateContact>): void {

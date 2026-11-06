@@ -15,7 +15,8 @@ import {
 import { RouterLink } from '@angular/router';
 import { Subscription, forkJoin, timer } from 'rxjs';
 import { MotionService } from '../../../../core/services/motion.service';
-import { CandidacyApi, CandidateContact } from '../../postulante/candidacy.api';
+import { errorMessage } from '../../../../core/api/api';
+import { ApplicationTarget, CandidacyApi, CandidateContact } from '../../postulante/candidacy.api';
 import { AiThinkingComponent } from '../../postulante/components/ai-thinking/ai-thinking.component';
 import { ApplicationSentComponent } from '../../postulante/components/application-sent/application-sent.component';
 import { CandidateFormComponent } from '../../postulante/components/candidate-form/candidate-form.component';
@@ -166,25 +167,48 @@ export class PersonaPanelComponent {
 
   protected applyTo(job: JobPosting): void {
     this.detail.set(null);
-    this.go({ kind: 'cv', position: job.title });
+    this.go({ kind: 'cv', position: job.title, offerRef: job.ref });
   }
 
-  protected readCv(file: File, position: string): void {
+  protected readCv(file: File, position: string, offerRef?: string): void {
     this.go({ kind: 'thinking', text: 'La IA está leyendo tu CV…' });
     this.pending = this.candidacy.readCv(file).subscribe({
-      next: (data) =>
-        this.go({ kind: 'form', heading: 'La IA leyó tu CV y completó todo', prefill: { ...data, position }, typed: true }),
-      error: () => this.go({ kind: 'cv', position, error: 'No pudimos leer tu CV. Probá de nuevo o completá tus datos a mano.' }),
+      next: ({ cvId, prefill }) =>
+        this.go({
+          kind: 'form',
+          heading: 'La IA leyó tu CV y completó todo',
+          prefill: { ...prefill, position },
+          typed: true,
+          target: { offerRef, cvId },
+        }),
+      error: (error: unknown) =>
+        this.go({
+          kind: 'cv',
+          position,
+          offerRef,
+          error: errorMessage(error, 'No pudimos leer tu CV. Probá de nuevo o completá tus datos a mano.'),
+        }),
     });
   }
 
-  protected fillManually(position: string): void {
-    this.go({ kind: 'form', heading: 'Completá tus datos', prefill: { position }, typed: false });
+  protected fillManually(position: string, offerRef?: string): void {
+    this.go({ kind: 'form', heading: 'Completá tus datos', prefill: { position }, typed: false, target: { offerRef } });
   }
 
-  protected send(contact: CandidateContact): void {
+  protected send(contact: CandidateContact, target: ApplicationTarget): void {
     this.go({ kind: 'thinking', text: 'Enviando tu postulación…' });
-    this.pending = this.candidacy.apply(contact).subscribe(() => this.go({ kind: 'sent', contact }));
+    this.pending = this.candidacy.apply(contact, target).subscribe({
+      next: (receipt) => this.go({ kind: 'sent', contact, receipt }),
+      error: (error: unknown) =>
+        this.go({
+          kind: 'form',
+          heading: 'Revisá tus datos',
+          prefill: contact,
+          typed: false,
+          target,
+          error: errorMessage(error, 'No pudimos enviar tu postulación. Probá de nuevo.'),
+        }),
+    });
   }
 
   /** Pasa a otro paso del flujo, cancela el anterior y deja visible el recuadro. */

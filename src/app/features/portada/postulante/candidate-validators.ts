@@ -10,6 +10,13 @@ export const fullNameValidator: ValidatorFn = (control: AbstractControl): Valida
   return value.split(/\s+/).length < 2 ? { fullName: 'missingLastName' } : null;
 };
 
+/** Email con usuario, dominio y extensión de 2+ letras (misma regla que el backend). */
+export const emailValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = String(control.value ?? '').trim();
+  if (!value) return null;
+  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) ? null : { email: true };
+};
+
 /** DNI argentino: 7 u 8 dígitos (acepta puntos). */
 export const dniValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const raw = String(control.value ?? '').trim();

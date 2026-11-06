@@ -14,6 +14,8 @@ import { TrackerStep } from '../../../portada.data';
 export class ApplicationSentComponent {
   readonly fullName = input.required<string>();
   readonly position = input.required<string>();
+  /** Código de seguimiento que asigna el backend. */
+  readonly trackingCode = input<string | null>(null);
 
   protected readonly firstName = computed(() => this.fullName().split(' ')[0]);
   protected readonly steps: readonly TrackerStep[] = [

@@ -90,15 +90,25 @@
                   <div
                     appCvUpload
                     [failure]="step.error ?? ''"
-                    (selected)="readCv($event, step.position)"
-                    (manual)="fillManually(step.position)"
+                    (selected)="readCv($event, step.position, step.offerRef)"
+                    (manual)="fillManually(step.position, step.offerRef)"
                   ></div>
                 }
                 @case ('form') {
-                  <app-candidate-form [prefill]="step.prefill" [typed]="step.typed" (submitted)="send($event)" />
+                  <app-candidate-form
+                    [prefill]="step.prefill"
+                    [typed]="step.typed"
+                    [failure]="step.error ?? ''"
+                    (submitted)="send($event, step.target)"
+                  />
                 }
                 @case ('sent') {
-                  <div appApplicationSent [fullName]="step.contact.fullName" [position]="step.contact.position"></div>
+                  <div
+                    appApplicationSent
+                    [fullName]="step.contact.fullName"
+                    [position]="step.receipt.position"
+                    [trackingCode]="step.receipt.trackingCode"
+                  ></div>
                 }
               }
             </div>

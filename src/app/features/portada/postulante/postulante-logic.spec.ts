@@ -5,10 +5,12 @@ import { TestBed } from '@angular/core/testing';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { firstValueFrom } from 'rxjs';
-import { dniValidator, formatDni, fullNameValidator, whatsappValidator } from './candidate-validators';
+import { CandidacyApi, CandidateContact, HttpCandidacyApi, zoneKey } from './candidacy.api';
+import { dniValidator, emailValidator, formatDni, fullNameValidator, whatsappValidator } from './candidate-validators';
 import { JobOffersResponse, JobPosting, formatDayMonth, toJobPosting } from './job-offer';
 import { searchJobs } from './job-search';
-import { OFFERS_URL, OffersApi } from './offers.api';
+import { API_BASE_URL } from '../../../core/api/api';
+import { HttpOffersApi, OFFERS_URL, OffersApi } from './offers.api';
 
 /** El mismo archivo que sirve la app en /mock/ofertas.json. */
 const MOCK: JobOffersResponse = JSON.parse(readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'));
@@ -97,6 +99,12 @@ describe('validadores del formulario de contacto', () => {
     expect(formatDni('38412907')).toBe('38.412.907');
   });
 
+  it('email con usuario, dominio y extensión', () => {
+    expect(check(emailValidator, 'martina@ejemplo.com')).toBeNull();
+    expect(check(emailValidator, 'martina@ejemplo')).toEqual({ email: true });
+    expect(check(emailValidator, 'martina ejemplo.com')).toEqual({ email: true });
+  });
+
   it('celular argentino de 10 dígitos, con o sin +54 9', () => {
     expect(check(whatsappValidator, '11 5555-0142')).toBeNull();
     expect(check(whatsappValidator, '+54 9 11 5555-0142')).toBeNull();
@@ -130,5 +138,88 @@ describe('OffersApi', () => {
     const retry = firstValueFrom(api.list());
     http.expectOne(OFFERS_URL).flush(MOCK);
     await expect(retry).resolves.toHaveLength(MOCK.ofertas.length);
+  });
+
+  it('con el backend pide GET /job-offers y usa los items tal como vienen', async () => {
+    TestBed.overrideProvider(API_BASE_URL, { useValue: 'http://api' });
+    TestBed.overrideProvider(OffersApi, { useFactory: () => new HttpOffersApi() });
+    const api = TestBed.inject(OffersApi);
+    const http = TestBed.inject(HttpTestingController);
+    const posting = toJobPosting(MOCK.ofertas[0]);
+    const result = firstValueFrom(api.list());
+    const req = http.expectOne((r) => r.url === 'http://api/job-offers');
+    expect(req.request.params.get('limit')).toBe('100');
+    req.flush({ items: [posting], total: 1, page: 1, limit: 100, query: '', matched: true });
+    expect(await result).toEqual([posting]);
+  });
+});
+
+describe('HttpCandidacyApi', () => {
+  const contact: CandidateContact = {
+    fullName: 'Martina Rodríguez',
+    email: 'martina@ejemplo.com',
+    dni: '38.412.907',
+    whatsapp: '11 5555-0142',
+    zone: 'monte grande ',
+    position: 'Operario/a Pan 29',
+  };
+  let api: CandidacyApi;
+  let http: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: 'http://api' },
+        { provide: CandidacyApi, useClass: HttpCandidacyApi },
+      ],
+    });
+    api = TestBed.inject(CandidacyApi);
+    http = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => http.verify());
+
+  it('sube el CV como archivo y devuelve su id con los datos leídos', async () => {
+    const file = new File(['cv'], 'cv.pdf', { type: 'application/pdf' });
+    const result = firstValueFrom(api.readCv(file));
+    const req = http.expectOne('http://api/cv');
+    expect(req.request.method).toBe('POST');
+    expect((req.request.body as FormData).get('file')).toBeInstanceOf(File);
+    req.flush({ cvId: 'cv-1', fileName: 'cv.pdf', prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande', zoneId: 'z1' } });
+    expect(await result).toEqual({ cvId: 'cv-1', prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande' } });
+  });
+
+  it('envía la postulación con zona, oferta y CV, y devuelve el código de seguimiento', async () => {
+    const result = firstValueFrom(api.apply(contact, { offerRef: 'CSYP1233113446', cvId: 'cv-1' }));
+    http.expectOne('http://api/zones').flush([{ id: 'z1', name: 'Monte Grande' }]);
+    const req = http.expectOne('http://api/applications');
+    expect(req.request.body).toEqual({
+      fullName: 'Martina Rodríguez',
+      email: 'martina@ejemplo.com',
+      dni: '38.412.907',
+      whatsapp: '11 5555-0142',
+      position: 'Operario/a Pan 29',
+      channel: 'new_web',
+      zoneId: 'z1',
+      offerCode: 'CSYP1233113446',
+      cvId: 'cv-1',
+    });
+    req.flush({ trackingCode: 'GG-ABC123', status: 'received', stage: 0, position: 'Operario/a Pan 29', offer: null });
+    expect(await result).toEqual({ trackingCode: 'GG-ABC123', position: 'Operario/a Pan 29' });
+  });
+
+  it('sin zona conocida ni oferta, se postula igual sin esos campos', async () => {
+    const result = firstValueFrom(api.apply({ ...contact, zone: 'Atlántida' }, {}));
+    http.expectOne('http://api/zones').flush('error', { status: 500, statusText: 'Error' });
+    const req = http.expectOne('http://api/applications');
+    expect(Object.keys(req.request.body)).toEqual(['fullName', 'email', 'dni', 'whatsapp', 'position', 'channel']);
+    req.flush({ trackingCode: 'GG-XYZ789', position: contact.position });
+    await result;
+  });
+
+  it('compara zonas sin tildes ni mayúsculas', () => {
+    expect(zoneKey('  San  Martín ')).toBe(zoneKey('san martin'));
   });
 });

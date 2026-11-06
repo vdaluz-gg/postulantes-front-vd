@@ -7,6 +7,7 @@ import {
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
+import { provideBackendApis } from './app.backend';
 import { routes } from './app.routes';
 import { API_TOKEN, authInterceptor } from './core/api/api';
 import { AuthStore } from './features/backoffice/data/auth.store';
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
         return () => auth.token();
       },
     },
+    ...provideBackendApis(),
     provideClientHydration(),
     provideAppInitializer(() => {
       inject(ThemeService).init();
