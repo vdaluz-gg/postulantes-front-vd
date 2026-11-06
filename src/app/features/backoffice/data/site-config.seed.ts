@@ -63,6 +63,11 @@ const postulantes: AudienceConfig = {
           placeholder: 'Sin puntos',
           validation: { pattern: '^\\d{7,8}$', message: 'Revisá el DNI: son 7 u 8 números.' },
         }),
+        field('email', 'Email', 'email', {
+          required: true,
+          placeholder: 'nombre@ejemplo.com',
+          validation: { message: 'Revisá el email, por ejemplo nombre@ejemplo.com.' },
+        }),
         field('whatsapp', 'WhatsApp', 'tel', {
           required: true,
           placeholder: '11 5555-0000',

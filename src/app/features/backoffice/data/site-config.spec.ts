@@ -37,7 +37,7 @@ describe('configuración inicial', () => {
   });
 
   it('incluye los campos de la maqueta de cada portal', () => {
-    expect(fieldIds(seed, 'application')).toEqual(['fullName', 'dni', 'whatsapp', 'zone', 'position']);
+    expect(fieldIds(seed, 'application')).toEqual(['fullName', 'dni', 'email', 'whatsapp', 'zone', 'position']);
     const absence = seed.audiences.colaboradores.sections.find((s) => s.id === 'absence')!;
     expect(absence.fields.map((f) => f.label)).toEqual(['Desde', 'Hasta', 'Motivo', 'Comentario (opcional)']);
     expect(seed.audiences.clientes.documents.map((d) => d.name)).toContain('Certificado de cobertura ART');
@@ -68,7 +68,7 @@ describe('operaciones del editor', () => {
 
   it('agrega un campo después del elegido o al final', () => {
     const after = addField(seed, 'postulantes', 'application', 'dni');
-    expect(fieldIds(after.config, 'application')).toEqual(['fullName', 'dni', 'campo', 'whatsapp', 'zone', 'position']);
+    expect(fieldIds(after.config, 'application')).toEqual(['fullName', 'dni', 'campo', 'email', 'whatsapp', 'zone', 'position']);
     const atEnd = addField(after.config, 'postulantes', 'application');
     expect(atEnd.id).toBe('campo-2');
     expect(fieldIds(atEnd.config, 'application').at(-1)).toBe('campo-2');
