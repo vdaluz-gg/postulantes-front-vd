@@ -12,15 +12,27 @@
   <div class="replies">
     @for (action of actions(); track action.label) {
       @if (action.command; as cmd) {
-        <button appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" (click)="command.emit(cmd)">
+        <button
+          appPortadaButton
+          size="mini"
+          [variant]="action.primary ? 'pri' : 'sec'"
+          (click)="command.emit(cmd)"
+        >
           {{ action.label }}
         </button>
       } @else if (action.link) {
-        <a appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">
+        <a
+          appPortadaButton
+          size="mini"
+          [variant]="action.primary ? 'pri' : 'sec'"
+          [routerLink]="action.link"
+        >
           {{ action.label }}
         </a>
       } @else {
-        <button appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" disabled>{{ action.label }}</button>
+        <button appPortadaButton size="mini" [variant]="action.primary ? 'pri' : 'sec'" disabled>
+          {{ action.label }}
+        </button>
       }
     }
   </div>

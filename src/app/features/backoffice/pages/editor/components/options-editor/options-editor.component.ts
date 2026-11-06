@@ -53,7 +53,10 @@ export class OptionsEditorComponent {
 
   protected add(): void {
     const label = `Opción ${this.options().length + 1}`;
-    const value = uniqueId(slug(label), this.options().map((o) => o.value));
+    const value = uniqueId(
+      slug(label),
+      this.options().map((o) => o.value),
+    );
     this.emit([...this.options(), { value, label }], 'options-add');
   }
 

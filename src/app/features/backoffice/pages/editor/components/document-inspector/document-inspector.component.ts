@@ -15,7 +15,14 @@ const MAX_MB = 25;
 /** Documento que la persona tiene que subir: nombre, si es obligatorio, formatos, tamaño y vencimiento. */
 @Component({
   selector: 'app-document-inspector',
-  imports: [IconComponent, MatButtonModule, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [
+    IconComponent,
+    MatButtonModule,
+    BoSwitchComponent,
+    BoTextFieldComponent,
+    InspectorHeadComponent,
+    PropGroupComponent,
+  ],
   templateUrl: './document-inspector.component.html',
   styleUrl: '../item-inspector.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +38,9 @@ export class DocumentInspectorComponent extends ItemInspectorBase<'documents'> {
 
   protected toggleFormat(format: string): void {
     const current = this.item()?.formats ?? [];
-    const formats = current.includes(format) ? current.filter((f) => f !== format) : FORMATS.filter((f) => f === format || current.includes(f));
+    const formats = current.includes(format)
+      ? current.filter((f) => f !== format)
+      : FORMATS.filter((f) => f === format || current.includes(f));
     this.set({ formats });
   }
 

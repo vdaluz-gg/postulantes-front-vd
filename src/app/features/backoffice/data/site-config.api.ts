@@ -27,9 +27,15 @@ export class HttpSiteConfigApi extends SiteConfigApi {
 
   /** Si todavía no se guardó nada (404), se arranca de la configuración inicial. */
   load(): Observable<SiteConfig> {
-    return this.http.get<SiteConfig>(this.base).pipe(
-      catchError((e: unknown) => (e instanceof HttpErrorResponse && e.status === 404 ? of(SITE_CONFIG_SEED) : throwError(() => e))),
-    );
+    return this.http
+      .get<SiteConfig>(this.base)
+      .pipe(
+        catchError((e: unknown) =>
+          e instanceof HttpErrorResponse && e.status === 404
+            ? of(SITE_CONFIG_SEED)
+            : throwError(() => e),
+        ),
+      );
   }
 
   save(config: SiteConfig): Observable<SiteConfig> {
@@ -76,7 +82,12 @@ export class MockSiteConfigApi extends SiteConfigApi {
   }
 
   private read(): StoredConfig {
-    return this.storage.getJson<StoredConfig>(STORAGE_KEYS.backofficeConfig) ?? { draft: null, published: SITE_CONFIG_SEED };
+    return (
+      this.storage.getJson<StoredConfig>(STORAGE_KEYS.backofficeConfig) ?? {
+        draft: null,
+        published: SITE_CONFIG_SEED,
+      }
+    );
   }
 
   private write(value: StoredConfig): void {

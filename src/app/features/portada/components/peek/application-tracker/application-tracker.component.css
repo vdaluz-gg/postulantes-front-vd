@@ -1,10 +1,65 @@
-:host{list-style:none;margin:0;display:grid;gap:10px;padding-left:4px}
-.step{display:flex;align-items:center;gap:10px;font-size:13px;animation:enter .4s both}
-i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:0 0 auto}
-i svg{width:11px;height:11px;stroke-width:2.6}
-.step.done i{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
-.step.now i{border-color:var(--acc);animation:pulse 1.8s infinite}
-small{margin-left:auto;font:400 11px var(--font-mono);color:var(--mut)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@keyframes enter{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--acc) 50%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+:host {
+  list-style: none;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  padding-left: 4px;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  animation: enter 0.4s both;
+}
+i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+i svg {
+  width: 11px;
+  height: 11px;
+  stroke-width: 2.6;
+}
+.step.done i {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--on-acc);
+}
+.step.now i {
+  border-color: var(--acc);
+  animation: pulse 1.8s infinite;
+}
+small {
+  margin-left: auto;
+  font: 400 11px var(--font-mono);
+  color: var(--mut);
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 50%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}

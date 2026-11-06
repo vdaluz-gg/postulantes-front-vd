@@ -24,6 +24,11 @@
     </aside>
   </div>
   <nav class="panes" aria-label="Paneles del editor">
-    <bo-segmented label="Panel" [options]="panes" [value]="pane()" (valueChange)="setPane($event)" />
+    <bo-segmented
+      label="Panel"
+      [options]="panes"
+      [value]="pane()"
+      (valueChange)="setPane($event)"
+    />
   </nav>
 }

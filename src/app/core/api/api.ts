@@ -41,15 +41,22 @@ export interface ApiError {
 }
 
 /** Primer mensaje legible de un error de la API o de la red. */
-export function errorMessage(error: unknown, fallback = 'No pudimos completar la acción. Probá de nuevo.'): string {
+export function errorMessage(
+  error: unknown,
+  fallback = 'No pudimos completar la acción. Probá de nuevo.',
+): string {
   if (error instanceof HttpErrorResponse && error.status === 429) {
     return 'Hiciste muchos intentos seguidos. Esperá un minuto y probá de nuevo.';
   }
-  const body = error instanceof HttpErrorResponse ? (error.error as Partial<ApiError> | null) : (error as Partial<ApiError> | null);
+  const body =
+    error instanceof HttpErrorResponse
+      ? (error.error as Partial<ApiError> | null)
+      : (error as Partial<ApiError> | null);
   const message = body?.message;
   if (Array.isArray(message)) return message[0] ?? fallback;
   if (typeof message === 'string' && message) return message;
-  if (error instanceof HttpErrorResponse && error.status === 0) return 'No hay conexión con el servidor.';
+  if (error instanceof HttpErrorResponse && error.status === 0)
+    return 'No hay conexión con el servidor.';
   return fallback;
 }
 

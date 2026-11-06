@@ -10,7 +10,24 @@ export interface JobSearchResult {
 }
 
 /** Palabras que no ayudan a encontrar el tipo de trabajo. */
-const STOPWORDS = new Set(['algo', 'trabajo', 'empleo', 'cerca', 'busco', 'quiero', 'para', 'con', 'una', 'uno', 'del', 'las', 'los', 'que', 'por', 'mas']);
+const STOPWORDS = new Set([
+  'algo',
+  'trabajo',
+  'empleo',
+  'cerca',
+  'busco',
+  'quiero',
+  'para',
+  'con',
+  'una',
+  'uno',
+  'del',
+  'las',
+  'los',
+  'que',
+  'por',
+  'mas',
+]);
 
 const terms = (query: string): string[] =>
   normalize(query)
@@ -39,5 +56,7 @@ export function searchJobs(query: string, offers: readonly JobPosting[]): JobSea
     .sort((a, b) => b.score - a.score || a.order - b.order)
     .map((hit) => hit.job);
 
-  return hits.length ? { query: trimmed, jobs: hits, matched: true } : { query: trimmed, jobs: offers, matched: false };
+  return hits.length
+    ? { query: trimmed, jobs: hits, matched: true }
+    : { query: trimmed, jobs: offers, matched: false };
 }

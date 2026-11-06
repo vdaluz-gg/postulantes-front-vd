@@ -51,7 +51,13 @@ export const localDate = (date = new Date()): string =>
 
 /** Avisos activos, con mensaje y dentro de sus fechas. */
 export const activeAlerts = (alerts: readonly AlertConfig[], today: string): AlertConfig[] =>
-  alerts.filter((a) => a.active && a.message.trim() && (!a.startsOn || a.startsOn <= today) && (!a.endsOn || today <= a.endsOn));
+  alerts.filter(
+    (a) =>
+      a.active &&
+      a.message.trim() &&
+      (!a.startsOn || a.startsOn <= today) &&
+      (!a.endsOn || today <= a.endsOn),
+  );
 
 /**
  * Textos publicados aplicados a un perfil. El título se parte en la última coma: lo que sigue va
@@ -68,14 +74,22 @@ export function withCopy(persona: Persona, copy: readonly CopyConfig[]): Persona
   return {
     ...persona,
     kicker: text('kicker') ?? persona.kicker,
-    ...(title && { title: cut > 0 ? title.slice(0, cut + 1) : title, highlight: cut > 0 ? title.slice(cut + 1).trim() : '' }),
-    prompt: { ...persona.prompt, placeholder: text('searchPlaceholder') ?? persona.prompt.placeholder },
+    ...(title && {
+      title: cut > 0 ? title.slice(0, cut + 1) : title,
+      highlight: cut > 0 ? title.slice(cut + 1).trim() : '',
+    }),
+    prompt: {
+      ...persona.prompt,
+      placeholder: text('searchPlaceholder') ?? persona.prompt.placeholder,
+    },
     suggestions: suggestions?.length ? suggestions : persona.suggestions,
     footnote: text('footnote') ?? persona.footnote,
   };
 }
 
-const SEED_APPLICATION = SITE_CONFIG_SEED.audiences.postulantes.sections.find((s) => s.id === APPLICATION_SECTION)!;
+const SEED_APPLICATION = SITE_CONFIG_SEED.audiences.postulantes.sections.find(
+  (s) => s.id === APPLICATION_SECTION,
+)!;
 
 /**
  * Configuración publicada para postulantes, lista para la portada: textos del panel, avisos y campos
@@ -87,7 +101,9 @@ export class PortadaConfig {
 
   readonly postulantes = signal<AudienceConfig>(SITE_CONFIG_SEED.audiences.postulantes);
   readonly applicationFields = computed<readonly FieldConfig[]>(
-    () => this.postulantes().sections.find((s) => s.id === APPLICATION_SECTION)?.fields ?? SEED_APPLICATION.fields,
+    () =>
+      this.postulantes().sections.find((s) => s.id === APPLICATION_SECTION)?.fields ??
+      SEED_APPLICATION.fields,
   );
   readonly alerts = computed(() => activeAlerts(this.postulantes().alerts, localDate()));
 

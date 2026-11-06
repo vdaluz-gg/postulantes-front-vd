@@ -51,7 +51,10 @@ export class HoloAvatarLoaderService {
       const script = this.doc.createElement('script');
       script.src = ENGINE_URL;
       script.async = true;
-      script.onload = () => (win?.AvatarHolo ? resolve(win.AvatarHolo) : reject(new Error('El motor 3D no expuso AvatarHolo')));
+      script.onload = () =>
+        win?.AvatarHolo
+          ? resolve(win.AvatarHolo)
+          : reject(new Error('El motor 3D no expuso AvatarHolo'));
       script.onerror = () => reject(new Error('No se pudo cargar el motor 3D'));
       this.doc.head.appendChild(script);
     });

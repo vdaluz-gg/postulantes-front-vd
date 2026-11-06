@@ -1,31 +1,200 @@
-:host{display:flex;flex-direction:column;min-height:0;height:100%}
-.head{display:flex;align-items:center;gap:10px;padding:14px 12px 8px 16px}
-.head button{margin-left:auto}
-.aud{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;border:1px solid var(--tone);font-size:12px;font-weight:700;color:var(--ink)}
-.aud::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--tone)}
-h2{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
-.search{padding:0 12px 10px}
-.search input{width:100%;min-height:38px;padding:0 12px;border-radius:999px;border:1px solid var(--line2);background:var(--surface2);color:var(--ink);font:14px var(--font)}
-.search input:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
-.groups{flex:1;min-height:0;overflow:auto;padding:0 8px 24px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
-.group{padding:6px 0 10px;border-top:1px solid var(--line)}
-.group:first-child{border-top:0}
-.gh{display:flex;align-items:center;gap:4px;padding:2px 2px 4px}
-.gt{flex:1;min-width:0;min-height:34px;padding:0 8px;border:0;border-radius:10px;background:none;color:var(--ink);font:700 13.5px var(--font);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-button.gt:hover{background:var(--surface2)}
-.gt[aria-current]{background:var(--tint-vio);color:var(--vio-t)}
-.gt.plain{display:flex;align-items:center}
-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
-.layer{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:6px 8px 6px 18px;border:0;border-radius:10px;background:none;color:var(--ink);text-align:left;transition:background .15s var(--ease)}
-.layer:hover{background:var(--surface2)}
-.layer[aria-current]{background:var(--tint-vio)}
-.layer[aria-current]::before{content:"";position:absolute;left:4px;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--vio)}
-.layer svg{flex:none;width:16px;height:16px;color:var(--mut)}
-.layer[aria-current] svg{color:var(--vio-t)}
-.tx{display:flex;flex-direction:column;min-width:0;flex:1}
-.tx b{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx small{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.muted .tx b{color:var(--mut)}
-.flag{flex:none;padding:2px 8px;border-radius:999px;background:var(--surface2);color:var(--mut);font-size:11.5px;font-weight:600}
-.empty{padding:4px 18px 6px;font-size:12.5px;color:var(--mut)}
-@media (pointer:coarse){.layer{min-height:44px}.gt{min-height:44px}.search input{min-height:44px}}
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px 8px 16px;
+}
+.head button {
+  margin-left: auto;
+}
+.aud {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tone);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.aud::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+h2 {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.search {
+  padding: 0 12px 10px;
+}
+.search input {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line2);
+  background: var(--surface2);
+  color: var(--ink);
+  font: 14px var(--font);
+}
+.search input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+.groups {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line2) transparent;
+}
+.group {
+  padding: 6px 0 10px;
+  border-top: 1px solid var(--line);
+}
+.group:first-child {
+  border-top: 0;
+}
+.gh {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 2px 4px;
+}
+.gt {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--ink);
+  font: 700 13.5px var(--font);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+button.gt:hover {
+  background: var(--surface2);
+}
+.gt[aria-current] {
+  background: var(--tint-vio);
+  color: var(--vio-t);
+}
+.gt.plain {
+  display: flex;
+  align-items: center;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.layer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 8px 6px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  transition: background 0.15s var(--ease);
+}
+.layer:hover {
+  background: var(--surface2);
+}
+.layer[aria-current] {
+  background: var(--tint-vio);
+}
+.layer[aria-current]::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--vio);
+}
+.layer svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--mut);
+}
+.layer[aria-current] svg {
+  color: var(--vio-t);
+}
+.tx {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.tx b {
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx small {
+  font-size: 12px;
+  color: var(--mut);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.muted .tx b {
+  color: var(--mut);
+}
+.flag {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface2);
+  color: var(--mut);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.empty {
+  padding: 4px 18px 6px;
+  font-size: 12.5px;
+  color: var(--mut);
+}
+@media (pointer: coarse) {
+  .layer {
+    min-height: 44px;
+  }
+  .gt {
+    min-height: 44px;
+  }
+  .search input {
+    min-height: 44px;
+  }
+}

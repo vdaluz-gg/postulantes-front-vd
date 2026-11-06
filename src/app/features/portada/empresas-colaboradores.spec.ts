@@ -4,7 +4,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MotionService } from '../../core/services/motion.service';
 import { HoloAvatarLoaderService } from '../../shared/three/holo-avatar-loader.service';
-import { cardSteps, latestReceipts, nextPayday, readCertificate, topicForQuestion } from './colaboradores/collaborator-data';
+import {
+  cardSteps,
+  latestReceipts,
+  nextPayday,
+  readCertificate,
+  topicForQuestion,
+} from './colaboradores/collaborator-data';
 import { COMPANY_SERVICES, draftProposal, recommendService } from './empresas/company-services';
 import { PortadaPage } from './portada.page';
 
@@ -26,7 +32,11 @@ describe('Empresas: datos de ejemplo', () => {
       'CABA',
       'Lo antes posible · te contactamos hoy',
     ]);
-    expect(draftProposal('40 operarios en Monte Grande', service).slice(1, 3).map((r) => r.value)).toEqual(['40 personas', 'Monte Grande']);
+    expect(
+      draftProposal('40 operarios en Monte Grande', service)
+        .slice(1, 3)
+        .map((r) => r.value),
+    ).toEqual(['40 personas', 'Monte Grande']);
   });
 });
 
@@ -43,7 +53,10 @@ describe('Colaboradores: datos de ejemplo', () => {
 
   it('calcula las fechas desde hoy', () => {
     expect(nextPayday(today)).toEqual({ label: '05 de diciembre', countdown: 'en 29 días' });
-    expect(nextPayday(new Date(2026, 10, 4))).toEqual({ label: '05 de noviembre', countdown: 'mañana' });
+    expect(nextPayday(new Date(2026, 10, 4))).toEqual({
+      label: '05 de noviembre',
+      countdown: 'mañana',
+    });
     expect(latestReceipts(today).map((r) => [r.title, r.signedOn])).toEqual([
       ['Recibo de octubre', null],
       ['Recibo de septiembre', '06/10'],
@@ -65,11 +78,14 @@ describe('Paneles de Empresas y Colaboradores', () => {
     fixture.detectChanges();
   };
   const button = (label: string) =>
-    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().startsWith(label))!;
+    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().startsWith(label),
+    )!;
   const chips = () => Array.from(el.querySelectorAll<HTMLButtonElement>('button[appTopicChip]'));
   const pressed = () => chips().map((c) => c.getAttribute('aria-pressed'));
   const peekTitle = () => el.querySelector('[appPeekPanel] .ph')?.textContent!.trim();
-  const say = () => el.querySelector('[appPeekPanel] .say')?.textContent!.replace(/\s+/g, ' ').trim();
+  const say = () =>
+    el.querySelector('[appPeekPanel] .say')?.textContent!.replace(/\s+/g, ' ').trim();
   const toast = () => el.querySelector('p[appToast]')!.textContent!.trim();
   const open = async (index: number) => {
     el.querySelectorAll<HTMLButtonElement>('app-persona-figure .hit')[index].click();
@@ -90,7 +106,13 @@ describe('Paneles de Empresas y Colaboradores', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: HoloAvatarLoaderService, useValue: { create: () => new Promise(() => undefined), loadModel: () => new Promise(() => undefined) } },
+        {
+          provide: HoloAvatarLoaderService,
+          useValue: {
+            create: () => new Promise(() => undefined),
+            loadModel: () => new Promise(() => undefined),
+          },
+        },
         { provide: MotionService, useValue: { reduced: () => true } },
       ],
     }).compileComponents();
@@ -109,11 +131,9 @@ describe('Paneles de Empresas y Colaboradores', () => {
       chips()[3].dispatchEvent(new Event('pointerenter'));
       await render();
       expect(peekTitle()).toBe('04 · Outsourcing de capital humano');
-      expect(Array.from(el.querySelectorAll('[appServicePreview] .incs li')).map((li) => li.textContent)).toEqual([
-        'Liquidación de sueldos',
-        'Recibos digitales',
-        'Atención al colaborador',
-      ]);
+      expect(
+        Array.from(el.querySelectorAll('[appServicePreview] .incs li')).map((li) => li.textContent),
+      ).toEqual(['Liquidación de sueldos', 'Recibos digitales', 'Atención al colaborador']);
     });
 
     it('la consulta recomienda un servicio, arma la propuesta y la envía a un asesor', async () => {
@@ -124,7 +144,9 @@ describe('Paneles de Empresas y Colaboradores', () => {
       button('Armar la propuesta').click();
       await render();
       expect(peekTitle()).toBe('Propuesta armada por la IA');
-      expect(Array.from(el.querySelectorAll('[appProposalForm] dd')).map((d) => d.textContent)).toEqual([
+      expect(
+        Array.from(el.querySelectorAll('[appProposalForm] dd')).map((d) => d.textContent),
+      ).toEqual([
         'Búsqueda y selección',
         'A definir',
         'CABA',
@@ -182,7 +204,8 @@ describe('Paneles de Empresas y Colaboradores', () => {
     it('sube un certificado: la IA lo lee y lo carga; rechaza lo que no es foto ni PDF', async () => {
       chips()[2].click();
       await render();
-      const fileInput = () => el.querySelector<HTMLInputElement>('[appCertificateDrop] input[type=file]')!;
+      const fileInput = () =>
+        el.querySelector<HTMLInputElement>('[appCertificateDrop] input[type=file]')!;
       expect(fileInput().accept).toBe('image/*,.pdf,application/pdf');
       const choose = async (file: File) => {
         const input = fileInput();
@@ -191,12 +214,16 @@ describe('Paneles de Empresas y Colaboradores', () => {
         await render();
       };
       await choose(new File(['x'], 'nota.txt', { type: 'text/plain' }));
-      expect(say()).toBe('Ese archivo no es una foto ni un PDF. Sacale una foto al certificado o subilo en PDF.');
+      expect(say()).toBe(
+        'Ese archivo no es una foto ni un PDF. Sacale una foto al certificado o subilo en PDF.',
+      );
 
       chips()[2].click();
       await render();
       await choose(new File(['x'], 'certificado.jpg', { type: 'image/jpeg' }));
-      expect(say()).toMatch(/^Certificado cargado\. La IA lo reconoció como certificado médico · 2 días/);
+      expect(say()).toMatch(
+        /^Certificado cargado\. La IA lo reconoció como certificado médico · 2 días/,
+      );
       expect(toast()).toBe('Certificado cargado ✓');
     });
 

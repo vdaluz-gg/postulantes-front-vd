@@ -23,5 +23,7 @@ export class SoundToggleComponent {
   protected readonly label = computed(() =>
     this.sound.enabled() ? 'Silenciar sonidos y voz' : 'Activar sonidos y voz',
   );
-  protected readonly title = computed(() => (this.sound.enabled() ? 'Sonido activado' : 'Sonido desactivado'));
+  protected readonly title = computed(() =>
+    this.sound.enabled() ? 'Sonido activado' : 'Sonido desactivado',
+  );
 }

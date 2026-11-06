@@ -11,7 +11,14 @@ import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.compo
 /** Texto visible del portal (título, bajada, sugerencias) y su nombre interno. */
 @Component({
   selector: 'app-copy-inspector',
-  imports: [IconComponent, MatButtonModule, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [
+    IconComponent,
+    MatButtonModule,
+    BoSwitchComponent,
+    BoTextFieldComponent,
+    InspectorHeadComponent,
+    PropGroupComponent,
+  ],
   templateUrl: './copy-inspector.component.html',
   styleUrl: '../item-inspector.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

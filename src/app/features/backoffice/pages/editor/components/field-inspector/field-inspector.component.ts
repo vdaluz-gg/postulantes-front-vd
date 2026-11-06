@@ -13,7 +13,15 @@ import {
   FieldValidation,
   hasOptions,
 } from '../../../../data/site-config.model';
-import { addField, duplicateField, findField, findSection, moveField, removeField, updateField } from '../../../../data/site-config.ops';
+import {
+  addField,
+  duplicateField,
+  findField,
+  findSection,
+  moveField,
+  removeField,
+  updateField,
+} from '../../../../data/site-config.ops';
 import { IslandService } from '../../../../ui/bo-island/island.service';
 import { BoSelectFieldComponent } from '../../../../ui/bo-select-field/bo-select-field.component';
 import { BoSwitchComponent } from '../../../../ui/bo-switch/bo-switch.component';
@@ -49,19 +57,29 @@ export class FieldInspectorComponent {
   private readonly store = inject(EditorStore);
   private readonly island = inject(IslandService);
 
-  protected readonly typeOptions = FIELD_TYPES.map((value) => ({ value, label: FIELD_TYPE_LABEL[value] }));
-  protected readonly tones = FIELD_TONES.map((value) => ({ value, label: FIELD_TONE_LABEL[value] }));
+  protected readonly typeOptions = FIELD_TYPES.map((value) => ({
+    value,
+    label: FIELD_TYPE_LABEL[value],
+  }));
+  protected readonly tones = FIELD_TONES.map((value) => ({
+    value,
+    label: FIELD_TONE_LABEL[value],
+  }));
   /** El color «del portal» depende del público que se edita. */
   protected readonly audienceColor = computed(() => `var(--aud-${this.store.audience()})`);
   protected readonly patternHelp = 'Para el equipo técnico. Ej.: ^\\d{7,8}$ para un DNI.';
 
   protected readonly field = computed(() => {
     const config = this.store.config();
-    return config ? findField(config, this.store.audience(), this.sectionId(), this.fieldId()) : undefined;
+    return config
+      ? findField(config, this.store.audience(), this.sectionId(), this.fieldId())
+      : undefined;
   });
   protected readonly sectionTitle = computed(() => {
     const config = this.store.config();
-    return config ? (findSection(config, this.store.audience(), this.sectionId())?.title ?? '') : '';
+    return config
+      ? (findSection(config, this.store.audience(), this.sectionId())?.title ?? '')
+      : '';
   });
   protected readonly position = computed(() => {
     const section = findSection(this.store.config()!, this.store.audience(), this.sectionId());
@@ -74,9 +92,12 @@ export class FieldInspectorComponent {
 
   protected set(patch: Partial<Omit<FieldConfig, 'id'>>, key?: string): void {
     const audience = this.store.audience();
-    this.store.apply(updateField(this.store.config()!, audience, this.sectionId(), this.fieldId(), patch), {
-      key: key && `${audience}.${this.sectionId()}.${this.fieldId()}.${key}`,
-    });
+    this.store.apply(
+      updateField(this.store.config()!, audience, this.sectionId(), this.fieldId(), patch),
+      {
+        key: key && `${audience}.${this.sectionId()}.${this.fieldId()}.${key}`,
+      },
+    );
   }
 
   protected setType(type: string): void {
@@ -98,7 +119,10 @@ export class FieldInspectorComponent {
     if (numeric && value !== undefined && Number.isNaN(value)) return;
     const validation: Record<string, unknown> = { ...this.field()?.validation, [rule]: value };
     for (const k of Object.keys(validation)) if (validation[k] === undefined) delete validation[k];
-    this.set({ validation: Object.keys(validation).length ? (validation as FieldValidation) : undefined }, `rule-${rule}`);
+    this.set(
+      { validation: Object.keys(validation).length ? (validation as FieldValidation) : undefined },
+      `rule-${rule}`,
+    );
   }
 
   protected rule(rule: keyof FieldValidation): string {
@@ -107,7 +131,15 @@ export class FieldInspectorComponent {
   }
 
   protected move(offset: -1 | 1): void {
-    this.store.apply(moveField(this.store.config()!, this.store.audience(), this.sectionId(), this.fieldId(), offset));
+    this.store.apply(
+      moveField(
+        this.store.config()!,
+        this.store.audience(),
+        this.sectionId(),
+        this.fieldId(),
+        offset,
+      ),
+    );
   }
 
   protected duplicate(): void {
@@ -128,8 +160,17 @@ export class FieldInspectorComponent {
 
   protected remove(): void {
     const label = this.field()?.label ?? '';
-    this.store.apply(removeField(this.store.config()!, this.store.audience(), this.sectionId(), this.fieldId()));
-    this.store.select({ kind: 'section', audience: this.store.audience(), sectionId: this.sectionId() });
-    this.island.show(`Borraste «${label}».`, { actionLabel: 'Deshacer', action: () => this.store.undo() });
+    this.store.apply(
+      removeField(this.store.config()!, this.store.audience(), this.sectionId(), this.fieldId()),
+    );
+    this.store.select({
+      kind: 'section',
+      audience: this.store.audience(),
+      sectionId: this.sectionId(),
+    });
+    this.island.show(`Borraste «${label}».`, {
+      actionLabel: 'Deshacer',
+      action: () => this.store.undo(),
+    });
   }
 }

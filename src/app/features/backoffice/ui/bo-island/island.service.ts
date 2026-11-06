@@ -17,8 +17,17 @@ export class IslandService {
 
   readonly message = signal<IslandMessage | null>(null);
 
-  show(text: string, options: { tone?: 'ok' | 'alert'; actionLabel?: string; action?: () => void } = {}): void {
-    this.message.set({ id: this.nextId++, text, tone: options.tone ?? 'ok', actionLabel: options.actionLabel, action: options.action });
+  show(
+    text: string,
+    options: { tone?: 'ok' | 'alert'; actionLabel?: string; action?: () => void } = {},
+  ): void {
+    this.message.set({
+      id: this.nextId++,
+      text,
+      tone: options.tone ?? 'ok',
+      actionLabel: options.actionLabel,
+      action: options.action,
+    });
     this.sound.play('notify');
   }
 

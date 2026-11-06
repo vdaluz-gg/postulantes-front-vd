@@ -62,19 +62,27 @@ describe('servicios core', () => {
     beforeEach(() => {
       oscillators.length = 0;
       const param = () => ({ setValueAtTime: jest.fn(), exponentialRampToValueAtTime: jest.fn() });
-      (globalThis as { AudioContext?: unknown }).AudioContext = jest.fn().mockImplementation(() => ({
-        currentTime: 0,
-        state: 'running',
-        destination: {},
-        createOscillator: () => {
-          const osc = { type: '', frequency: param(), connect: jest.fn(), start: jest.fn(), stop: jest.fn() };
-          oscillators.push({ frequency: 0 });
-          return osc;
-        },
-        createGain: () => ({ gain: param(), connect: jest.fn() }),
-        resume: jest.fn().mockResolvedValue(undefined),
-        close: jest.fn().mockResolvedValue(undefined),
-      }));
+      (globalThis as { AudioContext?: unknown }).AudioContext = jest
+        .fn()
+        .mockImplementation(() => ({
+          currentTime: 0,
+          state: 'running',
+          destination: {},
+          createOscillator: () => {
+            const osc = {
+              type: '',
+              frequency: param(),
+              connect: jest.fn(),
+              start: jest.fn(),
+              stop: jest.fn(),
+            };
+            oscillators.push({ frequency: 0 });
+            return osc;
+          },
+          createGain: () => ({ gain: param(), connect: jest.fn() }),
+          resume: jest.fn().mockResolvedValue(undefined),
+          close: jest.fn().mockResolvedValue(undefined),
+        }));
     });
 
     afterEach(() => delete (globalThis as { AudioContext?: unknown }).AudioContext);

@@ -3,65 +3,76 @@
  * diseño, así toman el azul del backoffice, las píldoras y los neutros en tema claro y oscuro.
  * Solo aplica dentro de app-backoffice-shell; la portada no usa Material.
  */
-app-backoffice-shell{
-  --mat-sys-primary:var(--vio);
-  --mat-sys-on-primary:var(--on);
-  --mat-sys-primary-container:var(--tint-vio);
-  --mat-sys-on-primary-container:var(--vio-t);
-  --mat-sys-secondary-container:var(--surface2);
-  --mat-sys-on-secondary-container:var(--ink);
-  --mat-sys-surface:var(--surface);
-  --mat-sys-on-surface:var(--ink);
-  --mat-sys-on-surface-variant:var(--mut);
-  --mat-sys-outline:var(--line2);
-  --mat-sys-corner-full:999px;
-  --mat-sys-corner-large:18px;
-  --mat-sys-corner-medium:12px;
-  --mat-sys-label-large-font:var(--font);
-  --mat-sys-label-large-size:14.5px;
-  --mat-sys-label-large-weight:600;
-  --mat-sys-label-large-tracking:0;
-  --mat-sys-label-large-line-height:20px;
-  --mat-sys-hover-state-layer-opacity:.08;
-  --mat-sys-focus-state-layer-opacity:.12;
-  --mat-sys-pressed-state-layer-opacity:.12;
-  --mat-sys-level0:none;
-  --mat-sys-level1:0 1px 3px rgba(0,0,0,.25);
-  --mat-sys-level2:0 3px 8px rgba(0,0,0,.25);
-  --mat-sys-level3:0 6px 16px rgba(0,0,0,.25);
-  --mat-sys-level4:0 10px 24px rgba(0,0,0,.25);
-  --mat-sys-level5:0 18px 50px rgba(0,0,0,.3);
+app-backoffice-shell {
+  --mat-sys-primary: var(--vio);
+  --mat-sys-on-primary: var(--on);
+  --mat-sys-primary-container: var(--tint-vio);
+  --mat-sys-on-primary-container: var(--vio-t);
+  --mat-sys-secondary-container: var(--surface2);
+  --mat-sys-on-secondary-container: var(--ink);
+  --mat-sys-surface: var(--surface);
+  --mat-sys-on-surface: var(--ink);
+  --mat-sys-on-surface-variant: var(--mut);
+  --mat-sys-outline: var(--line2);
+  --mat-sys-corner-full: 999px;
+  --mat-sys-corner-large: 18px;
+  --mat-sys-corner-medium: 12px;
+  --mat-sys-label-large-font: var(--font);
+  --mat-sys-label-large-size: 14.5px;
+  --mat-sys-label-large-weight: 600;
+  --mat-sys-label-large-tracking: 0;
+  --mat-sys-label-large-line-height: 20px;
+  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-focus-state-layer-opacity: 0.12;
+  --mat-sys-pressed-state-layer-opacity: 0.12;
+  --mat-sys-level0: none;
+  --mat-sys-level1: 0 1px 3px rgba(0, 0, 0, 0.25);
+  --mat-sys-level2: 0 3px 8px rgba(0, 0, 0, 0.25);
+  --mat-sys-level3: 0 6px 16px rgba(0, 0, 0, 0.25);
+  --mat-sys-level4: 0 10px 24px rgba(0, 0, 0, 0.25);
+  --mat-sys-level5: 0 18px 50px rgba(0, 0, 0, 0.3);
   /* Botones de 44 px de alto (área táctil del sistema) y con borde neutro en la variante con contorno. */
-  --mat-button-filled-container-height:44px;
-  --mat-button-outlined-container-height:44px;
-  --mat-button-text-container-height:44px;
-  --mat-button-outlined-label-text-color:var(--ink);
-  --mat-button-text-label-text-color:var(--vio-t);
-  --mat-icon-button-state-layer-size:44px;
-  --mat-icon-button-icon-size:20px;
-  --mat-icon-button-icon-color:var(--mut);
+  --mat-button-filled-container-height: 44px;
+  --mat-button-outlined-container-height: 44px;
+  --mat-button-text-container-height: 44px;
+  --mat-button-outlined-label-text-color: var(--ink);
+  --mat-button-text-label-text-color: var(--vio-t);
+  --mat-icon-button-state-layer-size: 44px;
+  --mat-icon-button-icon-size: 20px;
+  --mat-icon-button-icon-color: var(--mut);
 }
 
 /* Variante chica (barras y paneles): 36 px de alto y 32 px en los de ícono; 44 px en pantallas táctiles. */
-app-backoffice-shell .bo-sm{
-  --mat-button-filled-container-height:36px;
-  --mat-button-outlined-container-height:36px;
-  --mat-button-text-container-height:36px;
-  --mat-sys-label-large-size:13.5px;
-  --mat-icon-button-state-layer-size:32px;
-  --mat-icon-button-icon-size:17px;
+app-backoffice-shell .bo-sm {
+  --mat-button-filled-container-height: 36px;
+  --mat-button-outlined-container-height: 36px;
+  --mat-button-text-container-height: 36px;
+  --mat-sys-label-large-size: 13.5px;
+  --mat-icon-button-state-layer-size: 32px;
+  --mat-icon-button-icon-size: 17px;
 }
-@media (pointer:coarse){
-  app-backoffice-shell .bo-sm{
-    --mat-button-filled-container-height:44px;
-    --mat-button-outlined-container-height:44px;
-    --mat-button-text-container-height:44px;
-    --mat-icon-button-state-layer-size:44px;
+@media (pointer: coarse) {
+  app-backoffice-shell .bo-sm {
+    --mat-button-filled-container-height: 44px;
+    --mat-button-outlined-container-height: 44px;
+    --mat-button-text-container-height: 44px;
+    --mat-icon-button-state-layer-size: 44px;
   }
 }
 
 /* Los íconos del sistema (svg de trazo) dentro del botón de ícono de Material, centrados. */
-app-backoffice-shell .mat-mdc-icon-button svg{display:block;width:var(--mat-icon-button-icon-size);height:var(--mat-icon-button-icon-size)}
-app-backoffice-shell .mat-mdc-icon-button:hover{color:var(--ink)}
-app-backoffice-shell .mat-mdc-icon-button[aria-pressed="true"]{background:var(--tint-vio);color:var(--vio-t)}
-app-backoffice-shell .mat-mdc-button-base{white-space:nowrap}
+app-backoffice-shell .mat-mdc-icon-button svg {
+  display: block;
+  width: var(--mat-icon-button-icon-size);
+  height: var(--mat-icon-button-icon-size);
+}
+app-backoffice-shell .mat-mdc-icon-button:hover {
+  color: var(--ink);
+}
+app-backoffice-shell .mat-mdc-icon-button[aria-pressed='true'] {
+  background: var(--tint-vio);
+  color: var(--vio-t);
+}
+app-backoffice-shell .mat-mdc-button-base {
+  white-space: nowrap;
+}

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  afterNextRender,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { MotionService } from '../../../../core/services/motion.service';
 import { PortadaButtonComponent } from '../../components/portada-button/portada-button.component';
 import { ProposalRow } from '../company-services';
@@ -44,7 +53,9 @@ export class ProposalFormComponent {
     texts.forEach((text, row) => {
       this.later(at, () => this.typing.set(row));
       for (let i = 1; i <= text.length; i++) {
-        this.later(at + i * TYPE_CHAR_MS, () => this.values.update((v) => Object.assign([...v], { [row]: text.slice(0, i) })));
+        this.later(at + i * TYPE_CHAR_MS, () =>
+          this.values.update((v) => Object.assign([...v], { [row]: text.slice(0, i) })),
+        );
       }
       at += text.length * TYPE_CHAR_MS + TYPE_FIELD_MS;
     });

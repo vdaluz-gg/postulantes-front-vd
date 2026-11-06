@@ -1,8 +1,19 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
-import { API_BASE_URL, API_TOKEN, API_UNAUTHORIZED, authInterceptor, errorMessage } from '../../../core/api/api';
+import {
+  API_BASE_URL,
+  API_TOKEN,
+  API_UNAUTHORIZED,
+  authInterceptor,
+  errorMessage,
+} from '../../../core/api/api';
 import { STORAGE_KEYS } from '../../../core/services/storage.service';
 import { AuthApi, DEMO_USERS, HttpAuthApi, MockAuthApi } from './auth.api';
 import { AuthStore } from './auth.store';
@@ -16,7 +27,9 @@ describe('login simulado', () => {
   beforeEach(() => {
     sessionStorage.clear();
     jest.useFakeTimers();
-    TestBed.configureTestingModule({ providers: [{ provide: AuthApi, useValue: new MockAuthApi() }] });
+    TestBed.configureTestingModule({
+      providers: [{ provide: AuthApi, useValue: new MockAuthApi() }],
+    });
   });
   afterEach(() => jest.useRealTimers());
 
@@ -26,7 +39,12 @@ describe('login simulado', () => {
     const done = firstValueFrom(auth.login(` ${user.email.toUpperCase()} `, user.password));
     jest.advanceTimersByTime(600);
     const response = await done;
-    expect(response.admin).toEqual({ id: user.id, email: user.email, fullName: user.fullName, role: 'marketing' });
+    expect(response.admin).toEqual({
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      role: 'marketing',
+    });
     expect(JSON.stringify(response)).not.toContain(user.password);
     expect(auth.loggedIn()).toBe(true);
     expect(sessionStorage.getItem(STORAGE_KEYS.backofficeSession)).toContain(response.accessToken);
@@ -39,20 +57,34 @@ describe('login simulado', () => {
   it('con datos incorrectos responde como el backend, sin decir qué falló', async () => {
     const failed = firstValueFrom(TestBed.inject(AuthStore).login(DEMO_USERS[0].email, 'otra'));
     jest.advanceTimersByTime(600);
-    await expect(failed).rejects.toEqual(expect.objectContaining({ statusCode: 401, message: 'Credenciales inválidas' }));
+    await expect(failed).rejects.toEqual(
+      expect.objectContaining({ statusCode: 401, message: 'Credenciales inválidas' }),
+    );
   });
 
   it('el mock también confirma el token, y rechaza uno desconocido', async () => {
     const api = new MockAuthApi();
-    expect((await firstValueFrom(api.me(`mock.${DEMO_USERS[1].id}`))).email).toBe(DEMO_USERS[1].email);
-    await expect(firstValueFrom(api.me('otro'))).rejects.toEqual(expect.objectContaining({ statusCode: 401 }));
+    expect((await firstValueFrom(api.me(`mock.${DEMO_USERS[1].id}`))).email).toBe(
+      DEMO_USERS[1].email,
+    );
+    await expect(firstValueFrom(api.me('otro'))).rejects.toEqual(
+      expect.objectContaining({ statusCode: 401 }),
+    );
   });
 });
 
 describe('API', () => {
   it('extrae el mensaje del formato de error del backend', () => {
-    expect(errorMessage({ statusCode: 400, error: 'Bad Request', message: ['El correo no es válido', 'otro'] })).toBe('El correo no es válido');
-    expect(errorMessage({ statusCode: 401, error: 'Unauthorized', message: 'Token inválido o vencido' })).toBe('Token inválido o vencido');
+    expect(
+      errorMessage({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: ['El correo no es válido', 'otro'],
+      }),
+    ).toBe('El correo no es válido');
+    expect(
+      errorMessage({ statusCode: 401, error: 'Unauthorized', message: 'Token inválido o vencido' }),
+    ).toBe('Token inválido o vencido');
     expect(errorMessage(null)).toBe('No pudimos completar la acción. Probá de nuevo.');
   });
 
@@ -69,7 +101,9 @@ describe('API', () => {
     const ctrl = TestBed.inject(HttpTestingController);
     http.get('http://api/backoffice/site-config').subscribe();
     http.get('mock/ofertas.json').subscribe();
-    expect(ctrl.expectOne('http://api/backoffice/site-config').request.headers.get('Authorization')).toBe('Bearer abc');
+    expect(
+      ctrl.expectOne('http://api/backoffice/site-config').request.headers.get('Authorization'),
+    ).toBe('Bearer abc');
     expect(ctrl.expectOne('mock/ofertas.json').request.headers.has('Authorization')).toBe(false);
   });
 
@@ -95,8 +129,13 @@ describe('API', () => {
   });
 
   it('demasiados intentos (429) se explica en castellano', () => {
-    const error = new HttpErrorResponse({ status: 429, error: { statusCode: 429, message: 'ThrottlerException: Too Many Requests' } });
-    expect(errorMessage(error)).toBe('Hiciste muchos intentos seguidos. Esperá un minuto y probá de nuevo.');
+    const error = new HttpErrorResponse({
+      status: 429,
+      error: { statusCode: 429, message: 'ThrottlerException: Too Many Requests' },
+    });
+    expect(errorMessage(error)).toBe(
+      'Hiciste muchos intentos seguidos. Esperá un minuto y probá de nuevo.',
+    );
   });
 });
 
@@ -115,7 +154,12 @@ describe('HttpAuthApi', () => {
   it('ingresa con POST /auth/login y confirma el token con GET /auth/me', async () => {
     const api = TestBed.inject(AuthApi);
     const ctrl = TestBed.inject(HttpTestingController);
-    const profile = { id: 'a1', email: 'admin@ejemplo.com', fullName: 'Administración', role: 'admin' as const };
+    const profile = {
+      id: 'a1',
+      email: 'admin@ejemplo.com',
+      fullName: 'Administración',
+      role: 'admin' as const,
+    };
 
     const login = firstValueFrom(api.login('admin@ejemplo.com', 'Backoffice2026'));
     const req = ctrl.expectOne('http://api/auth/login');
@@ -149,7 +193,9 @@ describe('HttpSiteConfigApi', () => {
     const api = TestBed.inject(SiteConfigApi);
     const ctrl = TestBed.inject(HttpTestingController);
     const loaded = firstValueFrom(api.load());
-    ctrl.expectOne('http://api/backoffice/site-config').flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
+    ctrl
+      .expectOne('http://api/backoffice/site-config')
+      .flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
     expect(await loaded).toBe(SITE_CONFIG_SEED);
   });
 
@@ -163,11 +209,15 @@ describe('HttpSiteConfigApi', () => {
     expect((await saved).version).toBe(2);
 
     const published = firstValueFrom(api.publish(SITE_CONFIG_SEED, 'Yo'));
-    ctrl.expectOne('http://api/backoffice/site-config/publish').flush({ ...SITE_CONFIG_SEED, version: 3 });
+    ctrl
+      .expectOne('http://api/backoffice/site-config/publish')
+      .flush({ ...SITE_CONFIG_SEED, version: 3 });
     expect((await published).version).toBe(3);
 
     const failed = firstValueFrom(api.load());
-    ctrl.expectOne('http://api/backoffice/site-config').flush({ message: 'x' }, { status: 500, statusText: 'Error' });
+    ctrl
+      .expectOne('http://api/backoffice/site-config')
+      .flush({ message: 'x' }, { status: 500, statusText: 'Error' });
     await expect(failed).rejects.toBeInstanceOf(HttpErrorResponse);
     ctrl.verify();
   });
@@ -190,10 +240,16 @@ describe('configuración simulada', () => {
     const api = TestBed.runInInjectionContext(() => new MockSiteConfigApi());
     expect(await run(api.load())).toBe(SITE_CONFIG_SEED);
 
-    const edited = updateField(SITE_CONFIG_SEED, 'postulantes', 'application', 'dni', { label: 'Documento' });
+    const edited = updateField(SITE_CONFIG_SEED, 'postulantes', 'application', 'dni', {
+      label: 'Documento',
+    });
     const draft = await run(api.save(edited, 'Equipo de Marketing'));
-    expect(draft).toEqual(expect.objectContaining({ status: 'draft', version: 2, updatedBy: 'Equipo de Marketing' }));
-    expect(findField(await run(api.load()), 'postulantes', 'application', 'dni')!.label).toBe('Documento');
+    expect(draft).toEqual(
+      expect.objectContaining({ status: 'draft', version: 2, updatedBy: 'Equipo de Marketing' }),
+    );
+    expect(findField(await run(api.load()), 'postulantes', 'application', 'dni')!.label).toBe(
+      'Documento',
+    );
 
     const published = await run(api.publish(draft, 'Administración'));
     expect(published).toEqual(expect.objectContaining({ status: 'published', version: 3 }));
@@ -208,7 +264,12 @@ describe('EditorStore', () => {
     const api: Partial<SiteConfigApi> = {
       load: () => of(SITE_CONFIG_SEED),
       save: (config, author) => {
-        const stored = { ...config, status: 'draft' as const, version: config.version + 1, updatedBy: author };
+        const stored = {
+          ...config,
+          status: 'draft' as const,
+          version: config.version + 1,
+          updatedBy: author,
+        };
         saved.push(stored);
         return of(stored);
       },
@@ -228,19 +289,25 @@ describe('EditorStore', () => {
     expect(store.status()).toBe('ready');
     expect(store.dirty()).toBe(false);
 
-    store.apply(updateField(store.config()!, 'postulantes', 'application', 'dni', { label: 'Documento' }));
+    store.apply(
+      updateField(store.config()!, 'postulantes', 'application', 'dni', { label: 'Documento' }),
+    );
     expect(store.dirty()).toBe(true);
     store.undo();
     expect(findField(store.config()!, 'postulantes', 'application', 'dni')!.label).toBe('DNI');
     expect(store.dirty()).toBe(false);
     store.redo();
-    expect(findField(store.config()!, 'postulantes', 'application', 'dni')!.label).toBe('Documento');
+    expect(findField(store.config()!, 'postulantes', 'application', 'dni')!.label).toBe(
+      'Documento',
+    );
   });
 
   it('junta en un paso lo que se tipea sobre el mismo dato', () => {
     const store = loaded();
     for (const label of ['D', 'Do', 'Doc']) {
-      store.apply(updateField(store.config()!, 'postulantes', 'application', 'dni', { label }), { key: 'dni.label' });
+      store.apply(updateField(store.config()!, 'postulantes', 'application', 'dni', { label }), {
+        key: 'dni.label',
+      });
     }
     store.undo();
     expect(store.canUndo()).toBe(false);
@@ -252,7 +319,12 @@ describe('EditorStore', () => {
     store.apply(addField(store.config()!, 'postulantes', 'application'), {
       select: (id) => ({ kind: 'field', audience: 'postulantes', sectionId: 'application', id }),
     });
-    expect(store.selection()).toEqual({ kind: 'field', audience: 'postulantes', sectionId: 'application', id: 'campo' });
+    expect(store.selection()).toEqual({
+      kind: 'field',
+      audience: 'postulantes',
+      sectionId: 'application',
+      id: 'campo',
+    });
     store.undo();
     expect(store.selection()).toBeNull();
   });

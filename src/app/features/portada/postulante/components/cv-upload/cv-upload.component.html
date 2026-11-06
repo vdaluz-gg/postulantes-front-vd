@@ -11,6 +11,18 @@
   <b>Subí tu CV y la IA completa tus datos</b>
   <span id="cv-help">Tocá acá o arrastrá el archivo · PDF o Word, hasta 5 MB</span>
 </button>
-<input #picker type="file" class="sr" tabindex="-1" aria-hidden="true" [accept]="accept" (change)="onPicked($event)" />
-<p class="err" id="cv-err" role="alert" [class.on]="error() || failure()">{{ error() || failure() }}</p>
-<button type="button" class="manual" (click)="manual.emit()">Prefiero completar mis datos a mano</button>
+<input
+  #picker
+  type="file"
+  class="sr"
+  tabindex="-1"
+  aria-hidden="true"
+  [accept]="accept"
+  (change)="onPicked($event)"
+/>
+<p class="err" id="cv-err" role="alert" [class.on]="error() || failure()">
+  {{ error() || failure() }}
+</p>
+<button type="button" class="manual" (click)="manual.emit()">
+  Prefiero completar mis datos a mano
+</button>

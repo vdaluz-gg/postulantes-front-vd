@@ -1,10 +1,73 @@
-:host{display:block}
-.ai{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;border-radius:14px;background:var(--soft);border:1px solid var(--line);transition:border-color .25s,box-shadow .25s}
-.ai:focus-within{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 18%,transparent)}
-.ai-tag{display:inline-flex;align-items:center;gap:5px;font:500 10.5px var(--font-mono);letter-spacing:.14em;color:var(--acc);padding:5px 8px;border-radius:8px;background:color-mix(in srgb,var(--acc) 14%,transparent)}
-.spark{width:12px;height:12px;flex:0 0 auto}
-input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:500 15px var(--font-display);padding:10px 0;outline:none;-webkit-user-select:text;user-select:text}
-input::placeholder{color:var(--mut)}
-.go{min-height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--acc);color:var(--on-acc);font:600 13px var(--font-display);cursor:pointer}
-.go:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-@media (pointer:coarse){input,.go{min-height:44px}.go{min-width:44px}}
+:host {
+  display: block;
+}
+.ai {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  border-radius: 14px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+.ai:focus-within {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--acc) 18%, transparent);
+}
+.ai-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 500 10.5px var(--font-mono);
+  letter-spacing: 0.14em;
+  color: var(--acc);
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--acc) 14%, transparent);
+}
+.spark {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 500 15px var(--font-display);
+  padding: 10px 0;
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+input::placeholder {
+  color: var(--mut);
+}
+.go {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--acc);
+  color: var(--on-acc);
+  font: 600 13px var(--font-display);
+  cursor: pointer;
+}
+.go:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+@media (pointer: coarse) {
+  input,
+  .go {
+    min-height: 44px;
+  }
+  .go {
+    min-width: 44px;
+  }
+}

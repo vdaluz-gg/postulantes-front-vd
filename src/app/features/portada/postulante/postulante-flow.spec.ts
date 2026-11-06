@@ -13,11 +13,18 @@ import { JobOffersResponse } from './job-offer';
 import { OFFERS_URL } from './offers.api';
 
 /** Dos ofertas reales del mock: el flujo no depende de cuántas tenga el archivo. */
-const MOCK: JobOffersResponse = JSON.parse(readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'));
+const MOCK: JobOffersResponse = JSON.parse(
+  readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'),
+);
 const FIXTURE: JobOffersResponse = {
-  ofertas: ['CSYP1233113446', 'LOG7712093'].map((ref) => MOCK.ofertas.find((o) => o.codigo === ref)!),
+  ofertas: ['CSYP1233113446', 'LOG7712093'].map((ref) =>
+    MOCK.ofertas.find((o) => o.codigo === ref)!,
+  ),
 };
-const pendingLoader = { create: () => new Promise(() => undefined), loadModel: () => new Promise(() => undefined) };
+const pendingLoader = {
+  create: () => new Promise(() => undefined),
+  loadModel: () => new Promise(() => undefined),
+};
 
 describe('Panel del postulante: ofertas, CV y formulario', () => {
   let fixture: ComponentFixture<PortadaPage>;
@@ -33,7 +40,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     fixture.detectChanges();
   };
   const button = (text: string) =>
-    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().startsWith(text))!;
+    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().startsWith(text),
+    )!;
   const type = (id: string, value: string) => {
     const input = el.querySelector<HTMLInputElement>(`#${id}`)!;
     input.value = value;
@@ -64,12 +73,21 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
             readCv: () =>
               of({
                 cvId: 'cv-1',
-                prefill: { fullName: 'Martina Rodríguez', dni: '38.412.907', whatsapp: '11 5555-0142', zone: 'Monte Grande' },
+                prefill: {
+                  fullName: 'Martina Rodríguez',
+                  dni: '38.412.907',
+                  whatsapp: '11 5555-0142',
+                  zone: 'Monte Grande',
+                },
               }),
             apply: (contact: CandidateContact, target: ApplicationTarget) => {
               if (rejectNext) {
                 rejectNext = false;
-                return throwError(() => ({ statusCode: 409, error: 'Conflict', message: 'Ya te postulaste a esta oferta' }));
+                return throwError(() => ({
+                  statusCode: 409,
+                  error: 'Conflict',
+                  message: 'Ya te postulaste a esta oferta',
+                }));
               }
               applied.push({ contact, target });
               return of({ trackingCode: 'GG-ABC123', position: contact.position });
@@ -90,9 +108,14 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
 
   it('"Ver todas las ofertas" muestra las ofertas del mock', async () => {
     await showOffers('Ver todas las ofertas');
-    expect(el.querySelector('[appOfferResults] .say')!.textContent!.replace(/\s+/g, ' ')).toContain('Encontré 2 ofertas');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent!.replace(/\s+/g, ' ')).toContain(
+      'Encontré 2 ofertas',
+    );
     const jobs = Array.from(el.querySelectorAll('[appOfferResults] .job'));
-    expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Operario/a Pan 29', 'Chofer de camión chasis']);
+    expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual([
+      'Operario/a Pan 29',
+      'Chofer de camión chasis',
+    ]);
     expect(jobs.map((j) => j.querySelector('small')!.textContent)).toEqual([
       'Gral. Pacheco · Logística',
       'Moreno / Parque Avellaneda · Logística',
@@ -103,7 +126,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     type('q-post', 'Operario de depósito');
     await render();
     await showOffers('Ver todas las ofertas');
-    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('«Operario de depósito»');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain(
+      '«Operario de depósito»',
+    );
     expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(1);
   });
 
@@ -112,7 +137,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     await render();
     http.expectOne(OFFERS_URL).flush(FIXTURE);
     await render();
-    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('para «Chofer cerca de Moreno»');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain(
+      'para «Chofer cerca de Moreno»',
+    );
     const jobs = Array.from(el.querySelectorAll('[appOfferResults] .job'));
     expect(jobs.map((j) => j.querySelector('b')!.textContent)).toEqual(['Chofer de camión chasis']);
   });
@@ -121,7 +148,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     type('q-post', 'Desarrollador Frontend');
     await render();
     await showOffers('Ver todas las ofertas');
-    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain('No encontré ofertas para «Desarrollador Frontend»');
+    expect(el.querySelector('[appOfferResults] .say')!.textContent).toContain(
+      'No encontré ofertas para «Desarrollador Frontend»',
+    );
     expect(el.querySelectorAll('[appOfferResults] .job')).toHaveLength(2);
   });
 
@@ -130,14 +159,30 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     el.querySelectorAll<HTMLButtonElement>('[appOfferResults] .job')[1].click();
     await render();
     const detail = el.querySelector('[appOfferDetail]')!;
-    const texts = (selector: string) => Array.from(detail.querySelectorAll(selector)).map((n) => n.textContent!.trim());
+    const texts = (selector: string) =>
+      Array.from(detail.querySelectorAll(selector)).map((n) => n.textContent!.trim());
     expect(detail.querySelector('.kick')!.textContent).toBe('Oferta · Logística · Ref. LOG7712093');
     expect(detail.querySelector('h2')!.textContent).toBe('Chofer de camión chasis');
-    expect(texts('.meta li')).toEqual(['Moreno / Parque Avellaneda', 'Lunes a viernes · 6 a 15 h', 'Publicada el 07/10']);
+    expect(texts('.meta li')).toEqual([
+      'Moreno / Parque Avellaneda',
+      'Lunes a viernes · 6 a 15 h',
+      'Publicada el 07/10',
+    ]);
     expect(texts('h3')).toEqual(['Qué buscamos', 'Qué ofrecemos']);
-    expect(texts('.cols div:first-child li')).toEqual(['Licencia profesional vigente', 'Experiencia en reparto (deseable)', 'Disponibilidad inmediata']);
+    expect(texts('.cols div:first-child li')).toEqual([
+      'Licencia profesional vigente',
+      'Experiencia en reparto (deseable)',
+      'Disponibilidad inmediata',
+    ]);
     expect(texts('.cols div:last-child li')).toEqual(['Obra social', 'Viáticos', 'Continuidad']);
-    for (const internal of ['CLIENTE DEMO', 'CCT', 'Av. Victorica', 'vacante', 'Salario', '1.185.000']) {
+    for (const internal of [
+      'CLIENTE DEMO',
+      'CCT',
+      'Av. Victorica',
+      'vacante',
+      'Salario',
+      '1.185.000',
+    ]) {
       expect(detail.textContent).not.toContain(internal);
     }
   });
@@ -156,7 +201,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     picker.dispatchEvent(new Event('change'));
     await render();
 
-    expect(el.querySelector('[appPeekPanel] .ph')!.textContent!.trim()).toBe('La IA leyó tu CV y completó todo');
+    expect(el.querySelector('[appPeekPanel] .ph')!.textContent!.trim()).toBe(
+      'La IA leyó tu CV y completó todo',
+    );
     expect(el.querySelector<HTMLInputElement>('#cf-fullName')!.value).toBe('Martina Rodríguez');
     expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe('Operario/a Pan 29');
 
@@ -213,7 +260,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     button('Dejar mi CV con IA').click();
     await render();
     const picker = el.querySelector<HTMLInputElement>('[appCvUpload] input[type="file"]')!;
-    Object.defineProperty(picker, 'files', { value: [new File(['x'], 'foto.png', { type: 'image/png' })] });
+    Object.defineProperty(picker, 'files', {
+      value: [new File(['x'], 'foto.png', { type: 'image/png' })],
+    });
     picker.dispatchEvent(new Event('change'));
     await render();
     expect(el.querySelector('#cv-err')!.textContent).toContain('Subilo en PDF o Word');
@@ -224,7 +273,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     await render();
     button('Prefiero completar mis datos a mano').click();
     await render();
-    expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe('Postulación espontánea');
+    expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe(
+      'Postulación espontánea',
+    );
 
     type('cf-fullName', 'Martina');
     type('cf-dni', '123');
@@ -250,7 +301,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     await render();
     button('Prefiero completar mis datos a mano').click();
     await render();
-    expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe('Operario/a de producción');
+    expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe(
+      'Operario/a de producción',
+    );
   });
 
   it('si no cargan las ofertas, avisa y permite reintentar', async () => {

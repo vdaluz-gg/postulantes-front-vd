@@ -4,33 +4,39 @@
   </div>
 } @else {
   <article class="frame" [attr.aria-labelledby]="'pt-' + persona().id">
-    <p class="kick r" style="--i:0"><i aria-hidden="true"></i>{{ persona().kicker }}</p>
-    <h2 class="r" style="--i:1" [id]="'pt-' + persona().id">
+    <p class="kick r" style="--i: 0"><i aria-hidden="true"></i>{{ persona().kicker }}</p>
+    <h2 class="r" style="--i: 1" [id]="'pt-' + persona().id">
       {{ persona().title }} <em>{{ persona().highlight }}</em>
     </h2>
 
     <app-ai-prompt
       class="r"
-      style="--i:2"
+      style="--i: 2"
       [inputId]="'q-' + persona().id"
       [prompt]="persona().prompt"
       [(value)]="query"
       (submitted)="ask($event)"
     />
 
-    <div class="sugg r" style="--i:3" role="group" aria-label="Sugerencias">
+    <div class="sugg r" style="--i: 3" role="group" aria-label="Sugerencias">
       @for (suggestion of persona().suggestions; track suggestion) {
-        <button appSuggestionPill [active]="query() === suggestion" (click)="useSuggestion(suggestion)">
+        <button
+          appSuggestionPill
+          [active]="query() === suggestion"
+          (click)="useSuggestion(suggestion)"
+        >
           {{ suggestion }}
         </button>
       }
     </div>
 
-    <div class="chips r" style="--i:4" role="group" aria-label="Temas">
+    <div class="chips r" style="--i: 4" role="group" aria-label="Temas">
       @for (chip of persona().chips; track chip.id) {
         <button
           appTopicChip
-          [pressed]="(flow().kind === 'topic' || flow().kind === 'recommend') && activeChipId() === chip.id"
+          [pressed]="
+            (flow().kind === 'topic' || flow().kind === 'recommend') && activeChipId() === chip.id
+          "
           [attr.aria-controls]="chip.peek ? peekId() : null"
           (pointerenter)="preview(chip)"
           (focus)="preview(chip)"
@@ -42,7 +48,14 @@
     </div>
 
     @if (showsPeek()) {
-      <div #peekSlot class="peek-slot r" style="--i:5" tabindex="-1" [id]="peekId()" aria-live="polite">
+      <div
+        #peekSlot
+        class="peek-slot r"
+        style="--i: 5"
+        tabindex="-1"
+        [id]="peekId()"
+        aria-live="polite"
+      >
         @switch (flow().kind) {
           @case ('topic') {
             @if (activeChip()?.peek; as peek) {
@@ -100,35 +113,58 @@
                   </p>
                 }
                 @case ('recommend') {
-                  <p class="say">Para «{{ step.query }}» te recomiendo <b>{{ step.service.title }}</b>.</p>
+                  <p class="say">
+                    Para «{{ step.query }}» te recomiendo <b>{{ step.service.title }}</b
+                    >.
+                  </p>
                   <div appServicePreview [service]="step.service"></div>
-                  <button appPortadaButton class="next" size="mini" variant="pri" (click)="run({ kind: 'proposal' })">Armar la propuesta</button>
+                  <button
+                    appPortadaButton
+                    class="next"
+                    size="mini"
+                    variant="pri"
+                    (click)="run({ kind: 'proposal' })"
+                  >
+                    Armar la propuesta
+                  </button>
                 }
                 @case ('proposal') {
                   <div appProposalForm [rows]="step.rows" (send)="sendProposal()"></div>
                 }
                 @case ('proposal-sent') {
-                  <p class="say"><b>Propuesta enviada.</b> Un asesor la revisa y te contacta hoy. Mientras tanto, te dejamos el detalle del servicio.</p>
+                  <p class="say">
+                    <b>Propuesta enviada.</b> Un asesor la revisa y te contacta hoy. Mientras tanto,
+                    te dejamos el detalle del servicio.
+                  </p>
                   <div appServicePreview [service]="step.service"></div>
                 }
                 @case ('shortcuts') {
                   <p class="say">En <b>Gestión Virtual</b> tenés todo lo tuyo. ¿Qué querés ver?</p>
                   <div class="links">
                     @for (chip of persona().chips; track chip.id) {
-                      <button appPortadaButton size="mini" (click)="pin(chip)">{{ chip.label }}</button>
+                      <button appPortadaButton size="mini" (click)="pin(chip)">
+                        {{ chip.label }}
+                      </button>
                     }
                   </div>
                 }
                 @case ('app') {
-                  <p class="say">Con la app de <b>Gestión Virtual</b> ves tu cobro, firmás tus recibos y cargás certificados desde el celular.</p>
-                  <button appPortadaButton size="mini" variant="pri" (click)="sendAppLink()">Mandarme el enlace por WhatsApp</button>
+                  <p class="say">
+                    Con la app de <b>Gestión Virtual</b> ves tu cobro, firmás tus recibos y cargás
+                    certificados desde el celular.
+                  </p>
+                  <button appPortadaButton size="mini" variant="pri" (click)="sendAppLink()">
+                    Mandarme el enlace por WhatsApp
+                  </button>
                 }
                 @case ('thinking') {
                   <p appAiThinking>{{ step.text }}</p>
                 }
                 @case ('notice') {
                   <p class="notice" role="alert">{{ step.text }}</p>
-                  <button appPortadaButton size="mini" (click)="search(step.retry)">Reintentar</button>
+                  <button appPortadaButton size="mini" (click)="search(step.retry)">
+                    Reintentar
+                  </button>
                 }
                 @case ('results') {
                   <div appOfferResults [result]="step.result" (open)="openDetail($event)"></div>
@@ -167,7 +203,7 @@
 
     @if (persona().id === 'post') {
       @for (alert of alerts(); track alert.id) {
-        <p class="alert r" style="--i:6" [class]="'lv-' + alert.level" role="note">
+        <p class="alert r" style="--i: 6" [class]="'lv-' + alert.level" role="note">
           <b>{{ alert.title }}</b> {{ alert.message }}
           @if (alert.ctaLabel && alert.ctaHref) {
             <a [href]="alert.ctaHref">{{ alert.ctaLabel }}</a>
@@ -176,18 +212,27 @@
       }
     }
 
-    <div class="cta r" style="--i:6">
+    <div class="cta r" style="--i: 6">
       @for (action of persona().actions; track action.label) {
         @if (action.command; as cmd) {
-          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" (click)="run(cmd)">{{ action.label }}</button>
+          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" (click)="run(cmd)">
+            {{ action.label }}
+          </button>
         } @else if (action.link) {
-          <a appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" [routerLink]="action.link">{{ action.label }}</a>
+          <a
+            appPortadaButton
+            [variant]="action.primary ? 'pri' : 'sec'"
+            [routerLink]="action.link"
+            >{{ action.label }}</a
+          >
         } @else {
-          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled>{{ action.label }}</button>
+          <button appPortadaButton [variant]="action.primary ? 'pri' : 'sec'" disabled>
+            {{ action.label }}
+          </button>
         }
       }
     </div>
 
-    <p class="foot r" style="--i:7">{{ persona().footnote }}</p>
+    <p class="foot r" style="--i: 7">{{ persona().footnote }}</p>
   </article>
 }

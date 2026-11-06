@@ -1,10 +1,22 @@
 @if (collapsible()) {
-  <button type="button" class="legend toggle" [attr.aria-expanded]="open()" [attr.aria-controls]="bodyId" (click)="open.set(!open())">
+  <button
+    type="button"
+    class="legend toggle"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="bodyId"
+    (click)="open.set(!open())"
+  >
     {{ legend() }}
   </button>
 } @else {
   <h3 class="legend" [id]="bodyId + '-t'">{{ legend() }}</h3>
 }
-<div class="body" role="group" [id]="bodyId" [attr.aria-label]="legend()" [hidden]="collapsible() && !open()">
+<div
+  class="body"
+  role="group"
+  [id]="bodyId"
+  [attr.aria-label]="legend()"
+  [hidden]="collapsible() && !open()"
+>
   <ng-content />
 </div>

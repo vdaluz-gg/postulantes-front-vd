@@ -7,7 +7,10 @@ import { PortadaPage } from './portada.page';
 import { personaForQuery } from './portada.data';
 
 /** El motor 3D no corre en jsdom: queda cargando y se ve la silueta. */
-const pendingLoader = { create: () => new Promise(() => undefined), loadModel: () => new Promise(() => undefined) };
+const pendingLoader = {
+  create: () => new Promise(() => undefined),
+  loadModel: () => new Promise(() => undefined),
+};
 
 describe('personaForQuery', () => {
   it('elige el perfil según lo que escribió la persona', () => {
@@ -51,7 +54,9 @@ describe('PortadaPage', () => {
       'Empresas: ¿Sos cliente?',
       'Colaboradores: ¿Sos colaborador?',
     ]);
-    expect(el.querySelector('#q-route')!.getAttribute('placeholder')).toBe('Contale a la IA qué buscás y te llevo');
+    expect(el.querySelector('#q-route')!.getAttribute('placeholder')).toBe(
+      'Contale a la IA qué buscás y te llevo',
+    );
   });
 
   it('las figuras arrancan oscuras y se ilumina solo la que se señala', async () => {
@@ -66,7 +71,8 @@ describe('PortadaPage', () => {
 
   it('arrastrar la figura la gira sin abrir el perfil; un click sin arrastre lo abre', async () => {
     const hit = figures()[0].querySelector<HTMLButtonElement>('.hit')!;
-    const press = (type: string, x: number) => hit.dispatchEvent(new MouseEvent(type, { clientX: x, clientY: 200, bubbles: true }));
+    const press = (type: string, x: number) =>
+      hit.dispatchEvent(new MouseEvent(type, { clientX: x, clientY: 200, bubbles: true }));
     press('pointerdown', 100);
     press('pointermove', 160);
     await render();
@@ -88,7 +94,9 @@ describe('PortadaPage', () => {
     expect(el.querySelector('.stage')!.classList).toContain('open');
     expect(figures()[0].classList).toContain('selected');
     expect(figures()[1].classList).toContain('away');
-    expect(el.querySelector('app-persona-panel h2')!.textContent).toContain('El trabajo de la Argentina');
+    expect(el.querySelector('app-persona-panel h2')!.textContent).toContain(
+      'El trabajo de la Argentina',
+    );
     expect(el.querySelector('.topportal')!.textContent).toContain('Ingresar a tu portal');
     expect(el.querySelector('button[appBackTab]')).not.toBeNull();
 
@@ -108,10 +116,17 @@ describe('PortadaPage', () => {
     portal.click();
     await render();
     expect(document.activeElement).toBe(el.querySelector('#q-cli'));
-    expect(el.querySelector('p[appToast]')!.textContent!.trim()).toBe('Contale a la IA qué necesitás: lo resolvés desde acá.');
+    expect(el.querySelector('p[appToast]')!.textContent!.trim()).toBe(
+      'Contale a la IA qué necesitás: lo resolvés desde acá.',
+    );
     expect(el.querySelector('p[appToast]')!.classList).toContain('on');
-    const actions = Array.from(el.querySelectorAll<HTMLButtonElement>('app-persona-panel .cta button'));
-    expect(actions.map((b) => b.textContent!.trim())).toEqual(['Armar mi propuesta con IA →', 'Hablar con un asesor']);
+    const actions = Array.from(
+      el.querySelectorAll<HTMLButtonElement>('app-persona-panel .cta button'),
+    );
+    expect(actions.map((b) => b.textContent!.trim())).toEqual([
+      'Armar mi propuesta con IA →',
+      'Hablar con un asesor',
+    ]);
     expect(actions.every((b) => !b.disabled)).toBe(true);
     expect(el.innerHTML).not.toContain('Próximamente');
   });
@@ -157,7 +172,9 @@ describe('PortadaPage', () => {
       const suggestion = el.querySelector<HTMLButtonElement>('button[appSuggestionPill]')!;
       suggestion.click();
       await render();
-      expect(el.querySelector<HTMLInputElement>('#q-post')!.value).toBe(suggestion.textContent!.trim());
+      expect(el.querySelector<HTMLInputElement>('#q-post')!.value).toBe(
+        suggestion.textContent!.trim(),
+      );
       expect(suggestion.classList).toContain('on');
     });
 
@@ -178,9 +195,15 @@ describe('PortadaPage', () => {
       await hover(chips()[1]);
       expect(pressed()).toEqual(['false', 'true', 'false']);
       expect(peekTitle()).toBe('Así te avisa la IA');
-      expect(el.querySelector('[appWhatsappPreview] .wa b')!.textContent).toBe('Operario/a de producción');
-      const replies = Array.from(el.querySelectorAll<HTMLButtonElement>('[appWhatsappPreview] button[appPortadaButton]'));
-      expect(replies.map((b) => [b.textContent!.trim(), b.disabled, b.classList.contains('pri')])).toEqual([
+      expect(el.querySelector('[appWhatsappPreview] .wa b')!.textContent).toBe(
+        'Operario/a de producción',
+      );
+      const replies = Array.from(
+        el.querySelectorAll<HTMLButtonElement>('[appWhatsappPreview] button[appPortadaButton]'),
+      );
+      expect(
+        replies.map((b) => [b.textContent!.trim(), b.disabled, b.classList.contains('pri')]),
+      ).toEqual([
         ['Sí, postulame', false, true],
         ['Ver más ofertas', false, false],
       ]);
@@ -207,8 +230,13 @@ describe('PortadaPage', () => {
     });
 
     it('las acciones del panel usan el botón de la portada', () => {
-      const actions = Array.from(el.querySelectorAll<HTMLButtonElement>('.cta button[appPortadaButton]'));
-      expect(actions.map((a) => a.textContent!.trim())).toEqual(['Ver todas las ofertas →', 'Dejar mi CV con IA']);
+      const actions = Array.from(
+        el.querySelectorAll<HTMLButtonElement>('.cta button[appPortadaButton]'),
+      );
+      expect(actions.map((a) => a.textContent!.trim())).toEqual([
+        'Ver todas las ofertas →',
+        'Dejar mi CV con IA',
+      ]);
       expect(actions[0].classList).toContain('pri');
       expect(actions.every((a) => !a.disabled)).toBe(true);
     });

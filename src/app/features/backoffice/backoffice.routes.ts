@@ -4,7 +4,8 @@ import { backofficeAuthGuard } from './data/auth.store';
 export const BACKOFFICE_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./shell/backoffice-shell.component').then((m) => m.BackofficeShellComponent),
+    loadComponent: () =>
+      import('./shell/backoffice-shell.component').then((m) => m.BackofficeShellComponent),
     children: [
       {
         path: 'ingresar',

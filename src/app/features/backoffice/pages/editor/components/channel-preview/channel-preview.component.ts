@@ -3,7 +3,12 @@ import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.compo
 import { IconName } from '../../../../../../shared/ui/atoms/icon/icons';
 import { ChannelConfig, ChannelKind } from '../../../../data/site-config.model';
 
-const CHANNEL_ICON: Partial<Record<ChannelKind, IconName>> = { whatsapp: 'wa', phone: 'phone', email: 'mail', web: 'globe' };
+const CHANNEL_ICON: Partial<Record<ChannelKind, IconName>> = {
+  whatsapp: 'wa',
+  phone: 'phone',
+  email: 'mail',
+  web: 'globe',
+};
 
 /** Canal o red social como píldora de contacto. */
 @Component({

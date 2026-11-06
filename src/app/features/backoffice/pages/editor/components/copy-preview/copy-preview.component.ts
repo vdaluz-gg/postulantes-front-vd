@@ -11,5 +11,9 @@ import { CopyConfig } from '../../../../data/site-config.model';
 export class CopyPreviewComponent {
   readonly copy = input.required<CopyConfig>();
 
-  protected readonly lines = computed(() => this.copy().value.split('\n').filter((line) => line.trim()));
+  protected readonly lines = computed(() =>
+    this.copy()
+      .value.split('\n')
+      .filter((line) => line.trim()),
+  );
 }

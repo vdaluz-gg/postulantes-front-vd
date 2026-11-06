@@ -24,7 +24,9 @@ describe('Backoffice', () => {
     harness.detectChanges();
   };
   const buttonByText = (text: string) =>
-    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim() === text)!;
+    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find(
+      (b) => b.textContent!.trim() === text,
+    )!;
   const type = (input: HTMLInputElement, value: string) => {
     input.value = value;
     input.dispatchEvent(new Event('input'));
@@ -35,7 +37,10 @@ describe('Backoffice', () => {
     logins = [];
     TestBed.configureTestingModule({
       providers: [
-        provideRouter([{ path: 'backoffice', children: BACKOFFICE_ROUTES }], withComponentInputBinding()),
+        provideRouter(
+          [{ path: 'backoffice', children: BACKOFFICE_ROUTES }],
+          withComponentInputBinding(),
+        ),
         provideHttpClient(),
         { provide: MotionService, useValue: { reduced: () => true } },
         {
@@ -45,20 +50,30 @@ describe('Backoffice', () => {
               logins.push(email);
               return password === DEMO_USERS[0].password
                 ? of({ accessToken: 'mock.test', admin })
-                : throwError(() => ({ statusCode: 401, error: 'Unauthorized', message: 'Credenciales inválidas' }));
+                : throwError(() => ({
+                    statusCode: 401,
+                    error: 'Unauthorized',
+                    message: 'Credenciales inválidas',
+                  }));
             },
             me: (token: string) =>
               token === 'mock.test'
                 ? of({ ...admin, fullName: 'Nombre actualizado' })
-                : throwError(() => ({ statusCode: 401, error: 'Unauthorized', message: 'Token inválido o vencido' })),
+                : throwError(() => ({
+                    statusCode: 401,
+                    error: 'Unauthorized',
+                    message: 'Token inválido o vencido',
+                  })),
           },
         },
         {
           provide: SiteConfigApi,
           useValue: {
             load: () => of(SITE_CONFIG_SEED),
-            save: (config: typeof SITE_CONFIG_SEED) => of({ ...config, status: 'draft', version: 2 }),
-            publish: (config: typeof SITE_CONFIG_SEED) => of({ ...config, status: 'published', version: 2 }),
+            save: (config: typeof SITE_CONFIG_SEED) =>
+              of({ ...config, status: 'draft', version: 2 }),
+            publish: (config: typeof SITE_CONFIG_SEED) =>
+              of({ ...config, status: 'published', version: 2 }),
           },
         },
       ],
@@ -83,12 +98,16 @@ describe('Backoffice', () => {
   it('con datos incorrectos avisa sin decir cuál falló', async () => {
     await harness.navigateByUrl('/backoffice/ingresar');
     await settle();
-    const [email, password] = Array.from(el.querySelectorAll<HTMLInputElement>('bo-text-field input'));
+    const [email, password] = Array.from(
+      el.querySelectorAll<HTMLInputElement>('bo-text-field input'),
+    );
     type(email, 'marketing@ejemplo.com');
     type(password, 'Incorrecta123');
     buttonByText('Ingresar').click();
     await settle();
-    expect(el.querySelector('.form-err')!.textContent).toBe('El correo o la contraseña no coinciden. Revisalos y probá de nuevo.');
+    expect(el.querySelector('.form-err')!.textContent).toBe(
+      'El correo o la contraseña no coinciden. Revisalos y probá de nuevo.',
+    );
   });
 
   it('con los datos de ejemplo entra al editor y edita un campo desde el panel', async () => {
@@ -99,17 +118,26 @@ describe('Backoffice', () => {
     expect(TestBed.inject(Router).url).toBe('/backoffice');
     expect(el.querySelector('app-editor-toolbar')).not.toBeNull();
 
-    const layer = Array.from(el.querySelectorAll<HTMLButtonElement>('app-layers-panel .layer')).find((b) => b.textContent!.includes('DNI'))!;
+    const layer = Array.from(
+      el.querySelectorAll<HTMLButtonElement>('app-layers-panel .layer'),
+    ).find((b) => b.textContent!.includes('DNI'))!;
     layer.click();
     await settle();
     expect(el.querySelector('app-inspector-head h2')!.textContent).toBe('DNI');
     expect(layer.getAttribute('aria-current')).toBe('true');
 
-    type(el.querySelector<HTMLInputElement>('app-field-inspector bo-text-field input')!, 'Documento');
+    type(
+      el.querySelector<HTMLInputElement>('app-field-inspector bo-text-field input')!,
+      'Documento',
+    );
     await settle();
-    const labels = Array.from(el.querySelectorAll('app-canvas-preview .field')).map((b) => b.getAttribute('aria-label'));
+    const labels = Array.from(el.querySelectorAll('app-canvas-preview .field')).map((b) =>
+      b.getAttribute('aria-label'),
+    );
     expect(labels).toContain('Campo: Documento');
-    expect(el.querySelector('app-editor-toolbar .state')!.textContent).toContain('Cambios sin guardar');
+    expect(el.querySelector('app-editor-toolbar .state')!.textContent).toContain(
+      'Cambios sin guardar',
+    );
   });
 
   it('borrar un campo se puede deshacer desde el aviso', async () => {
@@ -120,9 +148,14 @@ describe('Backoffice', () => {
       .find((b) => b.getAttribute('aria-label') === 'Campo: Zona donde vivís')!
       .click();
     await settle();
-    el.querySelector<HTMLButtonElement>('app-field-inspector button[aria-label="Borrar el campo"]')!.click();
+    el.querySelector<HTMLButtonElement>(
+      'app-field-inspector button[aria-label="Borrar el campo"]',
+    )!.click();
     await settle();
-    const count = () => Array.from(el.querySelectorAll('app-canvas-preview .field')).filter((b) => b.getAttribute('aria-label') === 'Campo: Zona donde vivís').length;
+    const count = () =>
+      Array.from(el.querySelectorAll('app-canvas-preview .field')).filter(
+        (b) => b.getAttribute('aria-label') === 'Campo: Zona donde vivís',
+      ).length;
     expect(count()).toBe(0);
     expect(el.querySelector('bo-island .tx')!.textContent).toBe('Borraste «Zona donde vivís».');
 
@@ -144,7 +177,9 @@ describe('Backoffice', () => {
     await harness.navigateByUrl('/backoffice');
     await settle();
     expect(TestBed.inject(Router).url).toBe('/backoffice/ingresar?volver=%2Fbackoffice');
-    expect(el.querySelector('.form-err')!.textContent).toBe('Tu sesión venció. Ingresá de nuevo para seguir.');
+    expect(el.querySelector('.form-err')!.textContent).toBe(
+      'Tu sesión venció. Ingresá de nuevo para seguir.',
+    );
     expect(sessionStorage.getItem('gg_bo_ses')).toBeNull();
   });
 

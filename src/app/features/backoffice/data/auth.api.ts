@@ -40,7 +40,9 @@ export class HttpAuthApi extends AuthApi {
   }
 
   me(token: string): Observable<AdminProfile> {
-    return this.http.get<AdminProfile>(`${this.base}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
+    return this.http.get<AdminProfile>(`${this.base}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   }
 }
 
@@ -49,18 +51,37 @@ export class HttpAuthApi extends AuthApi {
  * Con el backend existen solo si se dieron de alta en esa base (ver README).
  */
 export const DEMO_USERS: readonly (AdminProfile & { readonly password: string })[] = [
-  { id: 'demo-marketing', email: 'marketing@ejemplo.com', fullName: 'Equipo de Marketing', role: 'marketing', password: 'Marketing2026' },
-  { id: 'demo-admin', email: 'admin@ejemplo.com', fullName: 'Administración', role: 'admin', password: 'Backoffice2026' },
+  {
+    id: 'demo-marketing',
+    email: 'marketing@ejemplo.com',
+    fullName: 'Equipo de Marketing',
+    role: 'marketing',
+    password: 'Marketing2026',
+  },
+  {
+    id: 'demo-admin',
+    email: 'admin@ejemplo.com',
+    fullName: 'Administración',
+    role: 'admin',
+    password: 'Backoffice2026',
+  },
 ];
 
 const MOCK_DELAY_MS = 600;
-const unauthorized = (message: string): ApiError => ({ statusCode: 401, error: 'Unauthorized', message });
+const unauthorized = (message: string): ApiError => ({
+  statusCode: 401,
+  error: 'Unauthorized',
+  message,
+});
 
 @Injectable()
 export class MockAuthApi extends AuthApi {
   login(email: string, password: string): Observable<LoginResponse> {
-    const user = DEMO_USERS.find((u) => u.email === email.trim().toLowerCase() && u.password === password);
-    if (!user) return throwError(() => unauthorized('Credenciales inválidas')).pipe(delay(MOCK_DELAY_MS));
+    const user = DEMO_USERS.find(
+      (u) => u.email === email.trim().toLowerCase() && u.password === password,
+    );
+    if (!user)
+      return throwError(() => unauthorized('Credenciales inválidas')).pipe(delay(MOCK_DELAY_MS));
     const { password: _, ...admin } = user;
     return of({ accessToken: `mock.${admin.id}`, admin }).pipe(delay(MOCK_DELAY_MS));
   }

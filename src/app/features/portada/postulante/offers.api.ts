@@ -39,7 +39,9 @@ export class MockOffersApi extends CachedOffersApi {
   private readonly http = inject(HttpClient);
 
   protected fetch(): Observable<readonly JobPosting[]> {
-    return this.http.get<JobOffersResponse>(OFFERS_URL).pipe(map((response) => response.ofertas.map(toJobPosting)));
+    return this.http
+      .get<JobOffersResponse>(OFFERS_URL)
+      .pipe(map((response) => response.ofertas.map(toJobPosting)));
   }
 }
 

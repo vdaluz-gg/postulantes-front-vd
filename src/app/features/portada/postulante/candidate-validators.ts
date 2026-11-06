@@ -3,7 +3,9 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 const digits = (value: unknown) => String(value ?? '').replace(/\D/g, '');
 
 /** Nombre y apellido: al menos dos palabras, solo letras, espacios, apóstrofos y guiones. */
-export const fullNameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+export const fullNameValidator: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
   const value = String(control.value ?? '').trim();
   if (!value) return null;
   if (!/^[\p{L}][\p{L}' -]*$/u.test(value)) return { fullName: 'invalidChars' };
@@ -14,7 +16,9 @@ export const fullNameValidator: ValidatorFn = (control: AbstractControl): Valida
 export const emailValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value = String(control.value ?? '').trim();
   if (!value) return null;
-  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) ? null : { email: true };
+  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)
+    ? null
+    : { email: true };
 };
 
 /** DNI argentino: 7 u 8 dígitos (acepta puntos). */
@@ -30,7 +34,9 @@ export const dniValidator: ValidatorFn = (control: AbstractControl): ValidationE
  * Celular argentino para WhatsApp: 10 dígitos con código de área (11 5555-0142), con o sin
  * +54 9 adelante. Acepta espacios, guiones y paréntesis.
  */
-export const whatsappValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+export const whatsappValidator: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
   const raw = String(control.value ?? '').trim();
   if (!raw) return null;
   if (!/^[+\d\s()-]+$/.test(raw)) return { whatsapp: true };

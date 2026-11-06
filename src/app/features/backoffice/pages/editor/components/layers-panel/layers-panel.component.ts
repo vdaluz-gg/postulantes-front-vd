@@ -4,8 +4,20 @@ import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.compo
 import { IconName } from '../../../../../../shared/ui/atoms/icon/icons';
 import { normalize } from '../../../../../../shared/utils/text';
 import { EditorStore } from '../../../../data/editor.store';
-import { ALERT_LEVEL_LABEL, AUDIENCE_LABEL, CHANNEL_LABEL, FieldType } from '../../../../data/site-config.model';
-import { ItemList, Selection, addField, addItem, addSection, sameSelection } from '../../../../data/site-config.ops';
+import {
+  ALERT_LEVEL_LABEL,
+  AUDIENCE_LABEL,
+  CHANNEL_LABEL,
+  FieldType,
+} from '../../../../data/site-config.model';
+import {
+  ItemList,
+  Selection,
+  addField,
+  addItem,
+  addSection,
+  sameSelection,
+} from '../../../../data/site-config.ops';
 
 interface Layer {
   readonly selection: Selection;
@@ -36,7 +48,11 @@ const FIELD_ICON: Readonly<Record<FieldType, IconName>> = {
   switch: 'check',
 };
 
-const CHANNEL_ICON: Partial<Record<string, IconName>> = { whatsapp: 'wa', phone: 'phone', email: 'mail' };
+const CHANNEL_ICON: Partial<Record<string, IconName>> = {
+  whatsapp: 'wa',
+  phone: 'phone',
+  email: 'mail',
+};
 
 /**
  * Árbol de lo que ve el público elegido: secciones con sus campos, documentos, avisos, canales y
@@ -159,6 +175,8 @@ export class LayersPanelComponent {
 
   private addTo(list: ItemList): void {
     const audience = this.store.audience();
-    this.store.apply(addItem(this.store.config()!, audience, list), { select: (id) => ({ kind: list, audience, id }) });
+    this.store.apply(addItem(this.store.config()!, audience, list), {
+      select: (id) => ({ kind: list, audience, id }),
+    });
   }
 }

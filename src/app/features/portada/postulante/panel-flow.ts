@@ -17,7 +17,12 @@ export type PanelFlow =
   /** Ofertas encontradas para la consulta. */
   | { readonly kind: 'results'; readonly result: JobSearchResult }
   /** Pedido del CV, para el puesto indicado (y la oferta, si se eligió una). */
-  | { readonly kind: 'cv'; readonly position: string; readonly offerRef?: string; readonly error?: string }
+  | {
+      readonly kind: 'cv';
+      readonly position: string;
+      readonly offerRef?: string;
+      readonly error?: string;
+    }
   /** Formulario de contacto, precargado por la IA o vacío. */
   | {
       readonly kind: 'form';
@@ -29,7 +34,11 @@ export type PanelFlow =
       readonly error?: string;
     }
   /** Postulación enviada. */
-  | { readonly kind: 'sent'; readonly contact: CandidateContact; readonly receipt: ApplicationReceipt }
+  | {
+      readonly kind: 'sent';
+      readonly contact: CandidateContact;
+      readonly receipt: ApplicationReceipt;
+    }
   /** Respuesta de la IA en texto, con los datos clave en negrita. */
   | { readonly kind: 'say'; readonly parts: readonly TextPart[] }
   /** Empresas: servicio que recomienda la IA para la consulta. */

@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { EditorStore } from '../../data/editor.store';
 import { BoSegmentedComponent } from '../../ui/bo-segmented/bo-segmented.component';
 import { CanvasPreviewComponent } from './components/canvas-preview/canvas-preview.component';
-import { EditorToolbarComponent, PreviewDevice } from './components/editor-toolbar/editor-toolbar.component';
+import {
+  EditorToolbarComponent,
+  PreviewDevice,
+} from './components/editor-toolbar/editor-toolbar.component';
 import { InspectorPanelComponent } from './components/inspector-panel/inspector-panel.component';
 import { LayersPanelComponent } from './components/layers-panel/layers-panel.component';
 
@@ -15,7 +25,14 @@ type Pane = 'layers' | 'canvas' | 'inspector';
  */
 @Component({
   selector: 'app-backoffice-editor',
-  imports: [MatButtonModule, BoSegmentedComponent, CanvasPreviewComponent, EditorToolbarComponent, InspectorPanelComponent, LayersPanelComponent],
+  imports: [
+    MatButtonModule,
+    BoSegmentedComponent,
+    CanvasPreviewComponent,
+    EditorToolbarComponent,
+    InspectorPanelComponent,
+    LayersPanelComponent,
+  ],
   templateUrl: './editor.page.html',
   styleUrl: './editor.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +76,9 @@ export class EditorPage {
   protected onKey(event: KeyboardEvent): void {
     const mod = event.ctrlKey || event.metaKey;
     const key = event.key.toLowerCase();
-    const typing = (event.target as HTMLElement | null)?.closest?.('input, textarea, select, [contenteditable="true"]');
+    const typing = (event.target as HTMLElement | null)?.closest?.(
+      'input, textarea, select, [contenteditable="true"]',
+    );
     if (mod && key === 's') {
       event.preventDefault();
       if (this.store.dirty()) this.store.save();

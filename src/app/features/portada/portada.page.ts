@@ -1,11 +1,21 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IconComponent } from '../../shared/ui/atoms/icon/icon.component';
 import { AiPromptComponent } from './components/ai-prompt/ai-prompt.component';
 import { BackTabComponent } from './components/back-tab/back-tab.component';
 import { HomeButtonComponent } from './components/home-button/home-button.component';
-import { FigureState, PersonaFigureComponent } from './components/persona-figure/persona-figure.component';
+import {
+  FigureState,
+  PersonaFigureComponent,
+} from './components/persona-figure/persona-figure.component';
 import { PersonaPanelComponent } from './components/persona-panel/persona-panel.component';
 import { PortalButtonComponent } from './components/portal-button/portal-button.component';
 import { SoundToggleComponent } from './components/sound-toggle/sound-toggle.component';
@@ -66,8 +76,12 @@ export class PortadaPage {
   protected readonly reply = signal<RouteReply>('idle');
   protected readonly goingTo = signal('');
 
-  protected readonly selected = computed(() => this.personas().find((p) => p.id === this.selectedId()) ?? null);
-  protected readonly accent = computed(() => `var(--c-${this.selectedId() ?? this.hovered() ?? 'post'})`);
+  protected readonly selected = computed(
+    () => this.personas().find((p) => p.id === this.selectedId()) ?? null,
+  );
+  protected readonly accent = computed(
+    () => `var(--c-${this.selectedId() ?? this.hovered() ?? 'post'})`,
+  );
 
   private readonly timers: ReturnType<typeof setTimeout>[] = [];
 

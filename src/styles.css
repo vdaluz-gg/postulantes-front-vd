@@ -2,7 +2,7 @@
  * Estilos globales: solo tokens de diseño, base tipográfica y transiciones de vista.
  * Cada componente define sus propios estilos en su archivo .css.
  */
-@import "./styles/tokens.css";
-@import "./styles/base.css";
-@import "./styles/view-transitions.css";
-@import "./styles/backoffice-material.css";
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/view-transitions.css';
+@import './styles/backoffice-material.css';

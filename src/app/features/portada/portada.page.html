@@ -1,8 +1,20 @@
 <main class="stage" [class.open]="selected()" [style.--acc]="accent()">
   <div class="intro" [attr.aria-hidden]="selected() ? true : null">
     <p class="logo">
-      <img class="lw" src="assets/brand/grupo-gestion-blanco.png" alt="Grupo Gestión" width="130" height="42" />
-      <img class="lc" src="assets/brand/grupo-gestion-color.svg" alt="Grupo Gestión" width="130" height="42" />
+      <img
+        class="lw"
+        src="assets/brand/grupo-gestion-blanco.png"
+        alt="Grupo Gestión"
+        width="130"
+        height="42"
+      />
+      <img
+        class="lc"
+        src="assets/brand/grupo-gestion-color.svg"
+        alt="Grupo Gestión"
+        width="130"
+        height="42"
+      />
     </p>
     <h1>Bienvenido a donde<br />todo se une.</h1>
   </div>
@@ -14,7 +26,13 @@
       @if (persona.portalLink; as link) {
         <a appPortalButton class="topportal" [routerLink]="link">Ingresar a tu portal</a>
       } @else {
-        <button appPortalButton type="button" class="topportal" [attr.aria-controls]="'q-' + persona.id" (click)="askHere(persona.id)">
+        <button
+          appPortalButton
+          type="button"
+          class="topportal"
+          [attr.aria-controls]="'q-' + persona.id"
+          (click)="askHere(persona.id)"
+        >
           Ingresar a tu portal
         </button>
       }
@@ -44,7 +62,12 @@
   </section>
 
   <div class="route" [attr.inert]="selected() ? '' : null">
-    <app-ai-prompt inputId="q-route" [prompt]="routePrompt" [(value)]="routeQuery" (submitted)="routeTo($event)" />
+    <app-ai-prompt
+      inputId="q-route"
+      [prompt]="routePrompt"
+      [(value)]="routeQuery"
+      (submitted)="routeTo($event)"
+    />
     <p class="reply" aria-live="polite">
       @switch (reply()) {
         @case ('thinking') {
@@ -52,7 +75,8 @@
         }
         @case ('going') {
           <svg appIcon="sparkFill" [filled]="true" class="spark"></svg>
-          Te llevo a <b>{{ goingTo() }}</b>…
+          Te llevo a <b>{{ goingTo() }}</b
+          >…
         }
       }
     </p>

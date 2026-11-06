@@ -1,18 +1,69 @@
 @if (item(); as doc) {
   <app-inspector-head kind="Documento" [title]="doc.name" [dataKey]="doc.id">
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Subir en la lista" title="Subir en la lista" [disabled]="position().first" (click)="move(-1)"><svg appIcon="arrowUp"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Bajar en la lista" title="Bajar en la lista" [disabled]="position().last" (click)="move(1)"><svg appIcon="arrowDown"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar el documento" title="Borrar el documento" (click)="remove()"><svg appIcon="trash"></svg></button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Subir en la lista"
+      title="Subir en la lista"
+      [disabled]="position().first"
+      (click)="move(-1)"
+    >
+      <svg appIcon="arrowUp"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Bajar en la lista"
+      title="Bajar en la lista"
+      [disabled]="position().last"
+      (click)="move(1)"
+    >
+      <svg appIcon="arrowDown"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Borrar el documento"
+      title="Borrar el documento"
+      (click)="remove()"
+    >
+      <svg appIcon="trash"></svg>
+    </button>
   </app-inspector-head>
 
   <app-prop-group legend="Contenido">
-    <bo-text-field label="Nombre del documento" [compact]="true" [value]="doc.name" (valueChange)="set({ name: $event }, 'name')" [error]="doc.name.trim() ? '' : 'Escribí un nombre.'" />
-    <bo-text-field label="Ayuda" help="Una línea: para qué se pide o dónde se consigue." [compact]="true" [value]="doc.help ?? ''" (valueChange)="set({ help: $event || undefined }, 'help')" />
+    <bo-text-field
+      label="Nombre del documento"
+      [compact]="true"
+      [value]="doc.name"
+      (valueChange)="set({ name: $event }, 'name')"
+      [error]="doc.name.trim() ? '' : 'Escribí un nombre.'"
+    />
+    <bo-text-field
+      label="Ayuda"
+      help="Una línea: para qué se pide o dónde se consigue."
+      [compact]="true"
+      [value]="doc.help ?? ''"
+      (valueChange)="set({ help: $event || undefined }, 'help')"
+    />
   </app-prop-group>
 
   <app-prop-group legend="Reglas">
-    <bo-switch label="Obligatorio" help="Sin este documento no se puede avanzar." [checked]="doc.required" (checkedChange)="set({ required: $event })" />
-    <bo-switch label="Tiene vencimiento" help="Pide la fecha y avisa antes de que venza." [checked]="doc.expires" (checkedChange)="set({ expires: $event })" />
+    <bo-switch
+      label="Obligatorio"
+      help="Sin este documento no se puede avanzar."
+      [checked]="doc.required"
+      (checkedChange)="set({ required: $event })"
+    />
+    <bo-switch
+      label="Tiene vencimiento"
+      help="Pide la fecha y avisa antes de que venza."
+      [checked]="doc.expires"
+      (checkedChange)="set({ expires: $event })"
+    />
     <bo-text-field
       label="Tamaño máximo (MB)"
       type="number"
@@ -26,7 +77,14 @@
   <app-prop-group legend="Formatos aceptados">
     <div class="pills" role="group" aria-label="Formatos aceptados">
       @for (format of formats; track format) {
-        <button type="button" class="pill" [attr.aria-pressed]="doc.formats.includes(format)" (click)="toggleFormat(format)">{{ format.toUpperCase() }}</button>
+        <button
+          type="button"
+          class="pill"
+          [attr.aria-pressed]="doc.formats.includes(format)"
+          (click)="toggleFormat(format)"
+        >
+          {{ format.toUpperCase() }}
+        </button>
       }
     </div>
     @if (!doc.formats.length) {

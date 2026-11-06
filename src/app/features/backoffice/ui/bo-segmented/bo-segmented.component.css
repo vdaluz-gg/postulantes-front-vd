@@ -1,7 +1,53 @@
-:host{display:inline-flex;gap:2px;padding:4px;border-radius:999px;background:var(--surface2);max-width:100%;overflow-x:auto;scrollbar-width:none}
-button{display:inline-flex;align-items:center;gap:8px;flex:none;min-height:36px;padding:0 14px;border:0;border-radius:999px;background:transparent;color:var(--mut);font:600 13.5px var(--font);white-space:nowrap;transition:background .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease)}
-button:hover{color:var(--ink)}
-button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.25)}
-button.toned[aria-pressed="true"]{box-shadow:0 1px 4px rgba(0,0,0,.25),inset 0 0 0 1.5px var(--tone)}
-.dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--tone)}
-@media (pointer:coarse){button{min-height:44px}}
+:host {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface2);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mut);
+  font: 600 13.5px var(--font);
+  white-space: nowrap;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+button:hover {
+  color: var(--ink);
+}
+button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+button.toned[aria-pressed='true'] {
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1.5px var(--tone);
+}
+.dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+@media (pointer: coarse) {
+  button {
+    min-height: 44px;
+  }
+}

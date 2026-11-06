@@ -3,70 +3,137 @@
  * Primitivas (--gg-*): valores de marca tomados de la maqueta.
  * Semánticas (--bg, --ink, --vio, ...): lo que consumen los componentes; cambian por tema.
  */
-:root{
-  --gg-violet-950:#2a0f5c;
-  --gg-violet-700:#6a20cf;
-  --gg-violet-600:#7a2be3;
-  --gg-violet-500:#8b3bf0;
-  --gg-violet-200:#c7a6ff;
-  --gg-violet-100:#e3d2ff;
-  --gg-fuchsia-700:#b3226f;
-  --gg-fuchsia-600:#c42a7f;
-  --gg-fuchsia-400:#ff5fae;
-  --gg-fuchsia-300:#ff8cc4;
-  --gg-mint-700:#0f6a52;
-  --gg-mint-600:#137a5f;
-  --gg-mint-400:#5fe0b5;
-  --gg-night-900:#0b0814;
-  --gg-night-800:#1a1328;
-  --gg-night-700:#1a1530;
-  --gg-night-600:#221c3b;
-  --gg-night-500:#2b2448;
-  --gg-gray-600:#5d5473;
-  --gg-gray-300:#aca2c7;
-  --gg-lilac-300:#a99ec4;
-  --gg-gray-650:#5a5172;
-  --gg-mist-50:#f7f5fc;
-  --gg-mist-100:#f0ecf9;
-  --gg-mist-200:#f3eefc;
-  --gg-white:#fff;
-  --gg-ink-950:#0c0a12;
+:root {
+  --gg-violet-950: #2a0f5c;
+  --gg-violet-700: #6a20cf;
+  --gg-violet-600: #7a2be3;
+  --gg-violet-500: #8b3bf0;
+  --gg-violet-200: #c7a6ff;
+  --gg-violet-100: #e3d2ff;
+  --gg-fuchsia-700: #b3226f;
+  --gg-fuchsia-600: #c42a7f;
+  --gg-fuchsia-400: #ff5fae;
+  --gg-fuchsia-300: #ff8cc4;
+  --gg-mint-700: #0f6a52;
+  --gg-mint-600: #137a5f;
+  --gg-mint-400: #5fe0b5;
+  --gg-night-900: #0b0814;
+  --gg-night-800: #1a1328;
+  --gg-night-700: #1a1530;
+  --gg-night-600: #221c3b;
+  --gg-night-500: #2b2448;
+  --gg-gray-600: #5d5473;
+  --gg-gray-300: #aca2c7;
+  --gg-lilac-300: #a99ec4;
+  --gg-gray-650: #5a5172;
+  --gg-mist-50: #f7f5fc;
+  --gg-mist-100: #f0ecf9;
+  --gg-mist-200: #f3eefc;
+  --gg-white: #fff;
+  --gg-ink-950: #0c0a12;
 
   /* Acentos de la portada: uno por perfil (postulante, cliente, colaborador). */
-  --gg-post-dark:#a66bff;--gg-post-light:var(--gg-violet-600);
-  --gg-cli-dark:#ff79bd;--gg-cli-light:var(--gg-fuchsia-600);
-  --gg-col-dark:#79e8c3;--gg-col-light:var(--gg-mint-600);
+  --gg-post-dark: #a66bff;
+  --gg-post-light: var(--gg-violet-600);
+  --gg-cli-dark: #ff79bd;
+  --gg-cli-light: var(--gg-fuchsia-600);
+  --gg-col-dark: #79e8c3;
+  --gg-col-light: var(--gg-mint-600);
 
-  --font-display:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
-  --font-mono:"DM Mono",ui-monospace,Consolas,monospace;
+  --font-display: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, Consolas, monospace;
 
   /* Fuente del sistema, sin web-font. Segoe UI no tiene peso 500: Chrome lo muestra como 600 y
      Firefox como 400. Con --font usar solo 400, 600 o 700. */
-  --font:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
-  --r:18px;--r-s:12px;--nav-w:272px;--bar-h:68px;
-  --ease:cubic-bezier(.2,.7,.2,1);
+  --font:
+    'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --r: 18px;
+  --r-s: 12px;
+  --nav-w: 272px;
+  --bar-h: 68px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-[data-theme="dark"]{
-  --bg:var(--gg-night-700);--surface:var(--gg-night-600);--surface2:var(--gg-night-500);--line:rgba(243,238,252,.12);--line2:rgba(243,238,252,.2);
-  --ink:var(--gg-mist-200);--mut:var(--gg-gray-300);
-  --vio:var(--gg-violet-500);--vio-t:var(--gg-violet-200);--fuc:var(--gg-fuchsia-400);--fuc-t:var(--gg-fuchsia-300);--mint:var(--gg-mint-400);--mint-t:var(--gg-mint-400);
-  --on:var(--gg-white);--focus:var(--gg-violet-200);--shadow:0 18px 50px rgba(0,0,0,.45);
-  --tint-vio:rgba(139,59,240,.18);--tint-fuc:rgba(255,95,174,.15);--tint-mint:rgba(95,224,181,.14);
-  --glow1:rgba(139,59,240,.22);--glow2:rgba(95,224,181,.09);
+[data-theme='dark'] {
+  --bg: var(--gg-night-700);
+  --surface: var(--gg-night-600);
+  --surface2: var(--gg-night-500);
+  --line: rgba(243, 238, 252, 0.12);
+  --line2: rgba(243, 238, 252, 0.2);
+  --ink: var(--gg-mist-200);
+  --mut: var(--gg-gray-300);
+  --vio: var(--gg-violet-500);
+  --vio-t: var(--gg-violet-200);
+  --fuc: var(--gg-fuchsia-400);
+  --fuc-t: var(--gg-fuchsia-300);
+  --mint: var(--gg-mint-400);
+  --mint-t: var(--gg-mint-400);
+  --on: var(--gg-white);
+  --focus: var(--gg-violet-200);
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --tint-vio: rgba(139, 59, 240, 0.18);
+  --tint-fuc: rgba(255, 95, 174, 0.15);
+  --tint-mint: rgba(95, 224, 181, 0.14);
+  --glow1: rgba(139, 59, 240, 0.22);
+  --glow2: rgba(95, 224, 181, 0.09);
 }
-[data-theme="light"]{
-  --bg:var(--gg-mist-50);--surface:var(--gg-white);--surface2:var(--gg-mist-100);--line:rgba(26,19,40,.12);--line2:rgba(26,19,40,.22);
-  --ink:var(--gg-night-800);--mut:var(--gg-gray-600);
-  --vio:var(--gg-violet-600);--vio-t:var(--gg-violet-700);--fuc:var(--gg-fuchsia-600);--fuc-t:var(--gg-fuchsia-700);--mint:var(--gg-mint-600);--mint-t:var(--gg-mint-700);
-  --on:var(--gg-white);--focus:var(--gg-violet-700);--shadow:0 18px 44px rgba(60,30,110,.14);
-  --tint-vio:rgba(122,43,227,.10);--tint-fuc:rgba(196,42,127,.09);--tint-mint:rgba(19,122,95,.10);
-  --glow1:rgba(122,43,227,.13);--glow2:rgba(19,122,95,.07);
+[data-theme='light'] {
+  --bg: var(--gg-mist-50);
+  --surface: var(--gg-white);
+  --surface2: var(--gg-mist-100);
+  --line: rgba(26, 19, 40, 0.12);
+  --line2: rgba(26, 19, 40, 0.22);
+  --ink: var(--gg-night-800);
+  --mut: var(--gg-gray-600);
+  --vio: var(--gg-violet-600);
+  --vio-t: var(--gg-violet-700);
+  --fuc: var(--gg-fuchsia-600);
+  --fuc-t: var(--gg-fuchsia-700);
+  --mint: var(--gg-mint-600);
+  --mint-t: var(--gg-mint-700);
+  --on: var(--gg-white);
+  --focus: var(--gg-violet-700);
+  --shadow: 0 18px 44px rgba(60, 30, 110, 0.14);
+  --tint-vio: rgba(122, 43, 227, 0.1);
+  --tint-fuc: rgba(196, 42, 127, 0.09);
+  --tint-mint: rgba(19, 122, 95, 0.1);
+  --glow1: rgba(122, 43, 227, 0.13);
+  --glow2: rgba(19, 122, 95, 0.07);
 }
-[data-contrast="high"]{--bg:#000;--surface:#000;--surface2:#1a1a1a;--line:rgba(255,255,255,.6);--line2:#fff;--ink:#fff;--mut:#e9e6f0;--vio:#6df0c3;--vio-t:#8ff7d2;--glow1:transparent;--glow2:transparent}
+[data-contrast='high'] {
+  --bg: #000;
+  --surface: #000;
+  --surface2: #1a1a1a;
+  --line: rgba(255, 255, 255, 0.6);
+  --line2: #fff;
+  --ink: #fff;
+  --mut: #e9e6f0;
+  --vio: #6df0c3;
+  --vio-t: #8ff7d2;
+  --glow1: transparent;
+  --glow2: transparent;
+}
 /* Texto negro sobre el acento menta: el blanco daba 1,41:1; el negro 14,9:1 (skill, corrección 9). */
-[data-contrast="high"]{--on:#000}
+[data-contrast='high'] {
+  --on: #000;
+}
 
-@property --vio{syntax:'<color>';inherits:true;initial-value:#8b3bf0}
-@property --vio-t{syntax:'<color>';inherits:true;initial-value:#c7a6ff}
-@property --rv{syntax:'<length>';inherits:true;initial-value:0px}
-:root{transition:--vio .55s ease,--vio-t .55s ease}
+@property --vio {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8b3bf0;
+}
+@property --vio-t {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c7a6ff;
+}
+@property --rv {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+:root {
+  transition:
+    --vio 0.55s ease,
+    --vio-t 0.55s ease;
+}

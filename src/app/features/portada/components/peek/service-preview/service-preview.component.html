@@ -10,15 +10,28 @@
   @case ('funnel') {
     <div class="funnel" aria-hidden="true">
       @for (step of funnel; track step.value) {
-        <div><i [style.width.%]="step.width" [style.animation-delay.ms]="$index * 100"></i>{{ step.value }}</div>
+        <div>
+          <i [style.width.%]="step.width" [style.animation-delay.ms]="$index * 100"></i
+          >{{ step.value }}
+        </div>
       }
     </div>
-    <small class="note">Postulantes → entrevistas → terna → elegido (ejemplo): 120, 24, 5 y 1</small>
+    <small class="note"
+      >Postulantes → entrevistas → terna → elegido (ejemplo): 120, 24, 5 y 1</small
+    >
   }
   @case ('loop') {
     <div class="loop" aria-hidden="true">
       <svg viewBox="0 0 150 150">
-        <circle cx="75" cy="75" r="60" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2" />
+        <circle
+          cx="75"
+          cy="75"
+          r="60"
+          fill="none"
+          stroke="currentColor"
+          stroke-opacity=".25"
+          stroke-width="2"
+        />
         <circle cx="75" cy="15" r="8" fill="var(--c-post)" />
         <circle cx="127" cy="105" r="8" fill="var(--c-cli)" />
         <circle cx="23" cy="105" r="8" fill="var(--c-col)" />
@@ -30,13 +43,17 @@
   @case ('docs') {
     <div class="docs">
       @for (doc of docs; track doc.label) {
-        <div [style.animation-delay.ms]="$index * 150">{{ doc.label }}<b>{{ doc.state }}</b></div>
+        <div [style.animation-delay.ms]="$index * 150">
+          {{ doc.label }}<b>{{ doc.state }}</b>
+        </div>
       }
     </div>
   }
   @case ('belt') {
     <div class="belt" aria-hidden="true">
-      <div class="line"><i></i><i style="animation-delay:1.3s"></i><i style="animation-delay:2.6s"></i></div>
+      <div class="line">
+        <i></i><i style="animation-delay: 1.3s"></i><i style="animation-delay: 2.6s"></i>
+      </div>
     </div>
     <small class="note">Proceso tercerizado con indicadores acordados</small>
   }

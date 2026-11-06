@@ -1,24 +1,93 @@
 <bo-brand />
 
-<bo-segmented class="aud" label="Público que estás editando" [options]="audiences" [value]="store.audience()" (valueChange)="setAudience($event)" />
+<bo-segmented
+  class="aud"
+  label="Público que estás editando"
+  [options]="audiences"
+  [value]="store.audience()"
+  (valueChange)="setAudience($event)"
+/>
 
 <div class="hist" role="group" aria-label="Historial">
-  <button mat-icon-button type="button" class="bo-sm" aria-label="Deshacer (Ctrl+Z)" title="Deshacer (Ctrl+Z)" [disabled]="!store.canUndo()" (click)="store.undo()"><svg appIcon="undo"></svg></button>
-  <button mat-icon-button type="button" class="bo-sm" aria-label="Rehacer (Ctrl+Shift+Z)" title="Rehacer (Ctrl+Shift+Z)" [disabled]="!store.canRedo()" (click)="store.redo()"><svg appIcon="redo"></svg></button>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    aria-label="Deshacer (Ctrl+Z)"
+    title="Deshacer (Ctrl+Z)"
+    [disabled]="!store.canUndo()"
+    (click)="store.undo()"
+  >
+    <svg appIcon="undo"></svg>
+  </button>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    aria-label="Rehacer (Ctrl+Shift+Z)"
+    title="Rehacer (Ctrl+Shift+Z)"
+    [disabled]="!store.canRedo()"
+    (click)="store.redo()"
+  >
+    <svg appIcon="redo"></svg>
+  </button>
 </div>
 
-<p class="state" [class.dirty]="store.dirty()" [class.err]="store.status() === 'error'" aria-live="polite">{{ saveState() }}</p>
+<p
+  class="state"
+  [class.dirty]="store.dirty()"
+  [class.err]="store.status() === 'error'"
+  aria-live="polite"
+>
+  {{ saveState() }}
+</p>
 
 <div class="view" role="group" aria-label="Vista previa">
-  <button mat-icon-button type="button" class="bo-sm" aria-label="Ver en escritorio" title="Ver en escritorio" [attr.aria-pressed]="device() === 'desktop'" (click)="device.set('desktop')"><svg appIcon="desktop"></svg></button>
-  <button mat-icon-button type="button" class="bo-sm" aria-label="Ver en celular" title="Ver en celular" [attr.aria-pressed]="device() === 'mobile'" (click)="device.set('mobile')"><svg appIcon="mobile"></svg></button>
-  <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="previewOnly() ? 'Volver a editar' : 'Ver sin paneles'" [attr.title]="previewOnly() ? 'Volver a editar' : 'Ver sin paneles'" [attr.aria-pressed]="previewOnly()" (click)="previewOnly.set(!previewOnly())"><svg [appIcon]="previewOnly() ? 'layers' : 'eye'"></svg></button>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    aria-label="Ver en escritorio"
+    title="Ver en escritorio"
+    [attr.aria-pressed]="device() === 'desktop'"
+    (click)="device.set('desktop')"
+  >
+    <svg appIcon="desktop"></svg>
+  </button>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    aria-label="Ver en celular"
+    title="Ver en celular"
+    [attr.aria-pressed]="device() === 'mobile'"
+    (click)="device.set('mobile')"
+  >
+    <svg appIcon="mobile"></svg>
+  </button>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    [attr.aria-label]="previewOnly() ? 'Volver a editar' : 'Ver sin paneles'"
+    [attr.title]="previewOnly() ? 'Volver a editar' : 'Ver sin paneles'"
+    [attr.aria-pressed]="previewOnly()"
+    (click)="previewOnly.set(!previewOnly())"
+  >
+    <svg [appIcon]="previewOnly() ? 'layers' : 'eye'"></svg>
+  </button>
 </div>
 
 <div class="actions">
   @if (store.issues().length) {
     <div class="pop-wrap">
-      <button type="button" class="issues" [attr.aria-expanded]="issuesOpen()" aria-controls="bo-issues" (click)="issuesOpen.set(!issuesOpen())">
+      <button
+        type="button"
+        class="issues"
+        [attr.aria-expanded]="issuesOpen()"
+        aria-controls="bo-issues"
+        (click)="issuesOpen.set(!issuesOpen())"
+      >
         {{ store.issues().length }} para revisar
       </button>
       @if (issuesOpen()) {
@@ -26,25 +95,52 @@
           <p class="pop-t">Antes de publicar</p>
           <ul>
             @for (issue of store.issues(); track $index) {
-              <li><button type="button" (click)="goTo(issue)">{{ issue.message }}</button></li>
+              <li>
+                <button type="button" (click)="goTo(issue)">{{ issue.message }}</button>
+              </li>
             }
           </ul>
         </div>
       }
     </div>
   }
-  <button mat-stroked-button type="button" class="bo-sm" [disabled]="busy() || !store.dirty()" (click)="save()">Guardar borrador</button>
-  <button mat-flat-button type="button" class="bo-sm" [attr.aria-busy]="store.status() === 'publishing' || null" [disabled]="busy()" (click)="publish()">
+  <button
+    mat-stroked-button
+    type="button"
+    class="bo-sm"
+    [disabled]="busy() || !store.dirty()"
+    (click)="save()"
+  >
+    Guardar borrador
+  </button>
+  <button
+    mat-flat-button
+    type="button"
+    class="bo-sm"
+    [attr.aria-busy]="store.status() === 'publishing' || null"
+    [disabled]="busy()"
+    (click)="publish()"
+  >
     {{ store.status() === 'publishing' ? 'Publicando…' : 'Publicar' }}
   </button>
   <button appThemeToggle></button>
   <div class="pop-wrap">
-    <button type="button" class="avatar" [attr.aria-expanded]="menuOpen()" aria-controls="bo-user-menu" [attr.aria-label]="'Tu cuenta: ' + (admin()?.fullName ?? '')" (click)="menuOpen.set(!menuOpen())">
+    <button
+      type="button"
+      class="avatar"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="bo-user-menu"
+      [attr.aria-label]="'Tu cuenta: ' + (admin()?.fullName ?? '')"
+      (click)="menuOpen.set(!menuOpen())"
+    >
       {{ initials() }}
     </button>
     @if (menuOpen()) {
       <div class="pop right" id="bo-user-menu">
-        <p class="who"><b>{{ admin()?.fullName }}</b><span>{{ admin()?.email }}</span></p>
+        <p class="who">
+          <b>{{ admin()?.fullName }}</b
+          ><span>{{ admin()?.email }}</span>
+        </p>
         <button mat-stroked-button type="button" class="bo-sm" (click)="logout()">Salir</button>
       </div>
     }

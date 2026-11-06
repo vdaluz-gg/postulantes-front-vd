@@ -36,8 +36,19 @@ import { PortadaButtonComponent } from '../portada-button/portada-button.compone
 import { SuggestionPillComponent } from '../suggestion-pill/suggestion-pill.component';
 import { TopicChipComponent } from '../topic-chip/topic-chip.component';
 import { PanelCommand, Persona, PersonaChip } from '../../portada.data';
-import { COLLABORATOR_PHONE, Receipt, readCertificate, topicForQuestion } from '../../colaboradores/collaborator-data';
-import { ADVISOR_PHONE, CompanyService, draftProposal, recommendService, serviceById } from '../../empresas/company-services';
+import {
+  COLLABORATOR_PHONE,
+  Receipt,
+  readCertificate,
+  topicForQuestion,
+} from '../../colaboradores/collaborator-data';
+import {
+  ADVISOR_PHONE,
+  CompanyService,
+  draftProposal,
+  recommendService,
+  serviceById,
+} from '../../empresas/company-services';
 import { ProposalFormComponent } from '../../empresas/proposal-form/proposal-form.component';
 import { CertificateDropComponent } from '../peek/certificate-drop/certificate-drop.component';
 import { PaydayCardComponent } from '../peek/payday-card/payday-card.component';
@@ -62,7 +73,8 @@ const CERTIFICATE_READ_MS = 1300;
  * Empresas y colaboradores usan datos de ejemplo.
  */
 /** Foto o PDF, como acepta la carga del certificado. */
-const isCertificateFile = (file: File): boolean => file.type.startsWith('image/') || file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+const isCertificateFile = (file: File): boolean =>
+  file.type.startsWith('image/') || file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
 @Component({
   selector: 'app-persona-panel',
@@ -119,9 +131,15 @@ export class PersonaPanelComponent {
     computation: (persona) => persona.chips.find((c) => c.peek)?.id ?? null,
   });
   /** Un tema tocado queda fijo: pasar por otros ya no cambia la vista previa. */
-  private readonly pinned = linkedSignal<Persona, boolean>({ source: this.persona, computation: () => false });
+  private readonly pinned = linkedSignal<Persona, boolean>({
+    source: this.persona,
+    computation: () => false,
+  });
 
-  protected readonly flow = linkedSignal<Persona, PanelFlow>({ source: this.persona, computation: () => ({ kind: 'topic' }) });
+  protected readonly flow = linkedSignal<Persona, PanelFlow>({
+    source: this.persona,
+    computation: () => ({ kind: 'topic' }),
+  });
   /** Cambia con cada paso del flujo para repetir la entrada del recuadro. */
   protected readonly flowKey = signal(0);
   /** Oferta abierta en detalle (reemplaza la vista principal del panel). */
@@ -160,8 +178,14 @@ export class PersonaPanelComponent {
   /** Recibos firmados en esta visita. */
   protected readonly signed = signal<ReadonlySet<string>>(new Set());
   /** Empresas: última consulta y servicio recomendado, para armar la propuesta. */
-  private readonly companyQuery = linkedSignal<Persona, string>({ source: this.persona, computation: () => '' });
-  private readonly recommended = linkedSignal<Persona, CompanyService | null>({ source: this.persona, computation: () => null });
+  private readonly companyQuery = linkedSignal<Persona, string>({
+    source: this.persona,
+    computation: () => '',
+  });
+  private readonly recommended = linkedSignal<Persona, CompanyService | null>({
+    source: this.persona,
+    computation: () => null,
+  });
   protected readonly shown = signal(false);
 
   private readonly peekSlot = viewChild<ElementRef<HTMLElement>>('peekSlot');
@@ -197,9 +221,17 @@ export class PersonaPanelComponent {
   /** Busca en las ofertas publicadas; espera a la vez la carga y la pausa en la que "piensa" la IA. */
   protected search(query: string): void {
     this.go({ kind: 'thinking', text: 'La IA cruza tu perfil con las ofertas…' });
-    this.pending = forkJoin([this.offers.list(), timer(this.motion.reduced() ? 0 : SEARCH_THINK_MS)]).subscribe({
+    this.pending = forkJoin([
+      this.offers.list(),
+      timer(this.motion.reduced() ? 0 : SEARCH_THINK_MS),
+    ]).subscribe({
       next: ([offers]) => this.go({ kind: 'results', result: searchJobs(query, offers) }),
-      error: () => this.go({ kind: 'notice', text: 'No pudimos cargar las ofertas. Probá de nuevo en un rato.', retry: query }),
+      error: () =>
+        this.go({
+          kind: 'notice',
+          text: 'No pudimos cargar las ofertas. Probá de nuevo en un rato.',
+          retry: query,
+        }),
     });
   }
 
@@ -265,7 +297,11 @@ export class PersonaPanelComponent {
     if (!isCertificateFile(file)) {
       this.go({
         kind: 'say',
-        parts: [{ text: 'Ese archivo no es una foto ni un PDF. ' }, { text: 'Sacale una foto al certificado', strong: true }, { text: ' o subilo en PDF.' }],
+        parts: [
+          { text: 'Ese archivo no es una foto ni un PDF. ' },
+          { text: 'Sacale una foto al certificado', strong: true },
+          { text: ' o subilo en PDF.' },
+        ],
       });
       return;
     }
@@ -357,13 +393,22 @@ export class PersonaPanelComponent {
           kind: 'cv',
           position,
           offerRef,
-          error: errorMessage(error, 'No pudimos leer tu CV. Probá de nuevo o completá tus datos a mano.'),
+          error: errorMessage(
+            error,
+            'No pudimos leer tu CV. Probá de nuevo o completá tus datos a mano.',
+          ),
         }),
     });
   }
 
   protected fillManually(position: string, offerRef?: string): void {
-    this.go({ kind: 'form', heading: 'Completá tus datos', prefill: { position }, typed: false, target: { offerRef } });
+    this.go({
+      kind: 'form',
+      heading: 'Completá tus datos',
+      prefill: { position },
+      typed: false,
+      target: { offerRef },
+    });
   }
 
   protected send(contact: CandidateContact, target: ApplicationTarget): void {
@@ -389,7 +434,10 @@ export class PersonaPanelComponent {
     this.flowKey.update((k) => k + 1);
     if (next.kind !== 'topic') {
       queueMicrotask(() =>
-        this.peekSlot()?.nativeElement.scrollIntoView({ block: 'nearest', behavior: this.motion.reduced() ? 'auto' : 'smooth' }),
+        this.peekSlot()?.nativeElement.scrollIntoView({
+          block: 'nearest',
+          behavior: this.motion.reduced() ? 'auto' : 'smooth',
+        }),
       );
     }
   }

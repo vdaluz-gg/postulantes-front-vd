@@ -33,7 +33,10 @@ export class BoTextFieldComponent {
 
   readonly inputId = `bo-tf-${nextId++}`;
   protected readonly describedBy = computed(
-    () => [this.help() && `${this.inputId}-help`, this.error() && `${this.inputId}-err`].filter(Boolean).join(' ') || null,
+    () =>
+      [this.help() && `${this.inputId}-help`, this.error() && `${this.inputId}-err`]
+        .filter(Boolean)
+        .join(' ') || null,
   );
 
   protected onInput(event: Event): void {

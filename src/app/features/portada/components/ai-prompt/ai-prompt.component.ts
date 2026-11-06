@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, input, model, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+  model,
+  output,
+  viewChild,
+} from '@angular/core';
 import { IconComponent } from '../../../../shared/ui/atoms/icon/icon.component';
 import { PersonaPrompt } from '../../portada.data';
 

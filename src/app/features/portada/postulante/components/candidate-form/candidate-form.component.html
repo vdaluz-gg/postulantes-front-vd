@@ -6,7 +6,12 @@
       <div class="field" [class.w]="field.wide" [class]="'tone-' + f.tone">
         @switch (f.type) {
           @case ('chips') {
-            <span class="lb" [id]="id + '-lb'">{{ f.label }}@if (!field.required) {<span class="opt"> (opcional)</span>}</span>
+            <span class="lb" [id]="id + '-lb'"
+              >{{ f.label }}
+              @if (!field.required) {
+                <span class="opt">(opcional)</span>
+              }
+            </span>
             <div
               class="chips"
               role="group"
@@ -44,7 +49,12 @@
             </label>
           }
           @default {
-            <label [for]="id">{{ f.label }}@if (!field.required && !f.readonly) {<span class="opt"> (opcional)</span>}</label>
+            <label [for]="id"
+              >{{ f.label }}
+              @if (!field.required && !f.readonly) {
+                <span class="opt">(opcional)</span>
+              }
+            </label>
             @switch (f.type) {
               @case ('textarea') {
                 <textarea
@@ -75,7 +85,14 @@
               @default {
                 <input
                   [id]="id"
-                  [type]="f.type === 'tel' || f.type === 'email' || f.type === 'number' || f.type === 'date' ? f.type : 'text'"
+                  [type]="
+                    f.type === 'tel' ||
+                    f.type === 'email' ||
+                    f.type === 'number' ||
+                    f.type === 'date'
+                      ? f.type
+                      : 'text'
+                  "
                   [formControlName]="f.id"
                   [attr.autocomplete]="field.autocomplete"
                   [attr.inputmode]="field.inputmode"
@@ -105,5 +122,7 @@
     }
   </div>
   <p class="summary" role="alert">{{ message() }}</p>
-  <button appPortadaButton variant="pri" type="submit" [disabled]="busy()">Enviar postulación</button>
+  <button appPortadaButton variant="pri" type="submit" [disabled]="busy()">
+    Enviar postulación
+  </button>
 </form>

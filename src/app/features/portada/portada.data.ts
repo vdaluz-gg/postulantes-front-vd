@@ -68,7 +68,12 @@ export interface TrackerStep {
 
 /** Vista previa que se muestra al pasar o tocar un tema del panel. */
 export type PeekContent =
-  | { readonly kind: 'map'; readonly title: string; readonly home: MapPoint; readonly pins: readonly MapPin[] }
+  | {
+      readonly kind: 'map';
+      readonly title: string;
+      readonly home: MapPoint;
+      readonly pins: readonly MapPin[];
+    }
   | {
       readonly kind: 'whatsapp';
       readonly title: string;
@@ -124,7 +129,12 @@ export const PERSONAS: readonly Persona[] = [
       placeholder: 'Contale a la IA qué sabés hacer y dónde vivís',
       submit: 'Buscar',
     },
-    suggestions: ['Chofer cerca de Moreno', 'Fábrica en Monte Grande', 'Trabajo de oficina', 'Algo en Salta'],
+    suggestions: [
+      'Chofer cerca de Moreno',
+      'Fábrica en Monte Grande',
+      'Trabajo de oficina',
+      'Algo en Salta',
+    ],
     chips: [
       {
         id: 'cerca',
@@ -153,7 +163,11 @@ export const PERSONAS: readonly Persona[] = [
             { text: ' en Monte Grande. ¿Querés que te postule?' },
           ],
           actions: [
-            { label: 'Sí, postulame', primary: true, command: { kind: 'apply', position: 'Operario/a de producción' } },
+            {
+              label: 'Sí, postulame',
+              primary: true,
+              command: { kind: 'apply', position: 'Operario/a de producción' },
+            },
             { label: 'Ver más ofertas', command: { kind: 'search' } },
           ],
         },
@@ -174,7 +188,11 @@ export const PERSONAS: readonly Persona[] = [
       },
     ],
     actions: [
-      { label: 'Ver todas las ofertas →', primary: true, command: { kind: 'search', useInput: true } },
+      {
+        label: 'Ver todas las ofertas →',
+        primary: true,
+        command: { kind: 'search', useInput: true },
+      },
       { label: 'Dejar mi CV con IA', command: { kind: 'cv' } },
     ],
     footnote: 'Matching con IA · 14 sucursales en todo el país',
@@ -201,7 +219,11 @@ export const PERSONAS: readonly Persona[] = [
     chips: COMPANY_SERVICES.map((service, i): PersonaChip => ({
       id: service.id,
       label: service.title,
-      peek: { kind: 'service', title: `${String(i + 1).padStart(2, '0')} · ${service.title}`, serviceId: service.id },
+      peek: {
+        kind: 'service',
+        title: `${String(i + 1).padStart(2, '0')} · ${service.title}`,
+        serviceId: service.id,
+      },
     })),
     actions: [
       { label: 'Armar mi propuesta con IA →', primary: true, command: { kind: 'proposal' } },
@@ -224,12 +246,29 @@ export const PERSONAS: readonly Persona[] = [
       placeholder: 'Preguntale a la IA: cobro, recibos, certificados…',
       submit: 'Preguntar',
     },
-    suggestions: ['¿Cuándo cobro?', 'Mi recibo de octubre', 'Cargar un certificado', '¿Y mi tarjeta?'],
+    suggestions: [
+      '¿Cuándo cobro?',
+      'Mi recibo de octubre',
+      'Cargar un certificado',
+      '¿Y mi tarjeta?',
+    ],
     chips: [
       { id: 'cobro', label: 'Fecha de cobro', peek: { kind: 'payday', title: 'Tu próximo cobro' } },
-      { id: 'recibo', label: 'Recibos de sueldo', peek: { kind: 'receipts', title: 'Tus recibos' } },
-      { id: 'cert', label: 'Ausencias y certificados', peek: { kind: 'certificate', title: 'La IA lo lee y lo carga por vos' } },
-      { id: 'tarjeta', label: 'Tarjeta de débito', peek: { kind: 'tracker', title: 'Tarjeta de débito', steps: cardSteps(new Date()) } },
+      {
+        id: 'recibo',
+        label: 'Recibos de sueldo',
+        peek: { kind: 'receipts', title: 'Tus recibos' },
+      },
+      {
+        id: 'cert',
+        label: 'Ausencias y certificados',
+        peek: { kind: 'certificate', title: 'La IA lo lee y lo carga por vos' },
+      },
+      {
+        id: 'tarjeta',
+        label: 'Tarjeta de débito',
+        peek: { kind: 'tracker', title: 'Tarjeta de débito', steps: cardSteps(new Date()) },
+      },
     ],
     actions: [
       { label: 'Gestión Virtual', primary: true, command: { kind: 'virtual' } },
@@ -244,11 +283,12 @@ export const PERSONAS: readonly Persona[] = [
 
 /** Elige el perfil más probable según lo que escribió la persona (mismas reglas de la maqueta). */
 export function personaForQuery(query: string): PersonaId {
-  const text = query
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
-  if (/cobr|recibo|sueldo|certific|ausen|tarjeta|ya trabajo|soy colaborador|gestion virtual|aguinaldo/.test(text)) {
+  const text = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  if (
+    /cobr|recibo|sueldo|certific|ausen|tarjeta|ya trabajo|soy colaborador|gestion virtual|aguinaldo/.test(
+      text,
+    )
+  ) {
     return 'col';
   }
   if (

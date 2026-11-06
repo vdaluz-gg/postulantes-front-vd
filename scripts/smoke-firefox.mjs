@@ -26,13 +26,23 @@ const port = 9900 + Math.floor(Math.random() * 400);
 const profile = mkdtempSync(join(tmpdir(), 'gg-firefox-'));
 writeFileSync(
   join(profile, 'user.js'),
-  ['browser.shell.checkDefaultBrowser', 'datareporting.policy.dataSubmissionEnabled', 'browser.aboutwelcome.enabled']
+  [
+    'browser.shell.checkDefaultBrowser',
+    'datareporting.policy.dataSubmissionEnabled',
+    'browser.aboutwelcome.enabled',
+  ]
     .map((pref) => `user_pref("${pref}", false);`)
     .join('\n'),
 );
 const firefox = spawn(
   BIN,
-  ['-no-remote', '-profile', profile, `--remote-debugging-port=${port}`, ...(process.env.HEADED === '1' ? [] : ['-headless'])],
+  [
+    '-no-remote',
+    '-profile',
+    profile,
+    `--remote-debugging-port=${port}`,
+    ...(process.env.HEADED === '1' ? [] : ['-headless']),
+  ],
   { stdio: 'ignore' },
 );
 const finish = (code) => {
@@ -66,20 +76,29 @@ const pending = new Map();
 const consoleErrors = [];
 ws.onmessage = ({ data }) => {
   const msg = JSON.parse(data);
-  if (msg.id && pending.has(msg.id)) pending.get(msg.id)(msg), pending.delete(msg.id);
-  if (msg.method === 'log.entryAdded' && msg.params.level === 'error') consoleErrors.push(msg.params.text);
+  if (msg.id && pending.has(msg.id)) (pending.get(msg.id)(msg), pending.delete(msg.id));
+  if (msg.method === 'log.entryAdded' && msg.params.level === 'error')
+    consoleErrors.push(msg.params.text);
 };
 const send = (method, params = {}) =>
   new Promise((resolve, reject) => {
     const n = ++id;
-    pending.set(n, (msg) => (msg.type === 'error' ? reject(new Error(`${method}: ${msg.message}`)) : resolve(msg.result)));
+    pending.set(n, (msg) =>
+      msg.type === 'error' ? reject(new Error(`${method}: ${msg.message}`)) : resolve(msg.result),
+    );
     ws.send(JSON.stringify({ id: n, method, params }));
   });
 
 await send('session.new', { capabilities: {} });
 await send('session.subscribe', { events: ['log.entryAdded'] });
 const context = (await send('browsingContext.getTree')).contexts[0].context;
-const version = (await send('script.evaluate', { expression: 'navigator.userAgent', target: { context }, awaitPromise: false })).result.value;
+const version = (
+  await send('script.evaluate', {
+    expression: 'navigator.userAgent',
+    target: { context },
+    awaitPromise: false,
+  })
+).result.value;
 
 /** Ejecuta código en la página; las ayudas `until`, `btn` y `type` están disponibles. */
 const run = async (body) => {
@@ -90,7 +109,11 @@ const run = async (body) => {
     const type = (el, value) => { el.value = value; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('blur')); };
     ${body}
   })()`;
-  const res = await send('script.evaluate', { expression, target: { context }, awaitPromise: true });
+  const res = await send('script.evaluate', {
+    expression,
+    target: { context },
+    awaitPromise: true,
+  });
   if (res.type === 'exception') throw new Error(res.exceptionDetails.text);
   return res.result.value;
 };
@@ -176,7 +199,9 @@ for (const [name, check] of checks) {
 }
 if (consoleErrors.length) {
   failed++;
-  console.log(`\n  FALLA Errores en la consola:\n${consoleErrors.map((e) => '        ' + e).join('\n')}`);
+  console.log(
+    `\n  FALLA Errores en la consola:\n${consoleErrors.map((e) => '        ' + e).join('\n')}`,
+  );
 }
 console.log(failed ? `\n${failed} problema(s).` : '\nTodo bien en Firefox.');
 finish(failed ? 1 : 0);

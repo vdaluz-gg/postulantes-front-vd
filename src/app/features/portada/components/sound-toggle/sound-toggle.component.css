@@ -1,7 +1,47 @@
-:host{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);cursor:pointer;opacity:.85;transition:transform .25s,border-color .25s,box-shadow .3s,opacity .3s,color .25s}
-:host(:hover){border-color:var(--ink);opacity:1}
-:host([aria-pressed="false"]){opacity:.55;color:var(--mut)}
-:host(:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
-svg{width:19px;height:19px}
-@media (max-width:480px){:host{width:40px;height:40px}}
-@media (pointer:coarse){:host{width:44px;height:44px}}
+:host {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0.85;
+  transition:
+    transform 0.25s,
+    border-color 0.25s,
+    box-shadow 0.3s,
+    opacity 0.3s,
+    color 0.25s;
+}
+:host(:hover) {
+  border-color: var(--ink);
+  opacity: 1;
+}
+:host([aria-pressed='false']) {
+  opacity: 0.55;
+  color: var(--mut);
+}
+:host(:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+svg {
+  width: 19px;
+  height: 19px;
+}
+@media (max-width: 480px) {
+  :host {
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (pointer: coarse) {
+  :host {
+    width: 44px;
+    height: 44px;
+  }
+}

@@ -22,12 +22,14 @@ export const COMPANY_SERVICES: readonly CompanyService[] = [
       'Cubrimos grandes dotaciones con inmediatez, desde una base preseleccionada y con servicio de guardia fuera del horario administrativo.',
     includes: ['Base preseleccionada', 'Guardia fuera de horario', 'Habilitación MTSS 1243/342'],
     visual: 'slots',
-    keywords: 'eventual temporada pico reemplazo vacaciones operarios operario dotacion produccion guardia urgente personal necesito cubrir gente',
+    keywords:
+      'eventual temporada pico reemplazo vacaciones operarios operario dotacion produccion guardia urgente personal necesito cubrir gente',
   },
   {
     id: 'seleccion',
     title: 'Búsqueda y selección',
-    description: 'Encontramos perfiles de todos los niveles con métodos de evaluación eficaces y conocimiento de cada industria.',
+    description:
+      'Encontramos perfiles de todos los niveles con métodos de evaluación eficaces y conocimiento de cada industria.',
     includes: ['Evaluación por competencias', 'Mandos medios y gerencias', 'Informe de terna'],
     visual: 'funnel',
     keywords: 'seleccion busqueda perfil jefe gerente analista puesto ejecutivo vendedor ventas',
@@ -35,7 +37,8 @@ export const COMPANY_SERVICES: readonly CompanyService[] = [
   {
     id: 'rpo',
     title: 'RPO',
-    description: 'Nos hacemos cargo de todo tu proceso de reclutamiento, o de una etapa, con tus indicadores y tu marca empleadora.',
+    description:
+      'Nos hacemos cargo de todo tu proceso de reclutamiento, o de una etapa, con tus indicadores y tu marca empleadora.',
     includes: ['Procesos de alto volumen', 'Indicadores acordados', 'Equipo dedicado'],
     visual: 'loop',
     keywords: 'rpo reclutamiento volumen continuo contratacion',
@@ -43,22 +46,26 @@ export const COMPANY_SERVICES: readonly CompanyService[] = [
   {
     id: 'capital',
     title: 'Outsourcing de capital humano',
-    description: 'Administramos al personal que trabaja para tu empresa: altas, liquidación, recibos digitales y atención.',
+    description:
+      'Administramos al personal que trabaja para tu empresa: altas, liquidación, recibos digitales y atención.',
     includes: ['Liquidación de sueldos', 'Recibos digitales', 'Atención al colaborador'],
     visual: 'docs',
-    keywords: 'nomina liquidacion sueldos recibos administrar administracion capital humano payroll',
+    keywords:
+      'nomina liquidacion sueldos recibos administrar administracion capital humano payroll',
   },
   {
     id: 'procesos',
     title: 'Outsourcing de procesos',
-    description: 'Tercerizamos procesos productivos completos con indicadores acordados, para que te enfoques en tu negocio.',
+    description:
+      'Tercerizamos procesos productivos completos con indicadores acordados, para que te enfoques en tu negocio.',
     includes: ['Gestión de punta a punta', 'Indicadores de productividad', 'Supervisión propia'],
     visual: 'belt',
     keywords: 'proceso linea deposito planta tercerizar operacion logistica empaque',
   },
 ];
 
-export const serviceById = (id: string): CompanyService => COMPANY_SERVICES.find((s) => s.id === id) ?? COMPANY_SERVICES[0];
+export const serviceById = (id: string): CompanyService =>
+  COMPANY_SERVICES.find((s) => s.id === id) ?? COMPANY_SERVICES[0];
 
 const words = (text: string) =>
   normalize(text)
@@ -82,7 +89,11 @@ export function recommendService(query: string): CompanyService {
 
 /** Zonas que la IA reconoce en la consulta (ejemplo). */
 const ZONES = ['caba', 'monte grande', 'cordoba', 'rosario', 'mendoza', 'salta', 'pilar', 'moron'];
-const ZONE_LABEL: Readonly<Record<string, string>> = { caba: 'CABA', cordoba: 'Córdoba', moron: 'Morón' };
+const ZONE_LABEL: Readonly<Record<string, string>> = {
+  caba: 'CABA',
+  cordoba: 'Córdoba',
+  moron: 'Morón',
+};
 
 export interface ProposalRow {
   readonly label: string;
@@ -98,8 +109,16 @@ export function draftProposal(query: string, service: CompanyService): ProposalR
   const zone = ZONES.find((z) => text.includes(z));
   return [
     { label: 'Servicio', value: service.title, wide: true },
-    { label: 'Dotación', value: headcount ? `${headcount} ${headcount === '1' ? 'persona' : 'personas'}` : 'A definir' },
-    { label: 'Zona', value: zone ? (ZONE_LABEL[zone] ?? zone.replace(/\b\w/g, (c) => c.toUpperCase())) : 'A definir con tu asesor' },
+    {
+      label: 'Dotación',
+      value: headcount ? `${headcount} ${headcount === '1' ? 'persona' : 'personas'}` : 'A definir',
+    },
+    {
+      label: 'Zona',
+      value: zone
+        ? (ZONE_LABEL[zone] ?? zone.replace(/\b\w/g, (c) => c.toUpperCase()))
+        : 'A definir con tu asesor',
+    },
     { label: 'Para cuándo', value: 'Lo antes posible · te contactamos hoy', wide: true },
   ];
 }

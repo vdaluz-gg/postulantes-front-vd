@@ -61,7 +61,8 @@ export class AvatarSpin {
     }
     this.yaw += this.velocity * dt * 60;
     this.velocity *= Math.exp(-dt * 2.8);
-    if (this.idle > RETURN_AFTER) this.yaw += (nearestFront(this.yaw) - this.yaw) * (1 - Math.exp(-dt * 2));
+    if (this.idle > RETURN_AFTER)
+      this.yaw += (nearestFront(this.yaw) - this.yaw) * (1 - Math.exp(-dt * 2));
     return this.yaw;
   }
 }

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, input, output, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { CV_ACCEPT, CV_MAX_BYTES } from '../../candidacy.api';
 
 const VALID_EXTENSIONS = /\.(pdf|docx?)$/i;

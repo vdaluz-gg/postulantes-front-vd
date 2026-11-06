@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, isDevMode, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  isDevMode,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { errorMessage } from '../../../../core/api/api';
@@ -33,7 +41,9 @@ export class LoginPage {
   protected readonly showPassword = signal(false);
   protected readonly emailError = signal('');
   protected readonly passwordError = signal('');
-  protected readonly formError = signal(this.auth.expired() ? 'Tu sesión venció. Ingresá de nuevo para seguir.' : '');
+  protected readonly formError = signal(
+    this.auth.expired() ? 'Tu sesión venció. Ingresá de nuevo para seguir.' : '',
+  );
   /** El atajo con datos de ejemplo existe solo en desarrollo: en producción esas cuentas no deben existir. */
   protected readonly demo = isDevMode();
   protected readonly busy = signal(false);
@@ -42,7 +52,13 @@ export class LoginPage {
     event?.preventDefault();
     if (this.busy()) return;
     const email = this.email().trim();
-    this.emailError.set(!email ? 'Escribí tu correo.' : EMAIL.test(email) ? '' : 'Revisá el correo: falta la @ o el dominio.');
+    this.emailError.set(
+      !email
+        ? 'Escribí tu correo.'
+        : EMAIL.test(email)
+          ? ''
+          : 'Revisá el correo: falta la @ o el dominio.',
+    );
     this.passwordError.set(this.password() ? '' : 'Escribí tu contraseña.');
     this.formError.set('');
     if (this.emailError() || this.passwordError()) {
@@ -59,7 +75,9 @@ export class LoginPage {
         this.busy.set(false);
         const message = errorMessage(e);
         this.formError.set(
-          message === 'Credenciales inválidas' ? 'El correo o la contraseña no coinciden. Revisalos y probá de nuevo.' : message,
+          message === 'Credenciales inválidas'
+            ? 'El correo o la contraseña no coinciden. Revisalos y probá de nuevo.'
+            : message,
         );
       },
     });
@@ -76,7 +94,9 @@ export class LoginPage {
   /** Solo rutas internas del backoffice, para no redirigir a otro sitio. */
   private safeReturn(): string {
     const target = this.volver() ?? '';
-    return target.startsWith('/backoffice') && !target.startsWith('/backoffice/ingresar') ? target : '/backoffice';
+    return target.startsWith('/backoffice') && !target.startsWith('/backoffice/ingresar')
+      ? target
+      : '/backoffice';
   }
 
   private focusFirstInvalid(): void {

@@ -1,7 +1,12 @@
 @let f = field();
 @if (f.type === 'switch') {
   <span class="sw-row">
-    <span class="lb">{{ f.label }}@if (f.required) {<span class="req">*</span>}</span>
+    <span class="lb"
+      >{{ f.label }}
+      @if (f.required) {
+        <span class="req">*</span>
+      }
+    </span>
     <span class="sw" aria-hidden="true"></span>
   </span>
 } @else {
@@ -29,7 +34,9 @@
       </span>
     }
     @case ('textarea') {
-      <span class="ctl area" [class.ro]="f.readonly"><span class="ph">{{ f.placeholder }}</span></span>
+      <span class="ctl area" [class.ro]="f.readonly"
+        ><span class="ph">{{ f.placeholder }}</span></span
+      >
     }
     @default {
       <span class="ctl" [class.ro]="f.readonly">

@@ -1,89 +1,271 @@
-:host{
-  --bg:var(--gg-night-700);--ink:var(--gg-mist-200);--mut:var(--gg-lilac-300);
-  --line:rgb(243 238 252 / .12);--soft:rgb(243 238 252 / .06);
-  --c-post:var(--gg-post-dark);--c-cli:var(--gg-cli-dark);--c-col:var(--gg-col-dark);
-  --on-acc:var(--gg-ink-950);--err:var(--gg-fuchsia-300);
-  display:block;font-family:var(--font-display);color:var(--ink)
+:host {
+  --bg: var(--gg-night-700);
+  --ink: var(--gg-mist-200);
+  --mut: var(--gg-lilac-300);
+  --line: rgb(243 238 252 / 0.12);
+  --soft: rgb(243 238 252 / 0.06);
+  --c-post: var(--gg-post-dark);
+  --c-cli: var(--gg-cli-dark);
+  --c-col: var(--gg-col-dark);
+  --on-acc: var(--gg-ink-950);
+  --err: var(--gg-fuchsia-300);
+  display: block;
+  font-family: var(--font-display);
+  color: var(--ink);
 }
-:host-context([data-theme="light"]){
-  --bg:var(--gg-mist-50);--ink:var(--gg-night-800);--mut:var(--gg-gray-650);
-  --line:rgb(26 19 40 / .14);--soft:rgb(26 19 40 / .05);
-  --c-post:var(--gg-post-light);--c-cli:var(--gg-cli-light);--c-col:var(--gg-col-light);
-  --on-acc:var(--gg-white);--err:var(--gg-fuchsia-700)
+:host-context([data-theme='light']) {
+  --bg: var(--gg-mist-50);
+  --ink: var(--gg-night-800);
+  --mut: var(--gg-gray-650);
+  --line: rgb(26 19 40 / 0.14);
+  --soft: rgb(26 19 40 / 0.05);
+  --c-post: var(--gg-post-light);
+  --c-cli: var(--gg-cli-light);
+  --c-col: var(--gg-col-light);
+  --on-acc: var(--gg-white);
+  --err: var(--gg-fuchsia-700);
 }
 
 /*
  * Medidas de la portada. Las figuras se ubican debajo del titular (logo + dos líneas de título)
  * con un espacio responsive, y su altura se ajusta al lugar libre hasta la caja de IA.
  */
-.stage{
-  --intro-top:clamp(56px,12vh,120px);
-  --logo-h:clamp(30px,3.4vw,42px);
-  --logo-gap:22px;
-  --title-size:clamp(30px,4.2vw,58px);
-  --title-gap:clamp(20px,4.5vh,56px);
-  --cast-top:calc(var(--intro-top) + var(--logo-h) + var(--logo-gap) + var(--title-size) * 2.04 + var(--title-gap));
-  --route-bottom:clamp(22px,6vh,56px);
+.stage {
+  --intro-top: clamp(56px, 12vh, 120px);
+  --logo-h: clamp(30px, 3.4vw, 42px);
+  --logo-gap: 22px;
+  --title-size: clamp(30px, 4.2vw, 58px);
+  --title-gap: clamp(20px, 4.5vh, 56px);
+  --cast-top: calc(
+    var(--intro-top) + var(--logo-h) + var(--logo-gap) + var(--title-size) * 2.04 + var(--title-gap)
+  );
+  --route-bottom: clamp(22px, 6vh, 56px);
   /* Pregunta "¿Sos ...?" (~84px) + caja de IA con respuesta (~80px) + aire mínimo entre ambas. */
-  --bottom-reserve:calc(184px + var(--route-bottom));
-  --cast-gap:clamp(24px,4.5vw,90px);
-  --ez:cubic-bezier(.2,.8,.2,1);
+  --bottom-reserve: calc(184px + var(--route-bottom));
+  --cast-gap: clamp(24px, 4.5vw, 90px);
+  --ez: cubic-bezier(0.2, 0.8, 0.2, 1);
   /*
    * La altura también se limita por ancho para que las tres figuras entren en pantallas angostas,
    * con margen lateral para la pregunta "¿Sos ...?", que es más ancha que la figura.
    */
-  --figure-h:min(
-    clamp(120px,calc((100vh - var(--cast-top) - var(--bottom-reserve)) / 1.22),310px),
+  --figure-h: min(
+    clamp(120px, calc((100vh - var(--cast-top) - var(--bottom-reserve)) / 1.22), 310px),
     calc((100vw - 2 * var(--cast-gap) - 80px) / 1.26)
   );
   /* Figura elegida (escritorio), como en la maqueta: 80% del alto, limitada por el ancho. */
-  --sel-fh:min(80vh,64.6vw);
-  position:fixed;inset:0;overflow:hidden;background:var(--bg);color:var(--ink);-webkit-user-select:none;user-select:none;transition:background .5s,color .5s
+  --sel-fh: min(80vh, 64.6vw);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background 0.5s,
+    color 0.5s;
 }
 
 /* Portada */
-.intro{position:absolute;left:0;right:0;top:var(--intro-top);z-index:4;text-align:center;pointer-events:none;transition:opacity .5s,transform .6s var(--ez)}
-.logo{display:flex;justify-content:center;margin-bottom:var(--logo-gap)}
-.logo img{height:var(--logo-h);width:auto}
-.logo .lc{display:none}
-:host-context([data-theme="light"]) .logo .lw{display:none}
-:host-context([data-theme="light"]) .logo .lc{display:block}
-.intro h1{font-size:var(--title-size);font-weight:600;letter-spacing:-.035em;line-height:1.02}
-.open .intro{opacity:0;transform:translateY(-24px)}
+.intro {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--intro-top);
+  z-index: 4;
+  text-align: center;
+  pointer-events: none;
+  transition:
+    opacity 0.5s,
+    transform 0.6s var(--ez);
+}
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--logo-gap);
+}
+.logo img {
+  height: var(--logo-h);
+  width: auto;
+}
+.logo .lc {
+  display: none;
+}
+:host-context([data-theme='light']) .logo .lw {
+  display: none;
+}
+:host-context([data-theme='light']) .logo .lc {
+  display: block;
+}
+.intro h1 {
+  font-size: var(--title-size);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+.open .intro {
+  opacity: 0;
+  transform: translateY(-24px);
+}
 
 /* Barra superior: sonido, tema y acceso al portal */
-.topr{position:absolute;right:clamp(14px,3vw,32px);top:clamp(14px,3vh,28px);z-index:8;display:flex;align-items:center;gap:8px}
-.topportal{min-height:42px;padding:0 16px;font-size:13px;animation:slideIn .55s .3s var(--ez) both}
-@keyframes slideIn{from{opacity:0;transform:translateX(18px)}}
-@media (pointer:coarse){.topportal{min-height:44px}}
+.topr {
+  position: absolute;
+  right: clamp(14px, 3vw, 32px);
+  top: clamp(14px, 3vh, 28px);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topportal {
+  min-height: 42px;
+  padding: 0 16px;
+  font-size: 13px;
+  animation: slideIn 0.55s 0.3s var(--ez) both;
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+@media (pointer: coarse) {
+  .topportal {
+    min-height: 44px;
+  }
+}
 
 /* Figuras de los perfiles */
-.cast{position:absolute;left:50%;top:calc(var(--cast-top) + var(--figure-h) * .22);z-index:3;display:flex;align-items:flex-end;gap:var(--cast-gap);transform:translateX(-50%);transition:left .8s,top .8s,gap .6s;transition-timing-function:var(--ez)}
-.open .cast{left:30%;top:calc(50vh - var(--sel-fh) / 2);gap:0}
+.cast {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--cast-top) + var(--figure-h) * 0.22);
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--cast-gap);
+  transform: translateX(-50%);
+  transition:
+    left 0.8s,
+    top 0.8s,
+    gap 0.6s;
+  transition-timing-function: var(--ez);
+}
+.open .cast {
+  left: 30%;
+  top: calc(50vh - var(--sel-fh) / 2);
+  gap: 0;
+}
 
 /* Panel de información del perfil elegido */
-.info{position:absolute;z-index:6;left:52%;top:clamp(64px,9vh,110px);width:min(560px,44vw);max-height:calc(100vh - clamp(64px,9vh,110px) - 20px);overflow:hidden;pointer-events:none;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.open .info{pointer-events:auto;overflow:auto}
+.info {
+  position: absolute;
+  z-index: 6;
+  left: 52%;
+  top: clamp(64px, 9vh, 110px);
+  width: min(560px, 44vw);
+  max-height: calc(100vh - clamp(64px, 9vh, 110px) - 20px);
+  overflow: hidden;
+  pointer-events: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.open .info {
+  pointer-events: auto;
+  overflow: auto;
+}
 
 /* Caja de la portada: "Contale a la IA qué buscás y te llevo" */
-.route{position:absolute;left:50%;bottom:var(--route-bottom);z-index:6;width:min(560px,100% - 32px);transform:translateX(-50%);transition:opacity .5s,transform .6s var(--ez);--acc:var(--c-post)}
-.open .route{opacity:0;pointer-events:none;transform:translate(-50%,20px)}
-.reply{display:flex;align-items:center;justify-content:center;gap:6px;min-height:18px;margin-top:8px;text-align:center;font:500 12.5px var(--font-display);color:var(--mut)}
-.reply b{color:var(--ink)}
-.reply .spark{width:12px;height:12px;color:var(--acc)}
-.typing{display:inline-flex;gap:4px}
-.typing i{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:dot 1s infinite}
-.typing i+i{animation-delay:.15s}
-.typing i+i+i{animation-delay:.3s}
-@keyframes dot{0%,100%{opacity:.25;transform:none}50%{opacity:1;transform:translateY(-3px)}}
+.route {
+  position: absolute;
+  left: 50%;
+  bottom: var(--route-bottom);
+  z-index: 6;
+  width: min(560px, 100% - 32px);
+  transform: translateX(-50%);
+  transition:
+    opacity 0.5s,
+    transform 0.6s var(--ez);
+  --acc: var(--c-post);
+}
+.open .route {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 20px);
+}
+.reply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 18px;
+  margin-top: 8px;
+  text-align: center;
+  font: 500 12.5px var(--font-display);
+  color: var(--mut);
+}
+.reply b {
+  color: var(--ink);
+}
+.reply .spark {
+  width: 12px;
+  height: 12px;
+  color: var(--acc);
+}
+.typing {
+  display: inline-flex;
+  gap: 4px;
+}
+.typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--acc);
+  animation: dot 1s infinite;
+}
+.typing i + i {
+  animation-delay: 0.15s;
+}
+.typing i + i + i {
+  animation-delay: 0.3s;
+}
+@keyframes dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: none;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
 
-@media (max-width:760px){
-  .intro{transition:opacity .28s,transform .4s var(--ez)}
+@media (max-width: 760px) {
+  .intro {
+    transition:
+      opacity 0.28s,
+      transform 0.4s var(--ez);
+  }
   /*
    * Celular (maqueta): avatar arriba al centro y panel anclado abajo. El panel nunca sube más
    * allá de los pies del avatar; si no entra, se desplaza por dentro.
    */
-  .stage{--sel-top:max(7.5vh,100px);--sel-h:min(30vh,74vw)}
-  .open .cast{left:50%;top:var(--sel-top)}
-  .info{left:16px;right:16px;width:auto;top:auto;bottom:24px;max-height:min(58vh,calc(100vh - var(--sel-top) - var(--sel-h) - 36px))}
+  .stage {
+    --sel-top: max(7.5vh, 100px);
+    --sel-h: min(30vh, 74vw);
+  }
+  .open .cast {
+    left: 50%;
+    top: var(--sel-top);
+  }
+  .info {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    top: auto;
+    bottom: 24px;
+    max-height: min(58vh, calc(100vh - var(--sel-top) - var(--sel-h) - 36px));
+  }
 }

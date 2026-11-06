@@ -82,10 +82,18 @@ export class HoloAvatarComponent {
     effect(() => {
       const next = this.state();
       untracked(() => {
-        if ((next === 'lit' && previous === 'idle') || (next === 'selected' && previous !== 'selected')) {
+        if (
+          (next === 'lit' && previous === 'idle') ||
+          (next === 'selected' && previous !== 'selected')
+        ) {
           this.wavePending = true;
         }
-        if (previous === 'selected' && next !== 'selected' && next !== 'away' && !this.reducedMotion()) {
+        if (
+          previous === 'selected' &&
+          next !== 'selected' &&
+          next !== 'away' &&
+          !this.reducedMotion()
+        ) {
           this.leavingSince = performance.now();
           this.wavePending = false;
         }
@@ -158,7 +166,9 @@ export class HoloAvatarComponent {
     const spin = this.spin();
     const turn = spin ? spin.step(dt, still) : 0;
     const leans = follow && (!spin || (spin.facingFront && !spin.dragging));
-    const yawTarget = leans ? clamp((this.pointer.x - centerX) / (innerWidth * 0.35), -1, 1) * 0.32 : 0;
+    const yawTarget = leans
+      ? clamp((this.pointer.x - centerX) / (innerWidth * 0.35), -1, 1) * 0.32
+      : 0;
     this.bodyYaw += (yawTarget - this.bodyYaw) * (1 - Math.exp(-dt * 4));
 
     if (this.wavePending && this.wave < 0 && !still) {
@@ -200,7 +210,9 @@ export class HoloAvatarComponent {
     const built = this.engine.fd ?? 1;
     canvas.style.opacity = String(this.fadeIn * built);
     canvas.style.filter =
-      built < 0.995 ? `blur(${((1 - built) * 10).toFixed(1)}px) brightness(${(1 + (1 - built) * 0.6).toFixed(2)})` : '';
+      built < 0.995
+        ? `blur(${((1 - built) * 10).toFixed(1)}px) brightness(${(1 + (1 - built) * 0.6).toFixed(2)})`
+        : '';
 
     if (!this.announced) {
       this.announced = true;

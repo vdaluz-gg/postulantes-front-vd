@@ -13,7 +13,12 @@ import { PERSONAS } from './portada.data';
 import { PortadaPage } from './portada.page';
 import { formFields } from './postulante/components/candidate-form/candidate-form.component';
 import { CandidacyApi, CandidateContact } from './postulante/candidacy.api';
-import { HttpPublishedConfigApi, PublishedConfigApi, activeAlerts, withCopy } from './published-config';
+import {
+  HttpPublishedConfigApi,
+  PublishedConfigApi,
+  activeAlerts,
+  withCopy,
+} from './published-config';
 
 const post = PERSONAS[0];
 const seedFields = findSection(SITE_CONFIG_SEED, 'postulantes', 'application')!.fields;
@@ -37,11 +42,16 @@ describe('configuración publicada: reglas', () => {
     ];
     const persona = withCopy(post, copy);
     expect(persona).toEqual(
-      expect.objectContaining({ title: 'Trabajo de verdad,', highlight: 'cerca tuyo.', suggestions: ['Chofer', 'Cocina'], footnote: post.footnote }),
+      expect.objectContaining({
+        title: 'Trabajo de verdad,',
+        highlight: 'cerca tuyo.',
+        suggestions: ['Chofer', 'Cocina'],
+        footnote: post.footnote,
+      }),
     );
-    expect(withCopy(post, [{ id: 'title', label: '', value: 'Sin coma', multiline: false }])).toEqual(
-      expect.objectContaining({ title: 'Sin coma', highlight: '' }),
-    );
+    expect(
+      withCopy(post, [{ id: 'title', label: '', value: 'Sin coma', multiline: false }]),
+    ).toEqual(expect.objectContaining({ title: 'Sin coma', highlight: '' }));
   });
 
   it('muestra solo los avisos activos, con mensaje y en fecha', () => {
@@ -68,7 +78,15 @@ describe('configuración publicada: reglas', () => {
     expect(by('zone')).toEqual(expect.objectContaining({ visible: false, required: false }));
     expect(by('extra')).toEqual(expect.objectContaining({ visible: false, required: false }));
     // Los que faltan se agregan; el puesto oculto (lo completa la oferta).
-    expect(fields.map((f) => f.config.id)).toEqual(['fullName', 'zone', 'extra', 'dni', 'email', 'whatsapp', 'position']);
+    expect(fields.map((f) => f.config.id)).toEqual([
+      'fullName',
+      'zone',
+      'extra',
+      'dni',
+      'email',
+      'whatsapp',
+      'position',
+    ]);
     expect(by('position').visible).toBe(false);
   });
 
@@ -84,7 +102,9 @@ describe('configuración publicada: reglas', () => {
     const api = TestBed.inject(PublishedConfigApi);
     const ctrl = TestBed.inject(HttpTestingController);
     const published = firstValueFrom(api.audience('postulantes'));
-    ctrl.expectOne('http://api/site-config/postulantes').flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
+    ctrl
+      .expectOne('http://api/site-config/postulantes')
+      .flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
     expect(await published).toBe(SITE_CONFIG_SEED.audiences.postulantes);
   });
 });
@@ -101,7 +121,9 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     fixture.detectChanges();
   };
   const button = (label: string) =>
-    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent!.trim().startsWith(label))!;
+    Array.from(el.querySelectorAll<HTMLButtonElement>('button')).find((b) =>
+      b.textContent!.trim().startsWith(label),
+    )!;
   const type = (id: string, value: string) => {
     const field = el.querySelector<HTMLInputElement | HTMLSelectElement>(`#${id}`)!;
     field.value = value;
@@ -112,9 +134,16 @@ describe('la portada muestra lo que publicó el backoffice', () => {
   beforeEach(async () => {
     applied = [];
     let config = SITE_CONFIG_SEED;
-    config = updateItem(config, 'postulantes', 'copy', 'title', { value: 'Tu próximo trabajo, más cerca.' });
-    config = updateItem(config, 'postulantes', 'alerts', 'no-money', { title: 'Atención', message: 'Nunca te pedimos plata.' });
-    config = updateField(config, 'postulantes', 'application', 'zone', { placeholder: 'Barrio o ciudad' });
+    config = updateItem(config, 'postulantes', 'copy', 'title', {
+      value: 'Tu próximo trabajo, más cerca.',
+    });
+    config = updateItem(config, 'postulantes', 'alerts', 'no-money', {
+      title: 'Atención',
+      message: 'Nunca te pedimos plata.',
+    });
+    config = updateField(config, 'postulantes', 'application', 'zone', {
+      placeholder: 'Barrio o ciudad',
+    });
     const [fullName, ...rest] = findSection(config, 'postulantes', 'application')!.fields;
     const fields = [
       fullName,
@@ -130,7 +159,9 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     ];
     const postulantes: AudienceConfig = {
       ...config.audiences.postulantes,
-      sections: config.audiences.postulantes.sections.map((s) => (s.id === 'application' ? { ...s, fields } : s)),
+      sections: config.audiences.postulantes.sections.map((s) =>
+        s.id === 'application' ? { ...s, fields } : s,
+      ),
     };
 
     await TestBed.configureTestingModule({
@@ -139,7 +170,13 @@ describe('la portada muestra lo que publicó el backoffice', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: HoloAvatarLoaderService, useValue: { create: () => new Promise(() => undefined), loadModel: () => new Promise(() => undefined) } },
+        {
+          provide: HoloAvatarLoaderService,
+          useValue: {
+            create: () => new Promise(() => undefined),
+            loadModel: () => new Promise(() => undefined),
+          },
+        },
         { provide: MotionService, useValue: { reduced: () => true } },
         { provide: PublishedConfigApi, useValue: { audience: () => of(postulantes) } },
         {
@@ -162,9 +199,13 @@ describe('la portada muestra lo que publicó el backoffice', () => {
   });
 
   it('el título y los avisos publicados', () => {
-    expect(el.querySelector('app-persona-panel h2')!.textContent!.replace(/\s+/g, ' ').trim()).toBe('Tu próximo trabajo, más cerca.');
+    expect(el.querySelector('app-persona-panel h2')!.textContent!.replace(/\s+/g, ' ').trim()).toBe(
+      'Tu próximo trabajo, más cerca.',
+    );
     expect(el.querySelector('app-persona-panel h2 em')!.textContent).toBe('más cerca.');
-    expect(el.querySelector('.alert')!.textContent!.replace(/\s+/g, ' ').trim()).toBe('Atención Nunca te pedimos plata.');
+    expect(el.querySelector('.alert')!.textContent!.replace(/\s+/g, ' ').trim()).toBe(
+      'Atención Nunca te pedimos plata.',
+    );
   });
 
   it('el formulario a mano trae el campo nuevo en su lugar, lo exige y lo envía', async () => {
@@ -173,8 +214,19 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     button('Prefiero completar mis datos a mano').click();
     await render();
 
-    const ids = Array.from(el.querySelectorAll('app-candidate-form .field')).map((f) => f.querySelector('input,select,textarea,[role=group]')!.id);
-    expect(ids).toEqual(['cf-fullName', 'cf-middleName', 'cf-dni', 'cf-email', 'cf-whatsapp', 'cf-zone', 'cf-position', 'cf-shift']);
+    const ids = Array.from(el.querySelectorAll('app-candidate-form .field')).map(
+      (f) => f.querySelector('input,select,textarea,[role=group]')!.id,
+    );
+    expect(ids).toEqual([
+      'cf-fullName',
+      'cf-middleName',
+      'cf-dni',
+      'cf-email',
+      'cf-whatsapp',
+      'cf-zone',
+      'cf-position',
+      'cf-shift',
+    ]);
     expect(el.querySelector<HTMLInputElement>('#cf-middleName')!.placeholder).toBe('Si tenés');
     expect(el.querySelector<HTMLInputElement>('#cf-zone')!.placeholder).toBe('Barrio o ciudad');
     expect(el.querySelector('label[for="cf-shift"]')!.textContent).toBe('Turno (opcional)');
@@ -196,11 +248,22 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     button('Enviar postulación').click();
     await render();
     expect(applied).toEqual([
-      expect.objectContaining({ fullName: 'Lucía Fernández', dni: '40.123.456', answers: { middleName: 'Sofía', shift: 'tarde' } }),
+      expect.objectContaining({
+        fullName: 'Lucía Fernández',
+        dni: '40.123.456',
+        answers: { middleName: 'Sofía', shift: 'tarde' },
+      }),
     ]);
   });
 
   it('la configuración inicial coincide con los campos que usa el formulario', () => {
-    expect(seedFields.map((f) => f.id)).toEqual(['fullName', 'dni', 'email', 'whatsapp', 'zone', 'position']);
+    expect(seedFields.map((f) => f.id)).toEqual([
+      'fullName',
+      'dni',
+      'email',
+      'whatsapp',
+      'zone',
+      'position',
+    ]);
   });
 });

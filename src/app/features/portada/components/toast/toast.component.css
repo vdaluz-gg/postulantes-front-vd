@@ -1,3 +1,30 @@
-:host{position:fixed;left:50%;bottom:24px;z-index:20;max-width:calc(100vw - 32px);margin:0;transform:translate(-50%,20px);opacity:0;padding:12px 18px;border-radius:12px;background:var(--ink);color:var(--bg);font:500 13.5px var(--font-display);text-align:center;pointer-events:none;transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
-:host(.on){opacity:1;transform:translate(-50%,0)}
-@media (prefers-reduced-motion:reduce){:host{transition:opacity .2s;transform:translate(-50%,0)}}
+:host {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 20;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 500 13.5px var(--font-display);
+  text-align: center;
+  pointer-events: none;
+  transition:
+    opacity 0.3s,
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+:host(.on) {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: opacity 0.2s;
+    transform: translate(-50%, 0);
+  }
+}

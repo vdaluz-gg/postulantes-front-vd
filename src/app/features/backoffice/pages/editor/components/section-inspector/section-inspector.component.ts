@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { MatButtonModule } from '@angular/material/button';
 import { EditorStore } from '../../../../data/editor.store';
 import { FormSection } from '../../../../data/site-config.model';
-import { addField, findSection, removeSection, updateSection } from '../../../../data/site-config.ops';
+import {
+  addField,
+  findSection,
+  removeSection,
+  updateSection,
+} from '../../../../data/site-config.ops';
 import { IslandService } from '../../../../ui/bo-island/island.service';
 import { BoTextFieldComponent } from '../../../../ui/bo-text-field/bo-text-field.component';
 import { InspectorHeadComponent } from '../inspector-head/inspector-head.component';
@@ -12,7 +17,13 @@ import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.compo
 /** Propiedades de una sección de formulario: título, descripción, pantalla y sus campos. */
 @Component({
   selector: 'app-section-inspector',
-  imports: [IconComponent, MatButtonModule, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [
+    IconComponent,
+    MatButtonModule,
+    BoTextFieldComponent,
+    InspectorHeadComponent,
+    PropGroupComponent,
+  ],
   templateUrl: './section-inspector.component.html',
   styleUrl: './section-inspector.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,25 +39,40 @@ export class SectionInspectorComponent {
     return config ? findSection(config, this.store.audience(), this.sectionId()) : undefined;
   });
 
-  protected set(patch: Partial<Pick<FormSection, 'title' | 'description' | 'screen'>>, key: string): void {
+  protected set(
+    patch: Partial<Pick<FormSection, 'title' | 'description' | 'screen'>>,
+    key: string,
+  ): void {
     const audience = this.store.audience();
-    this.store.apply(updateSection(this.store.config()!, audience, this.sectionId(), patch), { key: `${audience}.${this.sectionId()}.${key}` });
+    this.store.apply(updateSection(this.store.config()!, audience, this.sectionId(), patch), {
+      key: `${audience}.${this.sectionId()}.${key}`,
+    });
   }
 
   protected selectField(id: string): void {
-    this.store.select({ kind: 'field', audience: this.store.audience(), sectionId: this.sectionId(), id });
+    this.store.select({
+      kind: 'field',
+      audience: this.store.audience(),
+      sectionId: this.sectionId(),
+      id,
+    });
   }
 
   protected addField(): void {
     const audience = this.store.audience();
     const sectionId = this.sectionId();
-    this.store.apply(addField(this.store.config()!, audience, sectionId), { select: (id) => ({ kind: 'field', audience, sectionId, id }) });
+    this.store.apply(addField(this.store.config()!, audience, sectionId), {
+      select: (id) => ({ kind: 'field', audience, sectionId, id }),
+    });
   }
 
   protected remove(): void {
     const title = this.section()?.title ?? '';
     this.store.apply(removeSection(this.store.config()!, this.store.audience(), this.sectionId()));
     this.store.select(null);
-    this.island.show(`Borraste la sección «${title}».`, { actionLabel: 'Deshacer', action: () => this.store.undo() });
+    this.island.show(`Borraste la sección «${title}».`, {
+      actionLabel: 'Deshacer',
+      action: () => this.store.undo(),
+    });
   }
 }

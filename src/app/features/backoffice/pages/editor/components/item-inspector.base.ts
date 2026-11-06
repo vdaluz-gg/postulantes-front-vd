@@ -1,6 +1,13 @@
 import { Directive, computed, inject, input } from '@angular/core';
 import { EditorStore } from '../../../data/editor.store';
-import { ItemList, ItemOf, findItem, moveItem, removeItem, updateItem } from '../../../data/site-config.ops';
+import {
+  ItemList,
+  ItemOf,
+  findItem,
+  moveItem,
+  removeItem,
+  updateItem,
+} from '../../../data/site-config.ops';
 import { IslandService } from '../../../ui/bo-island/island.service';
 
 /**
@@ -37,14 +44,21 @@ export abstract class ItemInspectorBase<L extends ItemList> {
   }
 
   protected move(offset: -1 | 1): void {
-    this.store.apply(moveItem(this.store.config()!, this.store.audience(), this.list, this.itemId(), offset));
+    this.store.apply(
+      moveItem(this.store.config()!, this.store.audience(), this.list, this.itemId(), offset),
+    );
   }
 
   protected remove(): void {
     const item = this.item();
     if (!item) return;
-    this.store.apply(removeItem(this.store.config()!, this.store.audience(), this.list, this.itemId()));
+    this.store.apply(
+      removeItem(this.store.config()!, this.store.audience(), this.list, this.itemId()),
+    );
     this.store.select(null);
-    this.island.show(`Borraste «${this.name(item)}».`, { actionLabel: 'Deshacer', action: () => this.store.undo() });
+    this.island.show(`Borraste «${this.name(item)}».`, {
+      actionLabel: 'Deshacer',
+      action: () => this.store.undo(),
+    });
   }
 }

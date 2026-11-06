@@ -9,7 +9,8 @@ export const routes: Routes = [
   },
   {
     path: 'backoffice',
-    loadChildren: () => import('./features/backoffice/backoffice.routes').then((m) => m.BACKOFFICE_ROUTES),
+    loadChildren: () =>
+      import('./features/backoffice/backoffice.routes').then((m) => m.BACKOFFICE_ROUTES),
   },
   { path: '**', redirectTo: '' },
 ];

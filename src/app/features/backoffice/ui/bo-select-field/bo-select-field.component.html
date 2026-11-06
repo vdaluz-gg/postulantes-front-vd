@@ -1,8 +1,14 @@
 <label [for]="selectId">{{ label() }}</label>
 <div class="box">
-  <select [id]="selectId" [attr.aria-describedby]="help() ? selectId + '-help' : null" (change)="onChange($event)">
+  <select
+    [id]="selectId"
+    [attr.aria-describedby]="help() ? selectId + '-help' : null"
+    (change)="onChange($event)"
+  >
     @for (option of options(); track option.value) {
-      <option [value]="option.value" [selected]="option.value === value()">{{ option.label }}</option>
+      <option [value]="option.value" [selected]="option.value === value()">
+        {{ option.label }}
+      </option>
     }
   </select>
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>

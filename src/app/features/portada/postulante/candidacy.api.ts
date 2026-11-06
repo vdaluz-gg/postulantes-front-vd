@@ -39,7 +39,8 @@ export interface ApplicationReceipt {
 }
 
 /** Tipos de archivo aceptados para el CV y tamaño máximo. */
-export const CV_ACCEPT = '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+export const CV_ACCEPT =
+  '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 export const CV_MAX_BYTES = 5 * 1024 * 1024;
 
 /** Postulación desde la portada: lectura del CV con IA y envío de los datos. */
@@ -48,7 +49,10 @@ export abstract class CandidacyApi {
   /** Guarda el CV, lo lee con IA y devuelve los datos de contacto que pudo extraer. */
   abstract readCv(file: File): Observable<CvReading>;
   /** Envía la postulación. */
-  abstract apply(contact: CandidateContact, target: ApplicationTarget): Observable<ApplicationReceipt>;
+  abstract apply(
+    contact: CandidateContact,
+    target: ApplicationTarget,
+  ): Observable<ApplicationReceipt>;
 }
 
 /** Demora con la que el mock simula la lectura del CV. */
@@ -61,7 +65,12 @@ export class MockCandidacyApi extends CandidacyApi {
     return timer(READ_MS).pipe(
       map(() => ({
         cvId: null,
-        prefill: { fullName: 'Martina Rodríguez', dni: '38.412.907', whatsapp: '11 5555-0142', zone: 'Monte Grande' },
+        prefill: {
+          fullName: 'Martina Rodríguez',
+          dni: '38.412.907',
+          whatsapp: '11 5555-0142',
+          zone: 'Monte Grande',
+        },
       })),
     );
   }

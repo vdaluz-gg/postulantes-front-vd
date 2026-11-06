@@ -1,13 +1,98 @@
-:host{position:absolute;left:0;top:50%;z-index:8;display:flex;align-items:center;height:58px;max-width:34px;padding:0 0 0 9px;border:1px solid var(--line);border-left:0;border-radius:0 16px 16px 0;background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--mut);font:500 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;overflow:hidden;cursor:pointer;transform:translateY(-50%);animation:tabIn .4s both;transition:max-width .38s cubic-bezier(.2,.8,.2,1),padding .3s,color .2s,border-color .2s}
-svg{flex:0 0 auto;width:16px;height:16px;stroke-width:2;transition:transform .3s}
-span{max-width:0;opacity:0;overflow:hidden;margin-left:0;transition:max-width .38s cubic-bezier(.2,.8,.2,1),opacity .25s,margin .3s}
-:host(:hover),:host(:focus-visible){max-width:320px;padding-right:18px;color:var(--ink);border-color:var(--ink)}
-:host(:hover) span,:host(:focus-visible) span{max-width:260px;opacity:1;margin-left:10px}
-:host(:hover) svg,:host(:focus-visible) svg{transform:translateX(-2px)}
-:host(:focus-visible){outline:2px solid var(--ink);outline-offset:-2px}
-@keyframes tabIn{from{opacity:0;transform:translate(-14px,-50%)}}
+:host {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  height: 58px;
+  max-width: 34px;
+  padding: 0 0 0 9px;
+  border: 1px solid var(--line);
+  border-left: 0;
+  border-radius: 0 16px 16px 0;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--mut);
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transform: translateY(-50%);
+  animation: tabIn 0.4s both;
+  transition:
+    max-width 0.38s cubic-bezier(0.2, 0.8, 0.2, 1),
+    padding 0.3s,
+    color 0.2s,
+    border-color 0.2s;
+}
+svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  transition: transform 0.3s;
+}
+span {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-left: 0;
+  transition:
+    max-width 0.38s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.25s,
+    margin 0.3s;
+}
+:host(:hover),
+:host(:focus-visible) {
+  max-width: 320px;
+  padding-right: 18px;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+:host(:hover) span,
+:host(:focus-visible) span {
+  max-width: 260px;
+  opacity: 1;
+  margin-left: 10px;
+}
+:host(:hover) svg,
+:host(:focus-visible) svg {
+  transform: translateX(-2px);
+}
+:host(:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+@keyframes tabIn {
+  from {
+    opacity: 0;
+    transform: translate(-14px, -50%);
+  }
+}
 /* Sin hover en pantallas táctiles: la pestaña queda con el ancho mínimo para tocarla. */
-@media (pointer:coarse){:host{min-width:44px;max-width:44px;padding-left:14px}}
+@media (pointer: coarse) {
+  :host {
+    min-width: 44px;
+    max-width: 44px;
+    padding-left: 14px;
+  }
+}
 /* En celular el panel ocupa el ancho: la pestaña sube a la esquina superior izquierda, que queda libre. */
-@media (max-width:760px){:host{top:clamp(14px,3vh,28px);height:44px;transform:none;animation-name:tabInTop}}
-@keyframes tabInTop{from{opacity:0;transform:translateX(-14px)}}
+@media (max-width: 760px) {
+  :host {
+    top: clamp(14px, 3vh, 28px);
+    height: 44px;
+    transform: none;
+    animation-name: tabInTop;
+  }
+}
+@keyframes tabInTop {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}

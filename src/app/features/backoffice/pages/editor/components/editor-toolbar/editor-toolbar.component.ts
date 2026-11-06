@@ -19,7 +19,13 @@ export type PreviewDevice = 'desktop' | 'mobile';
  */
 @Component({
   selector: 'app-editor-toolbar',
-  imports: [IconComponent, MatButtonModule, BoBrandComponent, BoSegmentedComponent, ThemeToggleComponent],
+  imports: [
+    IconComponent,
+    MatButtonModule,
+    BoBrandComponent,
+    BoSegmentedComponent,
+    ThemeToggleComponent,
+  ],
   templateUrl: './editor-toolbar.component.html',
   styleUrl: './editor-toolbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +40,11 @@ export class EditorToolbarComponent {
   private readonly router = inject(Router);
   private readonly island = inject(IslandService);
 
-  protected readonly audiences = AUDIENCES.map((value) => ({ value, label: AUDIENCE_LABEL[value], color: `var(--aud-${value})` }));
+  protected readonly audiences = AUDIENCES.map((value) => ({
+    value,
+    label: AUDIENCE_LABEL[value],
+    color: `var(--aud-${value})`,
+  }));
   protected readonly admin = this.auth.admin;
   protected readonly initials = computed(() =>
     (this.admin()?.fullName ?? '')
@@ -66,25 +76,38 @@ export class EditorToolbarComponent {
           minute: '2-digit',
           hourCycle: 'h23',
         });
-        return config.status === 'published' ? `Publicado · v${config.version} · ${when} h` : `Borrador guardado · v${config.version} · ${when} h`;
+        return config.status === 'published'
+          ? `Publicado · v${config.version} · ${when} h`
+          : `Borrador guardado · v${config.version} · ${when} h`;
       }
     }
   });
-  protected readonly busy = computed(() => this.store.status() === 'saving' || this.store.status() === 'publishing');
+  protected readonly busy = computed(
+    () => this.store.status() === 'saving' || this.store.status() === 'publishing',
+  );
 
   protected setAudience(value: string): void {
     this.store.setAudience(value as Audience);
   }
 
   protected save(): void {
-    this.store.save(() => this.island.show('Guardaste el borrador. Todavía no lo ven los portales.'));
+    this.store.save(() =>
+      this.island.show('Guardaste el borrador. Todavía no lo ven los portales.'),
+    );
   }
 
   protected publish(): void {
-    const ok = this.store.publish(() => this.island.show('Publicaste los cambios. Ya los ven los portales.'));
+    const ok = this.store.publish(() =>
+      this.island.show('Publicaste los cambios. Ya los ven los portales.'),
+    );
     if (!ok) {
       const n = this.store.issues().length;
-      this.island.show(n === 1 ? 'Hay 1 cosa para revisar antes de publicar.' : `Hay ${n} cosas para revisar antes de publicar.`, { tone: 'alert' });
+      this.island.show(
+        n === 1
+          ? 'Hay 1 cosa para revisar antes de publicar.'
+          : `Hay ${n} cosas para revisar antes de publicar.`,
+        { tone: 'alert' },
+      );
       this.issuesOpen.set(true);
     }
   }

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { MotionService } from '../../../../core/services/motion.service';
 import { IconComponent } from '../../../../shared/ui/atoms/icon/icon.component';
 import { IslandMessage, IslandService } from './island.service';
@@ -50,7 +58,9 @@ export class BoIslandComponent {
     this.shown.set(message);
     this.phase.set(reduced ? 'open' : 'dot');
     if (!reduced) this.later(EXPAND_MS, () => this.phase.set('open'));
-    this.later((reduced ? 0 : EXPAND_MS) + (message.action ? STAY_ACTION_MS : STAY_MS), () => this.close(message.id));
+    this.later((reduced ? 0 : EXPAND_MS) + (message.action ? STAY_ACTION_MS : STAY_MS), () =>
+      this.close(message.id),
+    );
   }
 
   private close(id: number): void {

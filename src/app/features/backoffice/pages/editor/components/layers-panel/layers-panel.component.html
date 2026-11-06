@@ -1,12 +1,29 @@
 <div class="head">
   <h2>Capas</h2>
-  <span class="aud" [style.--tone]="'var(--aud-' + store.audience() + ')'">{{ audienceLabel() }}</span>
-  <button mat-icon-button type="button" class="bo-sm" aria-label="Sumar una sección de formulario" title="Sumar una sección de formulario" (click)="addSection()"><svg appIcon="plus"></svg></button>
+  <span class="aud" [style.--tone]="'var(--aud-' + store.audience() + ')'">{{
+    audienceLabel()
+  }}</span>
+  <button
+    mat-icon-button
+    type="button"
+    class="bo-sm"
+    aria-label="Sumar una sección de formulario"
+    title="Sumar una sección de formulario"
+    (click)="addSection()"
+  >
+    <svg appIcon="plus"></svg>
+  </button>
 </div>
 
 <div class="search">
   <label class="sr" for="bo-layer-q">Buscar en las capas</label>
-  <input id="bo-layer-q" type="search" placeholder="Buscar campo, documento, aviso…" [value]="query()" (input)="query.set($any($event.target).value)" />
+  <input
+    id="bo-layer-q"
+    type="search"
+    placeholder="Buscar campo, documento, aviso…"
+    [value]="query()"
+    (input)="query.set($any($event.target).value)"
+  />
 </div>
 
 <div class="groups">
@@ -14,19 +31,40 @@
     <section class="group" [attr.aria-labelledby]="'g-' + group.id">
       <div class="gh">
         @if (group.section; as section) {
-          <button type="button" class="gt" [id]="'g-' + group.id" [attr.aria-current]="isSelected(section) || null" (click)="store.select(section)">
+          <button
+            type="button"
+            class="gt"
+            [id]="'g-' + group.id"
+            [attr.aria-current]="isSelected(section) || null"
+            (click)="store.select(section)"
+          >
             {{ group.title }}
           </button>
         } @else {
           <h3 class="gt plain" [id]="'g-' + group.id">{{ group.title }}</h3>
         }
-        <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="group.add.label" [attr.title]="group.add.label" (click)="group.add.run()"><svg appIcon="plus"></svg></button>
+        <button
+          mat-icon-button
+          type="button"
+          class="bo-sm"
+          [attr.aria-label]="group.add.label"
+          [attr.title]="group.add.label"
+          (click)="group.add.run()"
+        >
+          <svg appIcon="plus"></svg>
+        </button>
       </div>
       @if (group.layers.length) {
         <ul>
           @for (layer of group.layers; track $index) {
             <li>
-              <button type="button" class="layer" [class.muted]="layer.muted" [attr.aria-current]="isSelected(layer.selection) || null" (click)="store.select(layer.selection)">
+              <button
+                type="button"
+                class="layer"
+                [class.muted]="layer.muted"
+                [attr.aria-current]="isSelected(layer.selection) || null"
+                (click)="store.select(layer.selection)"
+              >
                 <svg [appIcon]="layer.icon"></svg>
                 <span class="tx">
                   <b>{{ layer.label }}</b>
@@ -42,7 +80,9 @@
           }
         </ul>
       } @else {
-        <p class="empty">{{ query() ? 'Sin resultados.' : 'Todavía no hay nada. Sumalo con el +.' }}</p>
+        <p class="empty">
+          {{ query() ? 'Sin resultados.' : 'Todavía no hay nada. Sumalo con el +.' }}
+        </p>
       }
     </section>
   }

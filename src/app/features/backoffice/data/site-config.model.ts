@@ -13,7 +13,17 @@
 export const AUDIENCES = ['postulantes', 'clientes', 'colaboradores'] as const;
 export type Audience = (typeof AUDIENCES)[number];
 
-export const FIELD_TYPES = ['text', 'email', 'tel', 'number', 'date', 'textarea', 'select', 'chips', 'switch'] as const;
+export const FIELD_TYPES = [
+  'text',
+  'email',
+  'tel',
+  'number',
+  'date',
+  'textarea',
+  'select',
+  'chips',
+  'switch',
+] as const;
 export type FieldType = (typeof FIELD_TYPES)[number];
 
 /**
@@ -93,7 +103,18 @@ export interface AlertConfig {
   readonly ctaHref?: string;
 }
 
-export const CHANNEL_KINDS = ['whatsapp', 'phone', 'email', 'web', 'linkedin', 'instagram', 'facebook', 'youtube', 'x', 'tiktok'] as const;
+export const CHANNEL_KINDS = [
+  'whatsapp',
+  'phone',
+  'email',
+  'web',
+  'linkedin',
+  'instagram',
+  'facebook',
+  'youtube',
+  'x',
+  'tiktok',
+] as const;
 export type ChannelKind = (typeof CHANNEL_KINDS)[number];
 
 /** Canal de contacto o red social que se muestra en el portal. */

@@ -1,10 +1,11 @@
 <p class="say" role="status">
   <svg appIcon="sparkFill" [filled]="true"></svg>
   <span>
-    <b>¡Listo, {{ firstName() }}!</b> Te postulaste a <b>{{ position() }}</b>. Te vamos a avisar por WhatsApp desde
-    nuestro número oficial.
+    <b>¡Listo, {{ firstName() }}!</b> Te postulaste a <b>{{ position() }}</b
+    >. Te vamos a avisar por WhatsApp desde nuestro número oficial.
     @if (trackingCode(); as code) {
-      Tu código de seguimiento es <b class="code">{{ code }}</b>.
+      Tu código de seguimiento es <b class="code">{{ code }}</b
+      >.
     }
   </span>
 </p>

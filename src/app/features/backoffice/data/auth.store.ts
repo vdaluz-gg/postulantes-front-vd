@@ -8,14 +8,18 @@ import { AdminProfile, AuthApi, LoginResponse } from './auth.api';
 
 /** El servidor rechazó el token: vencido, inválido o de una cuenta dada de baja. */
 const isUnauthorized = (error: unknown): boolean =>
-  (error instanceof HttpErrorResponse ? error.status : (error as Partial<ApiError> | null)?.statusCode) === 401;
+  (error instanceof HttpErrorResponse
+    ? error.status
+    : (error as Partial<ApiError> | null)?.statusCode) === 401;
 
 /** Sesión del backoffice. Vive en sessionStorage: se cierra al cerrar la pestaña. */
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly api = inject(AuthApi);
   private readonly storage = inject(StorageService);
-  private readonly session = signal<LoginResponse | null>(this.storage.getSessionJson<LoginResponse>(STORAGE_KEYS.backofficeSession));
+  private readonly session = signal<LoginResponse | null>(
+    this.storage.getSessionJson<LoginResponse>(STORAGE_KEYS.backofficeSession),
+  );
   /** El token ya se confirmó con el servidor en esta carga de la app. */
   private verified = false;
 
@@ -86,7 +90,9 @@ export const LOGIN_PATH = '/backoffice/ingresar';
 /** Sin sesión válida, manda al ingreso y recuerda a dónde quería ir. */
 export const backofficeAuthGuard: CanActivateFn = (_route, state) => {
   const auth = inject(AuthStore);
-  const toLogin = inject(Router).createUrlTree([LOGIN_PATH], { queryParams: { volver: state.url } });
+  const toLogin = inject(Router).createUrlTree([LOGIN_PATH], {
+    queryParams: { volver: state.url },
+  });
   if (!auth.loggedIn()) return toLogin;
   return auth.verify().pipe(map((ok) => ok || toLogin));
 };

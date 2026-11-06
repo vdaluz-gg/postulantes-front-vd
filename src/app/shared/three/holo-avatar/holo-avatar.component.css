@@ -1,2 +1,13 @@
-:host{position:absolute;inset:0;pointer-events:none}
-canvas{position:absolute;left:-60%;top:-12%;width:220%;height:116%;opacity:0}
+:host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+canvas {
+  position: absolute;
+  left: -60%;
+  top: -12%;
+  width: 220%;
+  height: 116%;
+  opacity: 0;
+}

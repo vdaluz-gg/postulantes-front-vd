@@ -28,7 +28,13 @@
           [(value)]="password"
           [error]="passwordError()"
         />
-        <button mat-button class="bo-sm" type="button" [attr.aria-pressed]="showPassword()" (click)="showPassword.set(!showPassword())">
+        <button
+          mat-button
+          class="bo-sm"
+          type="button"
+          [attr.aria-pressed]="showPassword()"
+          (click)="showPassword.set(!showPassword())"
+        >
           {{ showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña' }}
         </button>
       </div>
@@ -41,7 +47,9 @@
         {{ busy() ? 'Ingresando…' : 'Ingresar' }}
       </button>
       @if (demo) {
-        <button mat-stroked-button type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
+        <button mat-stroked-button type="button" [disabled]="busy()" (click)="useDemo()">
+          Entrar con datos de ejemplo
+        </button>
       }
     </form>
   </section>

@@ -13,7 +13,9 @@ describe('HoloAvatarLoaderService', () => {
 
   it('descarga el modelo una sola vez y lo entrega en base64', async () => {
     const bytes = new TextEncoder().encode('glTF');
-    const fetchMock = jest.fn().mockResolvedValue({ ok: true, arrayBuffer: () => Promise.resolve(bytes.buffer) });
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue({ ok: true, arrayBuffer: () => Promise.resolve(bytes.buffer) });
     (globalThis as { fetch?: unknown }).fetch = fetchMock;
     const loader = TestBed.inject(HoloAvatarLoaderService);
 
@@ -37,7 +39,9 @@ describe('HoloAvatarLoaderService', () => {
     const loader = TestBed.inject(HoloAvatarLoaderService);
     const created = loader.create({ rotD: 0, rotL: 0 });
 
-    const script = document.head.querySelector<HTMLScriptElement>('script[src="avatar/avatar-holo.js"]')!;
+    const script = document.head.querySelector<HTMLScriptElement>(
+      'script[src="avatar/avatar-holo.js"]',
+    )!;
     expect(script).not.toBeNull();
     window.AvatarHolo = factory;
     script.onload!(new Event('load'));
@@ -50,7 +54,11 @@ describe('HoloAvatarLoaderService', () => {
 
 @Component({
   imports: [HoloAvatarComponent],
-  template: `<app-holo-avatar model="m.glb" [config]="{ rotD: 0, rotL: 0 }" (status)="status.set($event)" />`,
+  template: `<app-holo-avatar
+    model="m.glb"
+    [config]="{ rotD: 0, rotL: 0 }"
+    (status)="status.set($event)"
+  />`,
 })
 class HostComponent {
   readonly status = signal<HoloAvatarStatus | null>(null);
@@ -82,7 +90,10 @@ describe('HoloAvatarComponent', () => {
     const frame = jest.fn();
     const init = jest.fn().mockResolvedValue(true);
     const engine = { init, frame, reset: jest.fn(), fd: 1 } as unknown as HoloAvatarEngine;
-    const fixture = await setup({ create: () => Promise.resolve(engine), loadModel: () => Promise.resolve('QUJD') });
+    const fixture = await setup({
+      create: () => Promise.resolve(engine),
+      loadModel: () => Promise.resolve('QUJD'),
+    });
 
     const canvas = (fixture.nativeElement as HTMLElement).querySelector('canvas');
     expect(init).toHaveBeenCalledWith(canvas, 'QUJD');

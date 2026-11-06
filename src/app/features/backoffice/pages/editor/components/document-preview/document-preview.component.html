@@ -3,5 +3,9 @@
   <b>{{ doc().name }}</b>
   <span>{{ rules() }}</span>
 </span>
-<span class="chip" [class.req]="doc().required">{{ doc().required ? 'Obligatorio' : 'Opcional' }}</span>
-<a mat-stroked-button class="up bo-sm" tabindex="-1" aria-hidden="true"><svg appIcon="up"></svg>Subir</a>
+<span class="chip" [class.req]="doc().required">{{
+  doc().required ? 'Obligatorio' : 'Opcional'
+}}</span>
+<a mat-stroked-button class="up bo-sm" tabindex="-1" aria-hidden="true"
+  ><svg appIcon="up"></svg>Subir</a
+>

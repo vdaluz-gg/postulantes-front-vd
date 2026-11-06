@@ -6,15 +6,26 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { firstValueFrom } from 'rxjs';
 import { CandidacyApi, CandidateContact, HttpCandidacyApi, zoneKey } from './candidacy.api';
-import { dniValidator, emailValidator, formatDni, fullNameValidator, whatsappValidator } from './candidate-validators';
+import {
+  dniValidator,
+  emailValidator,
+  formatDni,
+  fullNameValidator,
+  whatsappValidator,
+} from './candidate-validators';
 import { JobOffersResponse, JobPosting, formatDayMonth, toJobPosting } from './job-offer';
 import { searchJobs } from './job-search';
 import { API_BASE_URL } from '../../../core/api/api';
 import { HttpOffersApi, OFFERS_URL, OffersApi } from './offers.api';
 
 /** El mismo archivo que sirve la app en /mock/ofertas.json. */
-const MOCK: JobOffersResponse = JSON.parse(readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'));
-const offer = (over: Partial<JobPosting> = {}): JobPosting => ({ ...toJobPosting(MOCK.ofertas[0]), ...over });
+const MOCK: JobOffersResponse = JSON.parse(
+  readFileSync(join(process.cwd(), 'public/mock/ofertas.json'), 'utf8'),
+);
+const offer = (over: Partial<JobPosting> = {}): JobPosting => ({
+  ...toJobPosting(MOCK.ofertas[0]),
+  ...over,
+});
 
 describe('mapeo de ofertas (mock JSON)', () => {
   it('toma solo los datos de la publicación', () => {
@@ -26,7 +37,10 @@ describe('mapeo de ofertas (mock JSON)', () => {
       area: 'Logística',
       schedule: 'Martes 24/06 · 12 a 18 h',
       publishedOn: '2026-11-04',
-      requirements: ['Disponibilidad para la jornada del martes 24/06', 'Sin experiencia obligatoria'],
+      requirements: [
+        'Disponibilidad para la jornada del martes 24/06',
+        'Sin experiencia obligatoria',
+      ],
       benefits: ['Pago al finalizar el mes'],
     });
   });
@@ -41,7 +55,13 @@ describe('mapeo de ofertas (mock JSON)', () => {
       expect(job.requirements.length).toBeGreaterThan(0);
       expect(job.benefits.length).toBeGreaterThan(0);
       const values = JSON.stringify(job);
-      for (const internal of [dto.cliente, dto.convenio, dto.domicilioExplotacion.direccion, String(dto.salario), '@']) {
+      for (const internal of [
+        dto.cliente,
+        dto.convenio,
+        dto.domicilioExplotacion.direccion,
+        String(dto.salario),
+        '@',
+      ]) {
         expect(values).not.toContain(internal);
       }
     }
@@ -55,8 +75,20 @@ describe('mapeo de ofertas (mock JSON)', () => {
 describe('searchJobs', () => {
   const offers = [
     offer({ ref: 'A', title: 'Operario/a de depósito', description: 'Carga y descarga' }),
-    offer({ ref: 'B', title: 'Chofer de reparto', description: 'Reparto en Moreno', area: 'Logística', zone: 'Moreno' }),
-    offer({ ref: 'C', title: 'Analista administrativo', description: 'Trabajo de oficina', area: 'Administración', zone: 'CABA' }),
+    offer({
+      ref: 'B',
+      title: 'Chofer de reparto',
+      description: 'Reparto en Moreno',
+      area: 'Logística',
+      zone: 'Moreno',
+    }),
+    offer({
+      ref: 'C',
+      title: 'Analista administrativo',
+      description: 'Trabajo de oficina',
+      area: 'Administración',
+      zone: 'CABA',
+    }),
   ];
 
   it('sin consulta devuelve todas', () => {
@@ -82,7 +114,8 @@ describe('searchJobs', () => {
 });
 
 describe('validadores del formulario de contacto', () => {
-  const check = (validator: typeof dniValidator, value: string) => validator(new FormControl(value));
+  const check = (validator: typeof dniValidator, value: string) =>
+    validator(new FormControl(value));
 
   it('nombre y apellido', () => {
     expect(check(fullNameValidator, 'Martina Rodríguez')).toBeNull();
@@ -115,7 +148,11 @@ describe('validadores del formulario de contacto', () => {
 });
 
 describe('OffersApi', () => {
-  beforeEach(() => TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }),
+  );
 
   it('lee las ofertas del mock una sola vez y las mapea', async () => {
     const api = TestBed.inject(OffersApi);
@@ -187,8 +224,15 @@ describe('HttpCandidacyApi', () => {
     const req = http.expectOne('http://api/cv');
     expect(req.request.method).toBe('POST');
     expect((req.request.body as FormData).get('file')).toBeInstanceOf(File);
-    req.flush({ cvId: 'cv-1', fileName: 'cv.pdf', prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande', zoneId: 'z1' } });
-    expect(await result).toEqual({ cvId: 'cv-1', prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande' } });
+    req.flush({
+      cvId: 'cv-1',
+      fileName: 'cv.pdf',
+      prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande', zoneId: 'z1' },
+    });
+    expect(await result).toEqual({
+      cvId: 'cv-1',
+      prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande' },
+    });
   });
 
   it('envía la postulación con zona, oferta y CV, y devuelve el código de seguimiento', async () => {
@@ -206,7 +250,13 @@ describe('HttpCandidacyApi', () => {
       offerCode: 'CSYP1233113446',
       cvId: 'cv-1',
     });
-    req.flush({ trackingCode: 'GG-ABC123', status: 'received', stage: 0, position: 'Operario/a Pan 29', offer: null });
+    req.flush({
+      trackingCode: 'GG-ABC123',
+      status: 'received',
+      stage: 0,
+      position: 'Operario/a Pan 29',
+      offer: null,
+    });
     expect(await result).toEqual({ trackingCode: 'GG-ABC123', position: 'Operario/a Pan 29' });
   });
 
@@ -214,13 +264,22 @@ describe('HttpCandidacyApi', () => {
     const result = firstValueFrom(api.apply({ ...contact, zone: 'Atlántida' }, {}));
     http.expectOne('http://api/zones').flush('error', { status: 500, statusText: 'Error' });
     const req = http.expectOne('http://api/applications');
-    expect(Object.keys(req.request.body)).toEqual(['fullName', 'email', 'dni', 'whatsapp', 'position', 'channel']);
+    expect(Object.keys(req.request.body)).toEqual([
+      'fullName',
+      'email',
+      'dni',
+      'whatsapp',
+      'position',
+      'channel',
+    ]);
     req.flush({ trackingCode: 'GG-XYZ789', position: contact.position });
     await result;
   });
 
   it('manda las respuestas a los campos agregados desde el backoffice', async () => {
-    const result = firstValueFrom(api.apply({ ...contact, answers: { middleName: 'Sofía', days: ['lun'] } }, {}));
+    const result = firstValueFrom(
+      api.apply({ ...contact, answers: { middleName: 'Sofía', days: ['lun'] } }, {}),
+    );
     http.expectOne('http://api/zones').flush([]);
     const req = http.expectOne('http://api/applications');
     expect(req.request.body.answers).toEqual({ middleName: 'Sofía', days: ['lun'] });

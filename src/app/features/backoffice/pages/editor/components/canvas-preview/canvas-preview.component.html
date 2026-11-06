@@ -1,7 +1,12 @@
 @if (store.current(); as a) {
   <div class="frame" [class]="'aud-' + a.audience + ' ' + device()" [class.clean]="clean()">
     <header class="portal-top">
-      <img src="assets/brand/grupo-gestion-blanco.png" alt="Grupo Gestión" width="130" height="42" />
+      <img
+        src="assets/brand/grupo-gestion-blanco.png"
+        alt="Grupo Gestión"
+        width="130"
+        height="42"
+      />
       <span class="who">Portal de {{ audienceLabel() }}</span>
     </header>
 
@@ -55,10 +60,24 @@
                 <button
                   type="button"
                   class="pick item field"
-                  [class.wide]="field.type === 'textarea' || field.type === 'chips' || field.type === 'switch'"
-                  [attr.data-sel]="sel({ kind: 'field', audience: a.audience, sectionId: section.id, id: field.id })"
+                  [class.wide]="
+                    field.type === 'textarea' || field.type === 'chips' || field.type === 'switch'
+                  "
+                  [attr.data-sel]="
+                    sel({
+                      kind: 'field',
+                      audience: a.audience,
+                      sectionId: section.id,
+                      id: field.id,
+                    })
+                  "
                   [attr.aria-label]="'Campo: ' + (field.label || 'sin etiqueta')"
-                  (click)="pick({ kind: 'field', audience: a.audience, sectionId: section.id, id: field.id }, $event)"
+                  (click)="
+                    pick(
+                      { kind: 'field', audience: a.audience, sectionId: section.id, id: field.id },
+                      $event
+                    )
+                  "
                 >
                   <app-field-preview [field]="field" />
                 </button>

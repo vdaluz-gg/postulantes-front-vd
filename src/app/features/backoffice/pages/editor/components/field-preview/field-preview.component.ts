@@ -22,6 +22,10 @@ export class FieldPreviewComponent {
   readonly field = input.required<FieldConfig>();
 
   /** Ocupa el ancho completo de la grilla: textos largos, píldoras y switches. */
-  protected readonly wide = computed(() => ['textarea', 'chips', 'switch'].includes(this.field().type));
-  protected readonly selectText = computed(() => this.field().placeholder || this.field().options?.[0]?.label || 'Elegí una opción');
+  protected readonly wide = computed(() =>
+    ['textarea', 'chips', 'switch'].includes(this.field().type),
+  );
+  protected readonly selectText = computed(
+    () => this.field().placeholder || this.field().options?.[0]?.label || 'Elegí una opción',
+  );
 }

@@ -1,14 +1,75 @@
 /* Cambio de vista: las tarjetas se transforman de una vista a otra. */
-::view-transition-group(*){animation-duration:.5s;animation-timing-function:cubic-bezier(.3,.7,.2,1);border-radius:var(--r,18px);overflow:clip}
-::view-transition-old(*),::view-transition-new(*){mix-blend-mode:normal;object-fit:cover;object-position:top left;height:100%}
-::view-transition-old(*){animation:vt-out .16s ease both}
-::view-transition-new(*){animation:vt-in .34s .1s ease both}
-@keyframes vt-out{to{opacity:0}}@keyframes vt-in{from{opacity:0}}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.3s;animation-delay:0s;animation-name:none;height:100%;object-fit:fill}
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
+  border-radius: var(--r, 18px);
+  overflow: clip;
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  mix-blend-mode: normal;
+  object-fit: cover;
+  object-position: top left;
+  height: 100%;
+}
+::view-transition-old(*) {
+  animation: vt-out 0.16s ease both;
+}
+::view-transition-new(*) {
+  animation: vt-in 0.34s 0.1s ease both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+  }
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-delay: 0s;
+  animation-name: none;
+  height: 100%;
+  object-fit: fill;
+}
 
 /* Cambio de tema: el nuevo tema se expande en círculo desde el puntero. */
-html.vt-theme::view-transition-group(root){animation:none}
-html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root){animation:none;mix-blend-mode:normal;block-size:100%;inline-size:100%;object-fit:fill}
-html.vt-theme::view-transition-old(root){z-index:1;animation:vtOld .7s ease both}
-html.vt-theme::view-transition-new(root){z-index:2;-webkit-mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),#000 calc(var(--rv) - 90px),transparent var(--rv));mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),#000 calc(var(--rv) - 90px),transparent var(--rv))}
-@keyframes vtOld{to{opacity:.92;transform:scale(.99);filter:brightness(.92)}}
+html.vt-theme::view-transition-group(root) {
+  animation: none;
+}
+html.vt-theme::view-transition-old(root),
+html.vt-theme::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  block-size: 100%;
+  inline-size: 100%;
+  object-fit: fill;
+}
+html.vt-theme::view-transition-old(root) {
+  z-index: 1;
+  animation: vtOld 0.7s ease both;
+}
+html.vt-theme::view-transition-new(root) {
+  z-index: 2;
+  -webkit-mask-image: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    #000 calc(var(--rv) - 90px),
+    transparent var(--rv)
+  );
+  mask-image: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    #000 calc(var(--rv) - 90px),
+    transparent var(--rv)
+  );
+}
+@keyframes vtOld {
+  to {
+    opacity: 0.92;
+    transform: scale(0.99);
+    filter: brightness(0.92);
+  }
+}

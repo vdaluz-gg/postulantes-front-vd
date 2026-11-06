@@ -1,51 +1,165 @@
 @if (field(); as f) {
   <app-inspector-head kind="Campo" [context]="sectionTitle()" [title]="f.label" [dataKey]="f.id">
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Subir el campo" title="Subir el campo" [disabled]="position().first" (click)="move(-1)"><svg appIcon="arrowUp"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Bajar el campo" title="Bajar el campo" [disabled]="position().last" (click)="move(1)"><svg appIcon="arrowDown"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Duplicar el campo" title="Duplicar el campo" (click)="duplicate()"><svg appIcon="copy"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar el campo" title="Borrar el campo" (click)="remove()"><svg appIcon="trash"></svg></button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Subir el campo"
+      title="Subir el campo"
+      [disabled]="position().first"
+      (click)="move(-1)"
+    >
+      <svg appIcon="arrowUp"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Bajar el campo"
+      title="Bajar el campo"
+      [disabled]="position().last"
+      (click)="move(1)"
+    >
+      <svg appIcon="arrowDown"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Duplicar el campo"
+      title="Duplicar el campo"
+      (click)="duplicate()"
+    >
+      <svg appIcon="copy"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Borrar el campo"
+      title="Borrar el campo"
+      (click)="remove()"
+    >
+      <svg appIcon="trash"></svg>
+    </button>
   </app-inspector-head>
 
   <app-prop-group legend="Contenido">
-    <bo-text-field label="Etiqueta" [compact]="true" [value]="f.label" (valueChange)="set({ label: $event }, 'label')" [error]="f.label.trim() ? '' : 'Escribí una etiqueta.'" />
-    <bo-text-field label="Texto de ejemplo" help="Se ve gris dentro del campo vacío." [compact]="true" [value]="f.placeholder ?? ''" (valueChange)="set({ placeholder: $event || undefined }, 'placeholder')" />
-    <bo-text-field label="Ayuda debajo del campo" [compact]="true" [multiline]="true" [rows]="2" [value]="f.help ?? ''" (valueChange)="set({ help: $event || undefined }, 'help')" />
+    <bo-text-field
+      label="Etiqueta"
+      [compact]="true"
+      [value]="f.label"
+      (valueChange)="set({ label: $event }, 'label')"
+      [error]="f.label.trim() ? '' : 'Escribí una etiqueta.'"
+    />
+    <bo-text-field
+      label="Texto de ejemplo"
+      help="Se ve gris dentro del campo vacío."
+      [compact]="true"
+      [value]="f.placeholder ?? ''"
+      (valueChange)="set({ placeholder: $event || undefined }, 'placeholder')"
+    />
+    <bo-text-field
+      label="Ayuda debajo del campo"
+      [compact]="true"
+      [multiline]="true"
+      [rows]="2"
+      [value]="f.help ?? ''"
+      (valueChange)="set({ help: $event || undefined }, 'help')"
+    />
   </app-prop-group>
 
   <app-prop-group legend="Tipo y reglas">
-    <bo-select-field label="Tipo de dato" [compact]="true" [options]="typeOptions" [value]="f.type" (valueChange)="setType($event)" />
-    <bo-switch label="Obligatorio" help="No deja avanzar sin completarlo." [checked]="f.required" (checkedChange)="set({ required: $event })" />
-    <bo-switch label="Visible en el portal" [checked]="f.visible" (checkedChange)="set({ visible: $event })" />
-    <bo-switch label="Solo lectura" help="Se muestra pero no se puede cambiar." [checked]="f.readonly" (checkedChange)="set({ readonly: $event })" />
+    <bo-select-field
+      label="Tipo de dato"
+      [compact]="true"
+      [options]="typeOptions"
+      [value]="f.type"
+      (valueChange)="setType($event)"
+    />
+    <bo-switch
+      label="Obligatorio"
+      help="No deja avanzar sin completarlo."
+      [checked]="f.required"
+      (checkedChange)="set({ required: $event })"
+    />
+    <bo-switch
+      label="Visible en el portal"
+      [checked]="f.visible"
+      (checkedChange)="set({ visible: $event })"
+    />
+    <bo-switch
+      label="Solo lectura"
+      help="Se muestra pero no se puede cambiar."
+      [checked]="f.readonly"
+      (checkedChange)="set({ readonly: $event })"
+    />
   </app-prop-group>
 
   <app-prop-group legend="Color">
     <div class="tones" role="group" aria-label="Color del campo" [style.--sec]="audienceColor()">
       @for (tone of tones; track tone.value) {
-        <button type="button" class="tone" [class]="'t-' + tone.value" [attr.aria-pressed]="f.tone === tone.value" (click)="setTone(tone.value)">
+        <button
+          type="button"
+          class="tone"
+          [class]="'t-' + tone.value"
+          [attr.aria-pressed]="f.tone === tone.value"
+          (click)="setTone(tone.value)"
+        >
           <span class="sw" aria-hidden="true"></span>{{ tone.label }}
         </button>
       }
     </div>
-    <p class="note">Los colores salen del sistema de diseño para que el contraste se mantenga en tema claro y oscuro.</p>
+    <p class="note">
+      Los colores salen del sistema de diseño para que el contraste se mantenga en tema claro y
+      oscuro.
+    </p>
   </app-prop-group>
 
   @if (withOptions()) {
     <app-prop-group legend="Opciones">
-      <app-options-editor [options]="f.options ?? []" [fieldLabel]="f.label" (changed)="setOptions($event)" />
+      <app-options-editor
+        [options]="f.options ?? []"
+        [fieldLabel]="f.label"
+        (changed)="setOptions($event)"
+      />
     </app-prop-group>
   }
 
   <app-prop-group legend="Validación" [collapsible]="true">
     @if (isNumber()) {
       <div class="row3">
-        <bo-text-field label="Mínimo" type="number" [compact]="true" [value]="rule('min')" (valueChange)="setRule('min', $event)" />
-        <bo-text-field label="Máximo" type="number" [compact]="true" [value]="rule('max')" (valueChange)="setRule('max', $event)" />
-        <bo-text-field label="De a" type="number" [compact]="true" [value]="rule('step')" (valueChange)="setRule('step', $event)" />
+        <bo-text-field
+          label="Mínimo"
+          type="number"
+          [compact]="true"
+          [value]="rule('min')"
+          (valueChange)="setRule('min', $event)"
+        />
+        <bo-text-field
+          label="Máximo"
+          type="number"
+          [compact]="true"
+          [value]="rule('max')"
+          (valueChange)="setRule('max', $event)"
+        />
+        <bo-text-field
+          label="De a"
+          type="number"
+          [compact]="true"
+          [value]="rule('step')"
+          (valueChange)="setRule('step', $event)"
+        />
       </div>
     }
     @if (isText()) {
-      <bo-text-field label="Largo máximo (caracteres)" type="number" [compact]="true" [value]="rule('maxLength')" (valueChange)="setRule('maxLength', $event)" />
+      <bo-text-field
+        label="Largo máximo (caracteres)"
+        type="number"
+        [compact]="true"
+        [value]="rule('maxLength')"
+        (valueChange)="setRule('maxLength', $event)"
+      />
       <bo-text-field
         label="Formato (expresión regular)"
         [help]="patternHelp"
@@ -64,6 +178,8 @@
   </app-prop-group>
 
   <div class="foot">
-    <button mat-stroked-button type="button" class="bo-sm" (click)="addBelow()">+ Sumar un campo debajo</button>
+    <button mat-stroked-button type="button" class="bo-sm" (click)="addBelow()">
+      + Sumar un campo debajo
+    </button>
   </div>
 }

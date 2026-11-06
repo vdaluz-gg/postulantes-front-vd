@@ -1,8 +1,40 @@
-:host{display:flex;align-items:center;gap:12px;flex:none}
-img{display:block;height:34px;width:auto}
-.lc{display:none}
-:host-context([data-theme="light"]) .lw{display:none}
-:host-context([data-theme="light"]) .lc{display:block}
-small{padding:3px 9px;border-radius:999px;background:var(--tint-vio);color:var(--vio-t);font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-@media (max-width:860px){img{height:28px}}
-@media (max-width:380px){small{display:none}}
+:host {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+img {
+  display: block;
+  height: 34px;
+  width: auto;
+}
+.lc {
+  display: none;
+}
+:host-context([data-theme='light']) .lw {
+  display: none;
+}
+:host-context([data-theme='light']) .lc {
+  display: block;
+}
+small {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--tint-vio);
+  color: var(--vio-t);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+@media (max-width: 860px) {
+  img {
+    height: 28px;
+  }
+}
+@media (max-width: 380px) {
+  small {
+    display: none;
+  }
+}

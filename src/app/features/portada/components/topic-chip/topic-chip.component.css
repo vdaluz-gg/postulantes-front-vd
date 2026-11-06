@@ -1,4 +1,28 @@
-:host{font:500 13px var(--font-display);color:var(--ink);padding:9px 12px;border-radius:10px;background:var(--soft);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
-.mark{color:var(--acc);margin-right:8px;font-weight:700}
-:host(:hover),:host(:focus-visible),:host([aria-pressed="true"]){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent);outline:none}
-:host([aria-pressed="true"]){transform:translateY(-1px)}
+:host {
+  font: 500 13px var(--font-display);
+  color: var(--ink);
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+.mark {
+  color: var(--acc);
+  margin-right: 8px;
+  font-weight: 700;
+}
+:host(:hover),
+:host(:focus-visible),
+:host([aria-pressed='true']) {
+  border-color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 10%, transparent);
+  outline: none;
+}
+:host([aria-pressed='true']) {
+  transform: translateY(-1px);
+}

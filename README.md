@@ -20,22 +20,22 @@ npm install
 npm start            # http://localhost:4200
 ```
 
-| Comando | Qué hace |
-|---|---|
-| `npm start` | Servidor de desarrollo con recarga. |
-| `npx ng build` | Build de producción en `dist/`. Falla si un CSS de componente pasa el presupuesto. |
-| `npm test` | Chequeo de tipos (app y tests) y después todos los tests de Jest. |
-| `npm run typecheck` | Solo el chequeo de tipos. |
-| `npx jest ruta/al.spec.ts` | Un archivo de tests. |
-| `npm run smoke:firefox` | Prueba de humo en Firefox, con `npm start` corriendo (ver [Navegadores](#navegadores)). Pide Node 22 o superior. |
+| Comando                    | Qué hace                                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `npm start`                | Servidor de desarrollo con recarga.                                                                              |
+| `npx ng build`             | Build de producción en `dist/`. Falla si un CSS de componente pasa el presupuesto.                               |
+| `npm test`                 | Chequeo de tipos (app y tests) y después todos los tests de Jest.                                                |
+| `npm run typecheck`        | Solo el chequeo de tipos.                                                                                        |
+| `npx jest ruta/al.spec.ts` | Un archivo de tests.                                                                                             |
+| `npm run smoke:firefox`    | Prueba de humo en Firefox, con `npm start` corriendo (ver [Navegadores](#navegadores)). Pide Node 22 o superior. |
 
 Rutas:
 
-| Ruta | Pantalla |
-|---|---|
-| `/` | Portada. |
-| `/backoffice/ingresar` | Ingreso al backoffice. |
-| `/backoffice` | Editor del backoffice (pide sesión). |
+| Ruta                   | Pantalla                             |
+| ---------------------- | ------------------------------------ |
+| `/`                    | Portada.                             |
+| `/backoffice/ingresar` | Ingreso al backoffice.               |
+| `/backoffice`          | Editor del backoffice (pide sesión). |
 
 ---
 
@@ -119,10 +119,10 @@ Correo y contraseña contra el backend: `POST /auth/login` devuelve un JWT y el 
 
 **Cuentas de desarrollo.** Hay que darlas de alta una vez en la base local, con `POST /auth/register` y la clave `ADMIN_REGISTRATION_KEY` del `.env` del backend:
 
-| Usuario | Contraseña | Rol en el backend |
-|---|---|---|
-| `marketing@ejemplo.com` | `Marketing2026` | `admin` (el rol `marketing` todavía no existe) |
-| `admin@ejemplo.com` | `Backoffice2026` | `admin` |
+| Usuario                 | Contraseña       | Rol en el backend                              |
+| ----------------------- | ---------------- | ---------------------------------------------- |
+| `marketing@ejemplo.com` | `Marketing2026`  | `admin` (el rol `marketing` todavía no existe) |
+| `admin@ejemplo.com`     | `Backoffice2026` | `admin`                                        |
 
 ```bash
 curl -X POST http://localhost:3000/api/v1/auth/register -H "Content-Type: application/json" \
@@ -162,14 +162,14 @@ Funciona como una herramienta de diseño, con tres paneles:
 
 Qué se puede editar para cada público:
 
-| Elemento | Propiedades |
-|---|---|
-| **Campos** | Etiqueta, texto de ejemplo, ayuda, tipo, obligatorio, visible, solo lectura, color, opciones y validación (mínimo, máximo, largo, formato y mensaje de error). Se suman, duplican, ordenan y borran. |
-| **Secciones** | Título, descripción y pantalla donde aparecen. |
-| **Documentos** | Nombre, obligatorio, formatos aceptados, tamaño máximo, vencimiento y ayuda. |
-| **Avisos** | Tono (informativo, positivo o atención), título, mensaje, botón con enlace, fechas de vigencia y encendido o apagado. |
-| **Canales y redes** | WhatsApp, teléfono, correo, web, LinkedIn, Instagram, Facebook, YouTube, X y TikTok, con nombre, dato, horario y visibilidad. |
-| **Textos** | Títulos, bajadas y sugerencias que se leen en el portal. |
+| Elemento            | Propiedades                                                                                                                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Campos**          | Etiqueta, texto de ejemplo, ayuda, tipo, obligatorio, visible, solo lectura, color, opciones y validación (mínimo, máximo, largo, formato y mensaje de error). Se suman, duplican, ordenan y borran. |
+| **Secciones**       | Título, descripción y pantalla donde aparecen.                                                                                                                                                       |
+| **Documentos**      | Nombre, obligatorio, formatos aceptados, tamaño máximo, vencimiento y ayuda.                                                                                                                         |
+| **Avisos**          | Tono (informativo, positivo o atención), título, mensaje, botón con enlace, fechas de vigencia y encendido o apagado.                                                                                |
+| **Canales y redes** | WhatsApp, teléfono, correo, web, LinkedIn, Instagram, Facebook, YouTube, X y TikTok, con nombre, dato, horario y visibilidad.                                                                        |
+| **Textos**          | Títulos, bajadas y sugerencias que se leen en el portal.                                                                                                                                             |
 
 La carga inicial (`data/site-config.seed.ts`) trae los campos, documentos, avisos y canales que hoy muestran los tres portales.
 
@@ -201,13 +201,13 @@ El backend es `postulantes-back-vd`: NestJS, PostgreSQL y Docker, con la base `h
 
 Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada y la HTTP:
 
-| Servicio | Simulado | HTTP | Endpoint | Hoy usa |
-|---|---|---|---|---|
-| `OffersApi` | `MockOffersApi` (`public/mock/ofertas.json`) | `HttpOffersApi` | `GET /job-offers` | Backend |
-| `CandidacyApi` | `MockCandidacyApi` | `HttpCandidacyApi` | `POST /cv`, `GET /zones`, `POST /applications` | Backend |
-| `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login`, `GET /auth/me` | Backend |
-| `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` | Backend |
-| `PublishedConfigApi` | `MockPublishedConfigApi` (lo publicado en `localStorage`) | `HttpPublishedConfigApi` | `GET /site-config/:audience` | Backend |
+| Servicio             | Simulado                                                  | HTTP                     | Endpoint                                                                      | Hoy usa |
+| -------------------- | --------------------------------------------------------- | ------------------------ | ----------------------------------------------------------------------------- | ------- |
+| `OffersApi`          | `MockOffersApi` (`public/mock/ofertas.json`)              | `HttpOffersApi`          | `GET /job-offers`                                                             | Backend |
+| `CandidacyApi`       | `MockCandidacyApi`                                        | `HttpCandidacyApi`       | `POST /cv`, `GET /zones`, `POST /applications`                                | Backend |
+| `AuthApi`            | `MockAuthApi`                                             | `HttpAuthApi`            | `POST /auth/login`, `GET /auth/me`                                            | Backend |
+| `SiteConfigApi`      | `MockSiteConfigApi` (`localStorage`)                      | `HttpSiteConfigApi`      | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` | Backend |
+| `PublishedConfigApi` | `MockPublishedConfigApi` (lo publicado en `localStorage`) | `HttpPublishedConfigApi` | `GET /site-config/:audience`                                                  | Backend |
 
 **Cómo se elige**
 
@@ -249,14 +249,14 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 
 Jest 30 con `jest-preset-angular` (zoneless):
 
-| Archivo | Qué cubre |
-|---|---|
-| `features/backoffice/data/site-config.spec.ts` | Modelo, carga inicial y operaciones del editor. |
-| `features/backoffice/data/backoffice-data.spec.ts` | Login, API simulada, interceptor y estado del editor (deshacer y guardado). |
-| `features/backoffice/backoffice-ui.spec.ts` | Ingreso, guard, edición desde el panel y deshacer desde el aviso. |
-| `features/portada/**/*.spec.ts` | Portada, ofertas, CV, formulario y postulación (simulada y HTTP). |
-| `features/portada/published-config.spec.ts` | Campos, textos y avisos publicados en el backoffice, y el envío de las respuestas. |
-| `features/portada/empresas-colaboradores.spec.ts` | Paneles de Empresas y Colaboradores. |
+| Archivo                                            | Qué cubre                                                                          |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `features/backoffice/data/site-config.spec.ts`     | Modelo, carga inicial y operaciones del editor.                                    |
+| `features/backoffice/data/backoffice-data.spec.ts` | Login, API simulada, interceptor y estado del editor (deshacer y guardado).        |
+| `features/backoffice/backoffice-ui.spec.ts`        | Ingreso, guard, edición desde el panel y deshacer desde el aviso.                  |
+| `features/portada/**/*.spec.ts`                    | Portada, ofertas, CV, formulario y postulación (simulada y HTTP).                  |
+| `features/portada/published-config.spec.ts`        | Campos, textos y avisos publicados en el backoffice, y el envío de las respuestas. |
+| `features/portada/empresas-colaboradores.spec.ts`  | Paneles de Empresas y Colaboradores.                                               |
 
 ---
 
@@ -284,6 +284,6 @@ Chrome, Edge, Firefox y Safari: las dos últimas versiones de cada uno, más Fir
 
 Si el editor sigue lento:
 
-- **TypeScript:** abrí la paleta y elegí **"TypeScript: Select TypeScript Version" → "Use Workspace Version"**. La extensión *TypeScript Nightly* reemplaza al del proyecto y levanta dos servidores de hasta 3 GB cada uno; si no la necesitás, desactivala en este workspace.
+- **TypeScript:** abrí la paleta y elegí **"TypeScript: Select TypeScript Version" → "Use Workspace Version"**. La extensión _TypeScript Nightly_ reemplaza al del proyecto y levanta dos servidores de hasta 3 GB cada uno; si no la necesitás, desactivala en este workspace.
 - **Servidores olvidados:** no dejes `ng serve` corriendo en terminales que no usás. Cada uno ocupa cerca de 1 GB.
 - **GitLens:** si lo usás poco, desactivalo en este workspace.

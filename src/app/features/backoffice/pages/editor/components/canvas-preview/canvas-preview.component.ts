@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { MotionService } from '../../../../../../core/services/motion.service';
 import { EditorStore } from '../../../../data/editor.store';
 import { AUDIENCE_LABEL } from '../../../../data/site-config.model';
@@ -17,7 +25,13 @@ import { FieldPreviewComponent } from '../field-preview/field-preview.component'
  */
 @Component({
   selector: 'app-canvas-preview',
-  imports: [AlertPreviewComponent, ChannelPreviewComponent, CopyPreviewComponent, DocumentPreviewComponent, FieldPreviewComponent],
+  imports: [
+    AlertPreviewComponent,
+    ChannelPreviewComponent,
+    CopyPreviewComponent,
+    DocumentPreviewComponent,
+    FieldPreviewComponent,
+  ],
   templateUrl: './canvas-preview.component.html',
   styleUrl: './canvas-preview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,15 +45,22 @@ export class CanvasPreviewComponent {
   private readonly motion = inject(MotionService);
 
   protected readonly audienceLabel = computed(() => AUDIENCE_LABEL[this.store.audience()]);
-  protected readonly alerts = computed(() => (this.store.current()?.alerts ?? []).filter((a) => !this.clean() || a.active));
-  protected readonly channels = computed(() => (this.store.current()?.channels ?? []).filter((c) => !this.clean() || c.visible));
+  protected readonly alerts = computed(() =>
+    (this.store.current()?.alerts ?? []).filter((a) => !this.clean() || a.active),
+  );
+  protected readonly channels = computed(() =>
+    (this.store.current()?.channels ?? []).filter((c) => !this.clean() || c.visible),
+  );
 
   constructor() {
     // Lleva a la vista lo que se eligió desde el panel de capas o la revisión de problemas.
     afterRenderEffect(() => {
       this.store.selection();
       const selected = this.host.querySelector<HTMLElement>('[data-sel="true"]');
-      selected?.scrollIntoView?.({ block: 'nearest', behavior: this.motion.reduced() ? 'auto' : 'smooth' });
+      selected?.scrollIntoView?.({
+        block: 'nearest',
+        behavior: this.motion.reduced() ? 'auto' : 'smooth',
+      });
     });
   }
 

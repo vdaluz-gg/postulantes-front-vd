@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, inject, input, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { MotionService } from '../../../../../core/services/motion.service';
 import { IconComponent } from '../../../../../shared/ui/atoms/icon/icon.component';
 
@@ -33,7 +41,10 @@ export class PeekPanelComponent {
     afterRenderEffect(() => {
       this.replayKey();
       if (this.motion.reduced()) return;
-      this.content().nativeElement.animate?.(ENTER, { duration: 450, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      this.content().nativeElement.animate?.(ENTER, {
+        duration: 450,
+        easing: 'cubic-bezier(.2,.8,.2,1)',
+      });
     });
   }
 }

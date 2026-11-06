@@ -18,11 +18,26 @@ export function topicForQuestion(question: string): CollaboratorTopic | null {
   return null;
 }
 
-const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const MONTHS = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+];
 const DAY_MS = 86_400_000;
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-const addDays = (d: Date, days: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
-const shortDate = (d: Date) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+const addDays = (d: Date, days: number) =>
+  new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
+const shortDate = (d: Date) =>
+  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
 
 /** Día del mes en que se acredita el sueldo (ejemplo). */
 const PAY_DAY = 5;
@@ -58,7 +73,11 @@ export function latestReceipts(today: Date): Receipt[] {
   const last = new Date(today.getFullYear(), today.getMonth() - 1, 1);
   const previous = new Date(today.getFullYear(), today.getMonth() - 2, 1);
   return [
-    { id: `${last.getFullYear()}-${last.getMonth() + 1}`, title: `Recibo de ${MONTHS[last.getMonth()]}`, signedOn: null },
+    {
+      id: `${last.getFullYear()}-${last.getMonth() + 1}`,
+      title: `Recibo de ${MONTHS[last.getMonth()]}`,
+      signedOn: null,
+    },
     {
       id: `${previous.getFullYear()}-${previous.getMonth() + 1}`,
       title: `Recibo de ${MONTHS[previous.getMonth()]}`,
@@ -72,7 +91,11 @@ export function cardSteps(today: Date): TrackerStep[] {
   return [
     { label: 'Pedido de tarjeta', when: shortDate(addDays(today, -32)), state: 'done' },
     { label: 'Emitida por el banco', when: shortDate(addDays(today, -25)), state: 'done' },
-    { label: 'En camino a tu sucursal', when: `llega el ${shortDate(addDays(today, 3))}`, state: 'now' },
+    {
+      label: 'En camino a tu sucursal',
+      when: `llega el ${shortDate(addDays(today, 3))}`,
+      state: 'now',
+    },
     { label: 'Retirala con tu DNI', when: '—', state: 'next' },
   ];
 }

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterNextRender, computed, input, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterNextRender,
+  computed,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { IconComponent } from '../../../../../shared/ui/atoms/icon/icon.component';
 import { PortadaButtonComponent } from '../../../components/portada-button/portada-button.component';
 import { JobPosting, formatDayMonth } from '../../job-offer';

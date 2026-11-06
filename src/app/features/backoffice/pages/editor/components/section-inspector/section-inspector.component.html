@@ -1,12 +1,40 @@
 @if (section(); as s) {
   <app-inspector-head kind="Sección" [title]="s.title" [dataKey]="s.id">
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar la sección con sus campos" title="Borrar la sección con sus campos" (click)="remove()"><svg appIcon="trash"></svg></button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Borrar la sección con sus campos"
+      title="Borrar la sección con sus campos"
+      (click)="remove()"
+    >
+      <svg appIcon="trash"></svg>
+    </button>
   </app-inspector-head>
 
   <app-prop-group legend="Contenido">
-    <bo-text-field label="Título" [compact]="true" [value]="s.title" (valueChange)="set({ title: $event }, 'title')" [error]="s.title.trim() ? '' : 'Escribí un título.'" />
-    <bo-text-field label="Descripción" [compact]="true" [multiline]="true" [rows]="2" [value]="s.description" (valueChange)="set({ description: $event }, 'description')" />
-    <bo-text-field label="Pantalla donde aparece" help="Para ubicarla: «Portal · Mi perfil»." [compact]="true" [value]="s.screen" (valueChange)="set({ screen: $event }, 'screen')" />
+    <bo-text-field
+      label="Título"
+      [compact]="true"
+      [value]="s.title"
+      (valueChange)="set({ title: $event }, 'title')"
+      [error]="s.title.trim() ? '' : 'Escribí un título.'"
+    />
+    <bo-text-field
+      label="Descripción"
+      [compact]="true"
+      [multiline]="true"
+      [rows]="2"
+      [value]="s.description"
+      (valueChange)="set({ description: $event }, 'description')"
+    />
+    <bo-text-field
+      label="Pantalla donde aparece"
+      help="Para ubicarla: «Portal · Mi perfil»."
+      [compact]="true"
+      [value]="s.screen"
+      (valueChange)="set({ screen: $event }, 'screen')"
+    />
   </app-prop-group>
 
   <app-prop-group [legend]="'Campos · ' + s.fields.length">
@@ -15,11 +43,16 @@
         <li>
           <button type="button" (click)="selectField(field.id)">
             <span>{{ field.label || 'Sin etiqueta' }}</span>
-            <small>{{ field.required ? 'Obligatorio' : 'Opcional' }}{{ field.visible ? '' : ' · Oculto' }}</small>
+            <small
+              >{{ field.required ? 'Obligatorio' : 'Opcional'
+              }}{{ field.visible ? '' : ' · Oculto' }}</small
+            >
           </button>
         </li>
       }
     </ul>
-    <button mat-stroked-button type="button" class="bo-sm" (click)="addField()">+ Sumar un campo</button>
+    <button mat-stroked-button type="button" class="bo-sm" (click)="addField()">
+      + Sumar un campo
+    </button>
   </app-prop-group>
 }

@@ -1,13 +1,53 @@
 @if (item(); as channel) {
   <app-inspector-head kind="Canal o red social" [title]="channel.label" [dataKey]="channel.id">
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Subir en la lista" title="Subir en la lista" [disabled]="position().first" (click)="move(-1)"><svg appIcon="arrowUp"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Bajar en la lista" title="Bajar en la lista" [disabled]="position().last" (click)="move(1)"><svg appIcon="arrowDown"></svg></button>
-    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar el canal" title="Borrar el canal" (click)="remove()"><svg appIcon="trash"></svg></button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Subir en la lista"
+      title="Subir en la lista"
+      [disabled]="position().first"
+      (click)="move(-1)"
+    >
+      <svg appIcon="arrowUp"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Bajar en la lista"
+      title="Bajar en la lista"
+      [disabled]="position().last"
+      (click)="move(1)"
+    >
+      <svg appIcon="arrowDown"></svg>
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="bo-sm"
+      aria-label="Borrar el canal"
+      title="Borrar el canal"
+      (click)="remove()"
+    >
+      <svg appIcon="trash"></svg>
+    </button>
   </app-inspector-head>
 
   <app-prop-group legend="Canal">
-    <bo-select-field label="Tipo" [compact]="true" [options]="kinds" [value]="channel.kind" (valueChange)="setKind($event)" />
-    <bo-text-field label="Nombre que se ve" [compact]="true" [value]="channel.label" (valueChange)="set({ label: $event }, 'label')" />
+    <bo-select-field
+      label="Tipo"
+      [compact]="true"
+      [options]="kinds"
+      [value]="channel.kind"
+      (valueChange)="setKind($event)"
+    />
+    <bo-text-field
+      label="Nombre que se ve"
+      [compact]="true"
+      [value]="channel.label"
+      (valueChange)="set({ label: $event }, 'label')"
+    />
     <bo-text-field
       [label]="valueField().label"
       [type]="valueField().type"
@@ -16,10 +56,20 @@
       [value]="channel.value"
       (valueChange)="set({ value: $event }, 'value')"
     />
-    <bo-text-field label="Horario o aclaración" placeholder="Lun a vie · 9 a 17 h" [compact]="true" [value]="channel.note ?? ''" (valueChange)="set({ note: $event || undefined }, 'note')" />
+    <bo-text-field
+      label="Horario o aclaración"
+      placeholder="Lun a vie · 9 a 17 h"
+      [compact]="true"
+      [value]="channel.note ?? ''"
+      (valueChange)="set({ note: $event || undefined }, 'note')"
+    />
   </app-prop-group>
 
   <app-prop-group legend="Visibilidad">
-    <bo-switch label="Mostrar en el portal" [checked]="channel.visible" (checkedChange)="set({ visible: $event })" />
+    <bo-switch
+      label="Mostrar en el portal"
+      [checked]="channel.visible"
+      (checkedChange)="set({ visible: $event })"
+    />
   </app-prop-group>
 }

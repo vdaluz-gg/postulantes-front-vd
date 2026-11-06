@@ -68,7 +68,10 @@ export class EditorStore {
     const next = 'audiences' in change ? change : change.config;
     if (next === before) return;
     const now = Date.now();
-    const coalesce = !!options.key && options.key === this.lastChange.key && now - this.lastChange.at < COALESCE_MS;
+    const coalesce =
+      !!options.key &&
+      options.key === this.lastChange.key &&
+      now - this.lastChange.at < COALESCE_MS;
     if (!coalesce) this.past.update((p) => [...p, before].slice(-HISTORY_LIMIT));
     this.lastChange = { key: options.key ?? '', at: now };
     this.future.set([]);

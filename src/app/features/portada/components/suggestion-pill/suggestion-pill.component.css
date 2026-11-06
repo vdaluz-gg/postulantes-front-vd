@@ -1,2 +1,20 @@
-:host{font:500 12px var(--font-display);color:var(--mut);background:none;border:1px dashed var(--line);border-radius:999px;padding:6px 11px;min-height:32px;cursor:pointer;transition:color .2s,border-color .2s}
-:host(:hover),:host(:focus-visible),:host(.on){color:var(--ink);border-color:var(--acc);outline:none}
+:host {
+  font: 500 12px var(--font-display);
+  color: var(--mut);
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  padding: 6px 11px;
+  min-height: 32px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+:host(:hover),
+:host(:focus-visible),
+:host(.on) {
+  color: var(--ink);
+  border-color: var(--acc);
+  outline: none;
+}
