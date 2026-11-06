@@ -8,7 +8,7 @@ Tiene dos partes:
 - **Backoffice**: el equipo administra lo que esos tres públicos ven y completan.
 
 Las ofertas y la postulación (datos y CV) ya usan la API de [`postulantes-back-vd`](#conexión-con-el-backend).
-El ingreso y la configuración del backoffice siguen simulados. Cada servicio cambia de simulado a HTTP sin tocar pantallas.
+El ingreso al backoffice también. La configuración del backoffice sigue simulada, porque el backend no tiene esos endpoints. Cada servicio cambia de simulado a HTTP sin tocar pantallas.
 
 ---
 
@@ -96,16 +96,35 @@ Herramienta interna para que el equipo administre, sin tocar código, lo que ven
 
 ### Ingreso
 
-Correo y contraseña. Por ahora valida contra usuarios de prueba (`MockAuthApi`):
+Correo y contraseña contra el backend: `POST /auth/login` devuelve un JWT y el perfil.
 
-| Usuario | Contraseña | Rol |
+**Cuentas de desarrollo.** Hay que darlas de alta una vez en la base local, con `POST /auth/register` y la clave `ADMIN_REGISTRATION_KEY` del `.env` del backend:
+
+| Usuario | Contraseña | Rol en el backend |
 |---|---|---|
-| `marketing@ejemplo.com` | `Marketing2026` | marketing |
-| `admin@ejemplo.com` | `Backoffice2026` | admin |
+| `marketing@ejemplo.com` | `Marketing2026` | `admin` (el rol `marketing` todavía no existe) |
+| `admin@ejemplo.com` | `Backoffice2026` | `admin` |
 
-- **Atajo:** el botón "Entrar con datos de ejemplo" entra como Marketing.
-- **Duración de la sesión:** se guarda en `sessionStorage`, así que se cierra al cerrar la pestaña.
-- **Rutas protegidas:** sin sesión, el guard manda al ingreso y después vuelve a la pantalla que se había pedido.
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/register -H "Content-Type: application/json" \
+  -d '{"email":"admin@ejemplo.com","fullName":"Administración","password":"Backoffice2026","registrationKey":"<clave del .env>"}'
+```
+
+Estas cuentas son solo para desarrollo: **no crearlas en producción**, porque la contraseña está en este README y en el código.
+
+- **Atajo:** el botón "Entrar con datos de ejemplo" entra como Marketing. Solo aparece en desarrollo (`isDevMode()`).
+- **Duración de la sesión:**
+  - Se guarda en `sessionStorage`, así que se cierra al cerrar la pestaña.
+  - El token del backend dura 8 horas (`JWT_EXPIRES_IN`).
+- **Rutas protegidas:**
+  - Sin sesión, el guard manda al ingreso y después vuelve a la pantalla que se había pedido.
+  - Al entrar al editor con una sesión guardada, el guard la confirma con `GET /auth/me` y actualiza el perfil.
+- **Sesión vencida:**
+  - Si el servidor rechaza el token (401), la sesión se cierra y el ingreso avisa "Tu sesión venció".
+  - Después de ingresar, vuelve a la misma pantalla.
+  - El interceptor avisa con `API_UNAUTHORIZED`, así que también vale para cualquier pedido futuro del backoffice.
+  - Si el servidor no responde, deja pasar: igual la API rechaza lo que no corresponda.
+- **Modo simulado:** con `USE_BACKEND = false`, `MockAuthApi` valida contra estas mismas cuentas sin backend.
 
 ### Editor
 
@@ -167,7 +186,7 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 |---|---|---|---|---|
 | `OffersApi` | `MockOffersApi` (`public/mock/ofertas.json`) | `HttpOffersApi` | `GET /job-offers` | Backend |
 | `CandidacyApi` | `MockCandidacyApi` | `HttpCandidacyApi` | `POST /cv`, `GET /zones`, `POST /applications` | Backend |
-| `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login` | Simulado |
+| `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login`, `GET /auth/me` | Backend |
 | `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` (**a crear**) | Simulado |
 
 **Cómo se elige**
@@ -189,9 +208,14 @@ Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada
 **Pendiente del lado del backend** (hoy no existe):
 
 - **Configuración:** el módulo `site-config`, con el contrato documentado en `data/site-config.model.ts`.
-- **Roles:**
-  - Hoy son `admin` y `superadmin`.
-  - Falta `marketing`, y aplicar `@Roles()` en las rutas del backoffice.
+- **Rol `marketing`:**
+  - Hoy los roles son `admin` y `superadmin`, y `POST /auth/register` siempre crea `admin`.
+  - Falta sumar `marketing` a `ADMIN_ROLES` (`auth/entities/admin.entity.ts`) y una forma de elegir el rol al dar el alta (por ejemplo, que solo un `superadmin` pueda hacerlo).
+- **Permisos por ruta:**
+  - Ninguna ruta del backoffice usa `@Roles()`, así que cualquier cuenta entra a todo.
+  - Hoy la cuenta de marketing puede leer postulantes y postulaciones (`/backoffice/candidates`, `/backoffice/applications`), con datos personales.
+  - Hay que restringir esas rutas a `admin` y `superadmin` cuando exista `marketing`.
+- **Cuentas:** no hay cómo crear un `superadmin`, cambiar o recuperar la contraseña, ni cerrar la sesión del lado del servidor (el token vale hasta que vence).
 - **Entidades:** clientes, avisos y repositorio de documentos.
 
 ---
