@@ -21,12 +21,6 @@ interface Press {
   moved: boolean;
 }
 
-/**
- * Figura de un perfil en la portada: zona clickeable, halo, luz de piso y la pregunta
- * "¿Sos ...?". Con avatar 3D configurado lo renderiza; mientras carga, o si el navegador
- * no puede mostrarlo, queda la silueta. Arrastrando en horizontal (o con las flechas) el
- * avatar gira sobre sí mismo; un click sin arrastre elige el perfil.
- */
 @Component({
   selector: 'app-persona-figure',
   imports: [HoloAvatarComponent],
