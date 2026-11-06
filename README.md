@@ -7,8 +7,8 @@ Tiene dos partes:
 - **Portada**: los postulantes, clientes y colaboradores eligen su perfil.
 - **Backoffice**: el equipo administra lo que esos tres públicos ven y completan.
 
-Hoy todo funciona con **datos simulados**. La capa de datos ya tiene la forma de la API de
-[`postulantes-back-vd`](#conexión-con-el-backend), así que conectarla es cambiar implementaciones, no pantallas.
+Las ofertas y la postulación (datos y CV) ya usan la API de [`postulantes-back-vd`](#conexión-con-el-backend).
+El ingreso y la configuración del backoffice siguen simulados. Cada servicio cambia de simulado a HTTP sin tocar pantallas.
 
 ---
 
@@ -28,6 +28,7 @@ npm start            # http://localhost:4200
 | `npm test` | Chequeo de tipos (app y tests) y después todos los tests de Jest. |
 | `npm run typecheck` | Solo el chequeo de tipos. |
 | `npx jest ruta/al.spec.ts` | Un archivo de tests. |
+| `npm run smoke:firefox` | Prueba de humo en Firefox, con `npm start` corriendo (ver [Navegadores](#navegadores)). Pide Node 22 o superior. |
 
 Rutas:
 
@@ -82,9 +83,10 @@ src/
 - **Perfiles:** postulante, cliente y colaborador. El postulante tiene avatar 3D: arranca oscuro, se ilumina con el hover y gira al arrastrarlo.
 - **Panel del postulante:**
   - Búsqueda de ofertas con IA y detalle de la oferta. Solo se muestran los campos públicos.
-  - Carga del CV y formulario de contacto validado.
+  - Carga del CV y formulario de contacto validado (nombre, DNI, email, WhatsApp, zona y puesto).
+  - Al enviar, muestra el código de seguimiento. Si el backend rechaza la postulación, vuelve al formulario con el motivo.
   - Vistas previas de los temas: ofertas cercanas, aviso por WhatsApp y seguimiento de la postulación.
-- **Ofertas:** salen de `public/mock/ofertas.json`, que tiene el mismo formato que la ficha interna. `toJobPosting` deja solo lo que ve el postulante.
+- **Ofertas:** con el backend salen de `GET /job-offers`. En modo simulado, de `public/mock/ofertas.json`, que tiene el formato de la ficha interna; `toJobPosting` deja solo lo que ve el postulante.
 
 ---
 
@@ -161,17 +163,28 @@ El backend es `postulantes-back-vd`: NestJS, PostgreSQL y Docker, con la base `h
 
 Cada acceso a datos es una clase abstracta con dos implementaciones, la simulada y la HTTP:
 
-| Servicio | Simulado (hoy) | HTTP (listo para usar) | Endpoint |
-|---|---|---|---|
-| `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login` (existe) |
-| `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` (**a crear**) |
-| `OffersApi` | `public/mock/ofertas.json` | — | `GET /job-offers` (existe) |
+| Servicio | Simulado | HTTP | Endpoint | Hoy usa |
+|---|---|---|---|---|
+| `OffersApi` | `MockOffersApi` (`public/mock/ofertas.json`) | `HttpOffersApi` | `GET /job-offers` | Backend |
+| `CandidacyApi` | `MockCandidacyApi` | `HttpCandidacyApi` | `POST /cv`, `GET /zones`, `POST /applications` | Backend |
+| `AuthApi` | `MockAuthApi` | `HttpAuthApi` | `POST /auth/login` | Simulado |
+| `SiteConfigApi` | `MockSiteConfigApi` (`localStorage`) | `HttpSiteConfigApi` | `GET` / `PUT /backoffice/site-config`, `POST /backoffice/site-config/publish` (**a crear**) | Simulado |
 
-**Pasos para conectar**
+**Cómo se elige**
 
-1. Levantar el backend (`docker compose up`). Su CORS ya acepta `http://localhost:4200`.
-2. Cambiar el `useFactory` del servicio por la versión HTTP. Por ejemplo, en `auth.api.ts`: `useFactory: () => new HttpAuthApi()`.
-3. Si la API corre en otra URL, proveer `API_BASE_URL` en `app.config.ts`.
+- `src/app/app.backend.ts` tiene `USE_BACKEND`. En `true`, `provideBackendApis()` usa las versiones HTTP de la tabla; en `false`, todo vuelve a lo simulado sin tocar componentes.
+- Para sumar otro servicio, agregarlo a `provideBackendApis()`: `{ provide: AuthApi, useClass: HttpAuthApi }`.
+
+**Qué guarda la postulación**
+
+1. **CV:** `POST /cv` guarda el archivo y devuelve un `cvId` y los datos que leyó la IA.
+2. **Zona:** el texto se busca en `GET /zones`, sin tildes ni mayúsculas. Se envía `zoneId` solo si coincide.
+3. **Postulación:** `POST /applications` crea o actualiza al postulante y vincula la oferta (`offerCode`) y el CV (`cvId`). Devuelve el código de seguimiento (`GG-XXXXXX`).
+
+**Pasos para levantarlo**
+
+1. Levantar el backend (`docker compose up`). Su CORS acepta solo `http://localhost:4200`, el puerto de `npm start`.
+2. Si la API corre en otra URL, proveer `API_BASE_URL` en `app.config.ts`.
 
 **Pendiente del lado del backend** (hoy no existe):
 
@@ -192,7 +205,25 @@ Jest 30 con `jest-preset-angular` (zoneless):
 | `features/backoffice/data/site-config.spec.ts` | Modelo, carga inicial y operaciones del editor. |
 | `features/backoffice/data/backoffice-data.spec.ts` | Login, API simulada, interceptor y estado del editor (deshacer y guardado). |
 | `features/backoffice/backoffice-ui.spec.ts` | Ingreso, guard, edición desde el panel y deshacer desde el aviso. |
-| `features/portada/**/*.spec.ts` | Portada, ofertas, CV y formulario del postulante. |
+| `features/portada/**/*.spec.ts` | Portada, ofertas, CV, formulario y postulación (simulada y HTTP). |
+
+---
+
+## Navegadores
+
+Chrome, Edge, Firefox y Safari: las dos últimas versiones de cada uno, más Firefox ESR (la lista por defecto de Angular, `npx browserslist`).
+
+**Prueba en Firefox:** con `npm start` corriendo, `npm run smoke:firefox`.
+
+- Abre Firefox sin ventana y recorre la portada (figuras 3D, ofertas y formulario), el ancho de celular y el editor del backoffice.
+- Falla si algo no aparece o si hay errores en la consola.
+- No envía postulaciones, así que no deja datos en el backend.
+- No necesita dependencias: maneja Firefox por WebDriver BiDi. Si Firefox no está en la ruta de siempre, indicarla con `FIREFOX_BIN`. `HEADED=1` muestra la ventana.
+
+**Reglas para que se vea igual en todos**
+
+- **Pesos con la fuente del sistema (`--font`):** usar solo 400, 600 o 700. Segoe UI no tiene 500: Chrome lo muestra como 600 y Firefox como 400. Plus Jakarta y DM Mono se cargan con 500, así que ahí sí se puede usar.
+- **Transición de color al cambiar de público:** usa `@property`. Los navegadores que no lo soportan (Firefox antes de la 128) cambian el color sin transición; el resto funciona igual.
 
 ---
 
