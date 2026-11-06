@@ -5,6 +5,7 @@ import { SoundService } from '../../../../core/services/sound.service';
 import { ThemeToggleComponent } from '../../../../shared/ui/molecules/theme-toggle/theme-toggle.component';
 import { DEMO_USERS } from '../../data/auth.api';
 import { AuthStore } from '../../data/auth.store';
+import { BoBrandComponent } from '../../ui/bo-brand/bo-brand.component';
 import { BoButtonComponent } from '../../ui/bo-button/bo-button.component';
 import { BoTextFieldComponent } from '../../ui/bo-text-field/bo-text-field.component';
 
@@ -13,7 +14,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** Ingreso con correo y contraseña. Hoy valida contra usuarios de prueba (MockAuthApi). */
 @Component({
   selector: 'app-backoffice-login',
-  imports: [BoButtonComponent, BoTextFieldComponent, ThemeToggleComponent],
+  imports: [BoBrandComponent, BoButtonComponent, BoTextFieldComponent, ThemeToggleComponent],
   templateUrl: './login.page.html',
   styleUrl: './login.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

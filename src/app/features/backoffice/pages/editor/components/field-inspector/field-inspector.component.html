@@ -20,7 +20,7 @@
   </app-prop-group>
 
   <app-prop-group legend="Color">
-    <div class="tones" role="group" aria-label="Color del campo">
+    <div class="tones" role="group" aria-label="Color del campo" [style.--sec]="audienceColor()">
       @for (tone of tones; track tone.value) {
         <button type="button" class="tone" [class]="'t-' + tone.value" [attr.aria-pressed]="f.tone === tone.value" (click)="setTone(tone.value)">
           <span class="sw" aria-hidden="true"></span>{{ tone.label }}

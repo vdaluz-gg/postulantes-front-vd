@@ -5,6 +5,8 @@ let nextId = 0;
 export interface BoOption {
   readonly value: string;
   readonly label: string;
+  /** Color que identifica la opción (punto y subrayado en el control segmentado). */
+  readonly color?: string;
 }
 
 /** Lista desplegable nativa con etiqueta: `[(value)]`. */

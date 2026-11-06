@@ -3,7 +3,7 @@ import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.compo
 import { IconName } from '../../../../../../shared/ui/atoms/icon/icons';
 import { normalize } from '../../../../../../shared/utils/text';
 import { EditorStore } from '../../../../data/editor.store';
-import { ALERT_LEVEL_LABEL, CHANNEL_LABEL, FieldType } from '../../../../data/site-config.model';
+import { ALERT_LEVEL_LABEL, AUDIENCE_LABEL, CHANNEL_LABEL, FieldType } from '../../../../data/site-config.model';
 import { ItemList, Selection, addField, addItem, addSection, sameSelection } from '../../../../data/site-config.ops';
 import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 
@@ -52,6 +52,7 @@ const CHANNEL_ICON: Partial<Record<string, IconName>> = { whatsapp: 'wa', phone:
 export class LayersPanelComponent {
   protected readonly store = inject(EditorStore);
   protected readonly query = signal('');
+  protected readonly audienceLabel = computed(() => AUDIENCE_LABEL[this.store.audience()]);
 
   protected readonly groups = computed<LayerGroup[]>(() => {
     const a = this.store.current();

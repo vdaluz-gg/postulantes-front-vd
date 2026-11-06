@@ -51,6 +51,8 @@ export class FieldInspectorComponent {
 
   protected readonly typeOptions = FIELD_TYPES.map((value) => ({ value, label: FIELD_TYPE_LABEL[value] }));
   protected readonly tones = FIELD_TONES.map((value) => ({ value, label: FIELD_TONE_LABEL[value] }));
+  /** El color «del portal» depende del público que se edita. */
+  protected readonly audienceColor = computed(() => `var(--aud-${this.store.audience()})`);
   protected readonly patternHelp = 'Para el equipo técnico. Ej.: ^\\d{7,8}$ para un DNI.';
 
   protected readonly field = computed(() => {

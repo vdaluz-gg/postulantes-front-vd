@@ -1,8 +1,8 @@
 @if (store.current(); as a) {
   <div class="frame" [class]="'aud-' + a.audience + ' ' + device()" [class.clean]="clean()">
     <header class="portal-top">
-      <span class="pmark" aria-hidden="true"></span>
-      <span class="pt"><b>Grupo Gestión</b><small>{{ audienceLabel() }}</small></span>
+      <img src="assets/brand/grupo-gestion-blanco.png" alt="Grupo Gestión" width="130" height="42" />
+      <span class="who">Portal de {{ audienceLabel() }}</span>
     </header>
 
     <div class="page">

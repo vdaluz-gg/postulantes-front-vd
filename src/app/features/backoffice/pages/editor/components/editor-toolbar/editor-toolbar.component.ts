@@ -5,6 +5,7 @@ import { AuthStore } from '../../../../data/auth.store';
 import { EditorStore } from '../../../../data/editor.store';
 import { AUDIENCES, AUDIENCE_LABEL, Audience } from '../../../../data/site-config.model';
 import { ConfigIssue } from '../../../../data/site-config.ops';
+import { BoBrandComponent } from '../../../../ui/bo-brand/bo-brand.component';
 import { BoButtonComponent } from '../../../../ui/bo-button/bo-button.component';
 import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { IslandService } from '../../../../ui/bo-island/island.service';
@@ -18,7 +19,7 @@ export type PreviewDevice = 'desktop' | 'mobile';
  */
 @Component({
   selector: 'app-editor-toolbar',
-  imports: [BoButtonComponent, BoIconButtonComponent, BoSegmentedComponent, ThemeToggleComponent],
+  imports: [BoBrandComponent, BoButtonComponent, BoIconButtonComponent, BoSegmentedComponent, ThemeToggleComponent],
   templateUrl: './editor-toolbar.component.html',
   styleUrl: './editor-toolbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +34,7 @@ export class EditorToolbarComponent {
   private readonly router = inject(Router);
   private readonly island = inject(IslandService);
 
-  protected readonly audiences = AUDIENCES.map((value) => ({ value, label: AUDIENCE_LABEL[value] }));
+  protected readonly audiences = AUDIENCES.map((value) => ({ value, label: AUDIENCE_LABEL[value], color: `var(--aud-${value})` }));
   protected readonly admin = this.auth.admin;
   protected readonly initials = computed(() =>
     (this.admin()?.fullName ?? '')

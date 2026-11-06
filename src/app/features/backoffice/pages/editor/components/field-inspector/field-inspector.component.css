@@ -4,7 +4,7 @@
 .tone:hover{background:var(--surface2)}
 .tone[aria-pressed="true"]{border-color:var(--vio);background:var(--tint-vio)}
 .sw{flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--line2);background:var(--surface)}
-.t-section .sw{border-color:#8b3bf0;background:rgba(139,59,240,.25)}
+.t-section .sw{border-color:var(--sec);background:color-mix(in srgb,var(--sec) 25%,transparent)}
 .t-positive .sw{border-color:var(--mint);background:var(--tint-mint)}
 .t-alert .sw{border-color:var(--fuc);background:var(--tint-fuc)}
 .note{font-size:12px;color:var(--mut)}
