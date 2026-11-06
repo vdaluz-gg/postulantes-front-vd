@@ -28,6 +28,7 @@ export abstract class AuthApi {
   abstract login(email: string, password: string): Observable<LoginResponse>;
 }
 
+@Injectable()
 export class HttpAuthApi extends AuthApi {
   private readonly http = inject(HttpClient);
   private readonly base = inject(API_BASE_URL);
@@ -45,6 +46,7 @@ export const DEMO_USERS: readonly (AdminProfile & { readonly password: string })
 
 const MOCK_DELAY_MS = 600;
 
+@Injectable()
 export class MockAuthApi extends AuthApi {
   login(email: string, password: string): Observable<LoginResponse> {
     const user = DEMO_USERS.find((u) => u.email === email.trim().toLowerCase() && u.password === password);

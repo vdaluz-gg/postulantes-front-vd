@@ -20,6 +20,7 @@ export abstract class SiteConfigApi {
   abstract publish(config: SiteConfig, author: string): Observable<SiteConfig>;
 }
 
+@Injectable()
 export class HttpSiteConfigApi extends SiteConfigApi {
   private readonly http = inject(HttpClient);
   private readonly base = `${inject(API_BASE_URL)}/backoffice/site-config`;
@@ -44,6 +45,7 @@ interface StoredConfig {
 
 const MOCK_DELAY_MS = 400;
 
+@Injectable()
 export class MockSiteConfigApi extends SiteConfigApi {
   private readonly storage = inject(StorageService);
 
