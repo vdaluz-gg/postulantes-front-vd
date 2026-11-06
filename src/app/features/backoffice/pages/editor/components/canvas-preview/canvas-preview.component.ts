@@ -5,6 +5,7 @@ import { AUDIENCE_LABEL } from '../../../../data/site-config.model';
 import { Selection, sameSelection } from '../../../../data/site-config.ops';
 import { AlertPreviewComponent } from '../alert-preview/alert-preview.component';
 import { ChannelPreviewComponent } from '../channel-preview/channel-preview.component';
+import { CopyPreviewComponent } from '../copy-preview/copy-preview.component';
 import { DocumentPreviewComponent } from '../document-preview/document-preview.component';
 import { PreviewDevice } from '../editor-toolbar/editor-toolbar.component';
 import { FieldPreviewComponent } from '../field-preview/field-preview.component';
@@ -16,7 +17,7 @@ import { FieldPreviewComponent } from '../field-preview/field-preview.component'
  */
 @Component({
   selector: 'app-canvas-preview',
-  imports: [AlertPreviewComponent, ChannelPreviewComponent, DocumentPreviewComponent, FieldPreviewComponent],
+  imports: [AlertPreviewComponent, ChannelPreviewComponent, CopyPreviewComponent, DocumentPreviewComponent, FieldPreviewComponent],
   templateUrl: './canvas-preview.component.html',
   styleUrl: './canvas-preview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,9 +50,5 @@ export class CanvasPreviewComponent {
   protected pick(selection: Selection, event?: Event): void {
     event?.stopPropagation();
     if (!this.clean()) this.store.select(selection);
-  }
-
-  protected copyLines(value: string): string[] {
-    return value.split('\n').filter((line) => line.trim());
   }
 }

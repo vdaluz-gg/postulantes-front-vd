@@ -21,24 +21,17 @@
       @if (a.copy.length) {
         <section class="card">
           <p class="eyebrow">Textos del portal</p>
-          <div class="copy">
+          <div class="fields">
             @for (c of a.copy; track c.id) {
               <button
                 type="button"
-                class="copy-item pick"
+                class="pick item field"
                 [class.wide]="c.multiline"
                 [attr.data-sel]="sel({ kind: 'copy', audience: a.audience, id: c.id })"
                 [attr.aria-label]="'Texto: ' + c.label"
                 (click)="pick({ kind: 'copy', audience: a.audience, id: c.id })"
               >
-                <span class="lb">{{ c.label }}</span>
-                <span class="val">
-                  @for (line of copyLines(c.value); track $index) {
-                    <span>{{ line }}</span>
-                  } @empty {
-                    <span class="mut">Sin texto</span>
-                  }
-                </span>
+                <app-copy-preview [copy]="c" />
               </button>
             }
           </div>

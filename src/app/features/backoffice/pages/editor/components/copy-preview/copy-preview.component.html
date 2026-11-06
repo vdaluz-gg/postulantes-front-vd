@@ -1,0 +1,8 @@
+<span class="lb">{{ copy().label }}</span>
+<span class="val">
+  @for (line of lines(); track $index) {
+    <span>{{ line }}</span>
+  } @empty {
+    <span class="empty">Sin texto</span>
+  }
+</span>
