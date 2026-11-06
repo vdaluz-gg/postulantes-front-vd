@@ -5,12 +5,12 @@
  * acentos. --band lleva texto blanco (AA); --pv es el acento sobre el fondo del lienzo.
  * El violeta del postulante en oscuro es el más claro de la portada, para que contraste.
  */
-.frame{--band:var(--band-postulantes,#8b3bf0);--pv:#a66bff;--pv-t:#c7a6ff;--pv-on:#0f0820;--pv-tint:rgba(166,107,255,.16);--al-line:color-mix(in srgb,var(--fuc) 40%,var(--line));--al-bg:var(--tint-fuc);--al-ic:var(--fuc-t)}
-.frame.aud-clientes{--band:var(--band-clientes,#c42a7f);--pv:#ff5fae;--pv-t:#ff8cc4;--pv-on:#1a0a14;--pv-tint:rgba(255,95,174,.15);--al-line:rgba(255,180,84,.45);--al-bg:rgba(255,180,84,.12);--al-ic:#ffb454}
+.frame{--band:var(--band-postulantes,#8b3bf0);--pv:#a66bff;--pv-t:#c7a6ff;--pv-on:#0f0820;--pv-tint:rgba(166,107,255,.16);--al-tone:var(--fuc);--al-ic:var(--fuc-t)}
+.frame.aud-clientes{--band:var(--band-clientes,#c42a7f);--pv:#ff5fae;--pv-t:#ff8cc4;--pv-on:#1a0a14;--pv-tint:rgba(255,95,174,.15);--al-tone:#ffb454;--al-ic:#ffb454}
 .frame.aud-colaboradores{--band:var(--band-colaboradores,#46b191);--band-on:var(--band-on-colaboradores,#052219);--pv:#46b191;--pv-t:#8fdcc2;--pv-on:#052219;--pv-tint:rgba(70,177,145,.16);--cta:#3fd6a2}
 .frame{--cta-text:var(--ink);--bg:color-mix(in srgb,var(--pv) 7%,#141419);--surface:color-mix(in srgb,var(--pv) 5%,#1c1c23);--surface2:color-mix(in srgb,var(--pv) 9%,#26262f)}
 :host-context([data-theme="light"]) .frame{--pv:#7a2be3;--pv-t:#6a20cf;--pv-on:#fff;--pv-tint:rgba(122,43,227,.10)}
-:host-context([data-theme="light"]) .frame.aud-clientes{--pv:#c42a7f;--pv-t:#a81f6c;--pv-tint:rgba(196,42,127,.09);--al-ic:#8a4b00}
+:host-context([data-theme="light"]) .frame.aud-clientes{--pv:#c42a7f;--pv-t:#a81f6c;--pv-tint:rgba(196,42,127,.09);--al-tone:#c47a1a;--al-ic:#8a4b00}
 :host-context([data-theme="light"]) .frame.aud-colaboradores{--pv:#46b191;--pv-t:#0e6650;--pv-on:#052219;--pv-line:#2f9477;--pv-tint:rgba(70,177,145,.12)}
 :host-context([data-theme="light"]) .frame{--cta-text:var(--pv-t);--bg:color-mix(in srgb,var(--pv) 5%,#f7f7fa);--surface:#fff;--surface2:color-mix(in srgb,var(--pv) 6%,#f1f1f5)}
 
