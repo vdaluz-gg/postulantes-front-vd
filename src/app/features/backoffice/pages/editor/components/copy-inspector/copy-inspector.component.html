@@ -1,8 +1,8 @@
 @if (item(); as copy) {
   <app-inspector-head kind="Texto" [title]="copy.label" [dataKey]="copy.id">
-    <button boIconButton icon="arrowUp" label="Subir en la lista" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
-    <button boIconButton icon="arrowDown" label="Bajar en la lista" size="sm" [disabled]="position().last" (click)="move(1)"></button>
-    <button boIconButton icon="trash" label="Borrar el texto" size="sm" (click)="remove()"></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Subir en la lista" title="Subir en la lista" [disabled]="position().first" (click)="move(-1)"><svg appIcon="arrowUp"></svg></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Bajar en la lista" title="Bajar en la lista" [disabled]="position().last" (click)="move(1)"><svg appIcon="arrowDown"></svg></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar el texto" title="Borrar el texto" (click)="remove()"><svg appIcon="trash"></svg></button>
   </app-inspector-head>
 
   <app-prop-group legend="Texto">

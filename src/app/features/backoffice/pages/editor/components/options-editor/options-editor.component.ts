@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { FieldOption } from '../../../../data/site-config.model';
 import { uniqueId } from '../../../../data/site-config.ops';
-import { BoButtonComponent } from '../../../../ui/bo-button/bo-button.component';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 /** Clave estable a partir del texto: "Fines de semana" → "fines-de-semana". */
 const slug = (text: string) =>
@@ -19,7 +19,7 @@ const slug = (text: string) =>
  */
 @Component({
   selector: 'app-options-editor',
-  imports: [BoButtonComponent, BoIconButtonComponent],
+  imports: [IconComponent, MatButtonModule],
   templateUrl: './options-editor.component.html',
   styleUrl: './options-editor.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

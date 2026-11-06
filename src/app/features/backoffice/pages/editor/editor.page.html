@@ -5,7 +5,7 @@
   <div class="state" role="alert">
     <h1>No pudimos cargar la configuración</h1>
     <p>{{ store.error() }}</p>
-    <button boButton variant="pri" (click)="store.load()">Reintentar</button>
+    <button mat-flat-button type="button" (click)="store.load()">Reintentar</button>
   </div>
 } @else if (!ready()) {
   <div class="state" aria-busy="true">

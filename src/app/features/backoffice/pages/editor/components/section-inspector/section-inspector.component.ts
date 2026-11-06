@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { EditorStore } from '../../../../data/editor.store';
 import { FormSection } from '../../../../data/site-config.model';
 import { addField, findSection, removeSection, updateSection } from '../../../../data/site-config.ops';
-import { BoButtonComponent } from '../../../../ui/bo-button/bo-button.component';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { IslandService } from '../../../../ui/bo-island/island.service';
 import { BoTextFieldComponent } from '../../../../ui/bo-text-field/bo-text-field.component';
 import { InspectorHeadComponent } from '../inspector-head/inspector-head.component';
 import { PropGroupComponent } from '../prop-group/prop-group.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 /** Propiedades de una sección de formulario: título, descripción, pantalla y sus campos. */
 @Component({
   selector: 'app-section-inspector',
-  imports: [BoButtonComponent, BoIconButtonComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [IconComponent, MatButtonModule, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
   templateUrl: './section-inspector.component.html',
   styleUrl: './section-inspector.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

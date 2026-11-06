@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, model, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { ThemeToggleComponent } from '../../../../../../shared/ui/molecules/theme-toggle/theme-toggle.component';
 import { AuthStore } from '../../../../data/auth.store';
@@ -6,10 +7,9 @@ import { EditorStore } from '../../../../data/editor.store';
 import { AUDIENCES, AUDIENCE_LABEL, Audience } from '../../../../data/site-config.model';
 import { ConfigIssue } from '../../../../data/site-config.ops';
 import { BoBrandComponent } from '../../../../ui/bo-brand/bo-brand.component';
-import { BoButtonComponent } from '../../../../ui/bo-button/bo-button.component';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { IslandService } from '../../../../ui/bo-island/island.service';
 import { BoSegmentedComponent } from '../../../../ui/bo-segmented/bo-segmented.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 export type PreviewDevice = 'desktop' | 'mobile';
 
@@ -19,7 +19,7 @@ export type PreviewDevice = 'desktop' | 'mobile';
  */
 @Component({
   selector: 'app-editor-toolbar',
-  imports: [BoBrandComponent, BoButtonComponent, BoIconButtonComponent, BoSegmentedComponent, ThemeToggleComponent],
+  imports: [IconComponent, MatButtonModule, BoBrandComponent, BoSegmentedComponent, ThemeToggleComponent],
   templateUrl: './editor-toolbar.component.html',
   styleUrl: './editor-toolbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

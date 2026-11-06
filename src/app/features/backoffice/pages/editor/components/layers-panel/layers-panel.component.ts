@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 import { IconName } from '../../../../../../shared/ui/atoms/icon/icons';
 import { normalize } from '../../../../../../shared/utils/text';
 import { EditorStore } from '../../../../data/editor.store';
 import { ALERT_LEVEL_LABEL, AUDIENCE_LABEL, CHANNEL_LABEL, FieldType } from '../../../../data/site-config.model';
 import { ItemList, Selection, addField, addItem, addSection, sameSelection } from '../../../../data/site-config.ops';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 
 interface Layer {
   readonly selection: Selection;
@@ -44,7 +44,7 @@ const CHANNEL_ICON: Partial<Record<string, IconName>> = { whatsapp: 'wa', phone:
  */
 @Component({
   selector: 'app-layers-panel',
-  imports: [IconComponent, BoIconButtonComponent],
+  imports: [MatButtonModule, IconComponent],
   templateUrl: './layers-panel.component.html',
   styleUrl: './layers-panel.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

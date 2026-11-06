@@ -56,7 +56,7 @@ src/
       ├─ portada/               portada y panel de cada perfil
       └─ backoffice/
          ├─ data/               modelo, carga inicial, operaciones, APIs y estado del editor
-         ├─ ui/                 átomos del backoffice (botón, campos, switch, isla de avisos…)
+         ├─ ui/                 átomos del backoffice (marca, campos, switch, isla de avisos…)
          ├─ shell/              contenedor con el color de sección
          └─ pages/
             ├─ login/           ingreso
@@ -67,6 +67,7 @@ src/
 
 - **Componentes:** cada componente es standalone, con `.ts`, `.html` y `.css` separados y estilos encapsulados.
 - **Estilos:** solo tokens de `src/styles/tokens.css`. No se usan colores sueltos salvo los del sistema de diseño.
+- **Botones del backoffice:** son de Angular Material (`mat-flat-button`, `mat-stroked-button`, `mat-button`, `mat-icon-button`; clase `bo-sm` para la versión chica). No usan un tema prearmado: `src/styles/backoffice-material.css` les pasa los tokens del sistema. La portada no usa Material.
 - **Accesibilidad:** AA en tema claro y oscuro, foco visible, áreas táctiles de 44 px y teclado completo. Todo respeta "reducir movimiento".
 - **Idioma:**
   - Interfaz en español rioplatense con voseo.

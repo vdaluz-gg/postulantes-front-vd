@@ -1,8 +1,8 @@
 @if (item(); as alert) {
   <app-inspector-head kind="Aviso" [title]="alert.title" [dataKey]="alert.id">
-    <button boIconButton icon="arrowUp" label="Subir el aviso" size="sm" [disabled]="position().first" (click)="move(-1)"></button>
-    <button boIconButton icon="arrowDown" label="Bajar el aviso" size="sm" [disabled]="position().last" (click)="move(1)"></button>
-    <button boIconButton icon="trash" label="Borrar el aviso" size="sm" (click)="remove()"></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Subir el aviso" title="Subir el aviso" [disabled]="position().first" (click)="move(-1)"><svg appIcon="arrowUp"></svg></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Bajar el aviso" title="Bajar el aviso" [disabled]="position().last" (click)="move(1)"><svg appIcon="arrowDown"></svg></button>
+    <button mat-icon-button type="button" class="bo-sm" aria-label="Borrar el aviso" title="Borrar el aviso" (click)="remove()"><svg appIcon="trash"></svg></button>
   </app-inspector-head>
 
   <app-prop-group legend="Estado">

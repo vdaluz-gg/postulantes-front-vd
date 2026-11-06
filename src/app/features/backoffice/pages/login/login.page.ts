@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { errorMessage } from '../../../../core/api/api';
 import { SoundService } from '../../../../core/services/sound.service';
@@ -6,7 +7,6 @@ import { ThemeToggleComponent } from '../../../../shared/ui/molecules/theme-togg
 import { DEMO_USERS } from '../../data/auth.api';
 import { AuthStore } from '../../data/auth.store';
 import { BoBrandComponent } from '../../ui/bo-brand/bo-brand.component';
-import { BoButtonComponent } from '../../ui/bo-button/bo-button.component';
 import { BoTextFieldComponent } from '../../ui/bo-text-field/bo-text-field.component';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -14,7 +14,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** Ingreso con correo y contraseña. Hoy valida contra usuarios de prueba (MockAuthApi). */
 @Component({
   selector: 'app-backoffice-login',
-  imports: [BoBrandComponent, BoButtonComponent, BoTextFieldComponent, ThemeToggleComponent],
+  imports: [MatButtonModule, BoBrandComponent, BoTextFieldComponent, ThemeToggleComponent],
   templateUrl: './login.page.html',
   styleUrl: './login.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -28,7 +28,7 @@
           [(value)]="password"
           [error]="passwordError()"
         />
-        <button boButton variant="ghost" size="sm" type="button" [attr.aria-pressed]="showPassword()" (click)="showPassword.set(!showPassword())">
+        <button mat-button class="bo-sm" type="button" [attr.aria-pressed]="showPassword()" (click)="showPassword.set(!showPassword())">
           {{ showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña' }}
         </button>
       </div>
@@ -37,10 +37,10 @@
         <p class="form-err" role="alert">{{ formError() }}</p>
       }
 
-      <button boButton variant="pri" type="submit" [busy]="busy()" [disabled]="busy()">
+      <button mat-flat-button [attr.aria-busy]="busy() || null" type="submit" [disabled]="busy()">
         {{ busy() ? 'Ingresando…' : 'Ingresar' }}
       </button>
-      <button boButton type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
+      <button mat-stroked-button type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
     </form>
   </section>
 </main>

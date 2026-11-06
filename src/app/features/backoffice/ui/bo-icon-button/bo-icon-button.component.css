@@ -1,9 +1,0 @@
-:host{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .15s var(--ease)}
-:host(.sm){width:32px;height:32px;border-color:transparent;background:transparent;color:var(--mut)}
-:host(:hover){background:var(--surface2);color:var(--ink)}
-:host(:active){transform:scale(.96)}
-:host(.on){background:var(--tint-vio);border-color:color-mix(in srgb,var(--vio) 45%,var(--line));color:var(--vio-t)}
-:host([disabled]){opacity:.4;cursor:not-allowed;transform:none;background:transparent}
-svg{width:20px;height:20px}
-:host(.sm) svg{width:17px;height:17px}
-@media (pointer:coarse){:host(.sm){width:44px;height:44px}}

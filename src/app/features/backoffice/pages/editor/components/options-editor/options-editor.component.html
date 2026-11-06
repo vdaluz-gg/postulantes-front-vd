@@ -3,12 +3,12 @@
     <li>
       <label class="sr" [for]="'opt-' + i">Opción {{ i + 1 }} de {{ fieldLabel() }}</label>
       <input [id]="'opt-' + i" [value]="option.label" (input)="rename(i, $any($event.target).value)" />
-      <button boIconButton icon="arrowUp" [label]="'Subir «' + option.label + '»'" size="sm" [disabled]="first" (click)="move(i, -1)"></button>
-      <button boIconButton icon="arrowDown" [label]="'Bajar «' + option.label + '»'" size="sm" [disabled]="last" (click)="move(i, 1)"></button>
-      <button boIconButton icon="x" [label]="'Quitar «' + option.label + '»'" size="sm" (click)="remove(i)"></button>
+      <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="'Subir «' + option.label + '»'" [attr.title]="'Subir «' + option.label + '»'" [disabled]="first" (click)="move(i, -1)"><svg appIcon="arrowUp"></svg></button>
+      <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="'Bajar «' + option.label + '»'" [attr.title]="'Bajar «' + option.label + '»'" [disabled]="last" (click)="move(i, 1)"><svg appIcon="arrowDown"></svg></button>
+      <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="'Quitar «' + option.label + '»'" [attr.title]="'Quitar «' + option.label + '»'" (click)="remove(i)"><svg appIcon="x"></svg></button>
     </li>
   } @empty {
     <li class="empty">Sin opciones. Sumá al menos una.</li>
   }
 </ol>
-<button boButton variant="ghost" size="sm" (click)="add()">+ Sumar opción</button>
+<button mat-button type="button" class="bo-sm" (click)="add()">+ Sumar opción</button>

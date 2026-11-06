@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { EditorStore } from '../../../../data/editor.store';
 import {
   FIELD_TONES,
@@ -13,8 +14,6 @@ import {
   hasOptions,
 } from '../../../../data/site-config.model';
 import { addField, duplicateField, findField, findSection, moveField, removeField, updateField } from '../../../../data/site-config.ops';
-import { BoButtonComponent } from '../../../../ui/bo-button/bo-button.component';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { IslandService } from '../../../../ui/bo-island/island.service';
 import { BoSelectFieldComponent } from '../../../../ui/bo-select-field/bo-select-field.component';
 import { BoSwitchComponent } from '../../../../ui/bo-switch/bo-switch.component';
@@ -22,6 +21,7 @@ import { BoTextFieldComponent } from '../../../../ui/bo-text-field/bo-text-field
 import { InspectorHeadComponent } from '../inspector-head/inspector-head.component';
 import { OptionsEditorComponent } from '../options-editor/options-editor.component';
 import { PropGroupComponent } from '../prop-group/prop-group.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 const TEXT_TYPES: readonly FieldType[] = ['text', 'email', 'tel', 'textarea'];
 
@@ -29,8 +29,8 @@ const TEXT_TYPES: readonly FieldType[] = ['text', 'email', 'tel', 'textarea'];
 @Component({
   selector: 'app-field-inspector',
   imports: [
-    BoButtonComponent,
-    BoIconButtonComponent,
+    IconComponent,
+    MatButtonModule,
     BoSelectFieldComponent,
     BoSwitchComponent,
     BoTextFieldComponent,

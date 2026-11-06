@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { CHANNEL_KINDS, CHANNEL_LABEL, ChannelConfig, ChannelKind } from '../../../../data/site-config.model';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { BoSelectFieldComponent } from '../../../../ui/bo-select-field/bo-select-field.component';
 import { BoSwitchComponent } from '../../../../ui/bo-switch/bo-switch.component';
 import { BoTextFieldComponent } from '../../../../ui/bo-text-field/bo-text-field.component';
 import { InspectorHeadComponent } from '../inspector-head/inspector-head.component';
 import { ItemInspectorBase } from '../item-inspector.base';
 import { PropGroupComponent } from '../prop-group/prop-group.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 /** Qué se pide en "dato" según el tipo de canal. */
 const VALUE_FIELD: Partial<Record<ChannelKind, { label: string; placeholder: string; type: 'tel' | 'email' | 'url' }>> = {
@@ -19,7 +20,7 @@ const URL_FIELD = { label: 'Enlace', placeholder: 'https://…', type: 'url' as 
 /** Canal de contacto o red social: tipo, nombre visible, dato, horario y si se muestra. */
 @Component({
   selector: 'app-channel-inspector',
-  imports: [BoIconButtonComponent, BoSelectFieldComponent, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [IconComponent, MatButtonModule, BoSelectFieldComponent, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
   templateUrl: './channel-inspector.component.html',
   styleUrl: '../item-inspector.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

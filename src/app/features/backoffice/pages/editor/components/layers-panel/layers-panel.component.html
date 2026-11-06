@@ -1,7 +1,7 @@
 <div class="head">
   <h2>Capas</h2>
   <span class="aud" [style.--tone]="'var(--aud-' + store.audience() + ')'">{{ audienceLabel() }}</span>
-  <button boIconButton icon="plus" label="Sumar una sección de formulario" size="sm" (click)="addSection()"></button>
+  <button mat-icon-button type="button" class="bo-sm" aria-label="Sumar una sección de formulario" title="Sumar una sección de formulario" (click)="addSection()"><svg appIcon="plus"></svg></button>
 </div>
 
 <div class="search">
@@ -20,7 +20,7 @@
         } @else {
           <h3 class="gt plain" [id]="'g-' + group.id">{{ group.title }}</h3>
         }
-        <button boIconButton icon="plus" [label]="group.add.label" size="sm" (click)="group.add.run()"></button>
+        <button mat-icon-button type="button" class="bo-sm" [attr.aria-label]="group.add.label" [attr.title]="group.add.label" (click)="group.add.run()"><svg appIcon="plus"></svg></button>
       </div>
       @if (group.layers.length) {
         <ul>

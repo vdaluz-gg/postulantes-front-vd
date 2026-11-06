@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { ALERT_LEVELS, ALERT_LEVEL_LABEL, AlertConfig, AlertLevel } from '../../../../data/site-config.model';
-import { BoIconButtonComponent } from '../../../../ui/bo-icon-button/bo-icon-button.component';
 import { BoSegmentedComponent } from '../../../../ui/bo-segmented/bo-segmented.component';
 import { BoSwitchComponent } from '../../../../ui/bo-switch/bo-switch.component';
 import { BoTextFieldComponent } from '../../../../ui/bo-text-field/bo-text-field.component';
 import { InspectorHeadComponent } from '../inspector-head/inspector-head.component';
 import { ItemInspectorBase } from '../item-inspector.base';
 import { PropGroupComponent } from '../prop-group/prop-group.component';
+import { IconComponent } from '../../../../../../shared/ui/atoms/icon/icon.component';
 
 /** Aviso que se muestra arriba del portal: tono, texto, botón opcional y fechas de vigencia. */
 @Component({
   selector: 'app-alert-inspector',
-  imports: [BoIconButtonComponent, BoSegmentedComponent, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
+  imports: [IconComponent, MatButtonModule, BoSegmentedComponent, BoSwitchComponent, BoTextFieldComponent, InspectorHeadComponent, PropGroupComponent],
   templateUrl: './alert-inspector.component.html',
   styleUrl: '../item-inspector.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { EditorStore } from '../../data/editor.store';
-import { BoButtonComponent } from '../../ui/bo-button/bo-button.component';
 import { BoSegmentedComponent } from '../../ui/bo-segmented/bo-segmented.component';
 import { CanvasPreviewComponent } from './components/canvas-preview/canvas-preview.component';
 import { EditorToolbarComponent, PreviewDevice } from './components/editor-toolbar/editor-toolbar.component';
@@ -15,7 +15,7 @@ type Pane = 'layers' | 'canvas' | 'inspector';
  */
 @Component({
   selector: 'app-backoffice-editor',
-  imports: [BoButtonComponent, BoSegmentedComponent, CanvasPreviewComponent, EditorToolbarComponent, InspectorPanelComponent, LayersPanelComponent],
+  imports: [MatButtonModule, BoSegmentedComponent, CanvasPreviewComponent, EditorToolbarComponent, InspectorPanelComponent, LayersPanelComponent],
   templateUrl: './editor.page.html',
   styleUrl: './editor.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
