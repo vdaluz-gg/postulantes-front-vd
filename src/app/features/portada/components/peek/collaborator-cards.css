@@ -1,6 +1,7 @@
 /* Tarjetas del legajo del colaborador (cobro, recibos). Las comparten sus vistas previas. */
 :host{display:block}
 .card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line);margin-bottom:8px;animation:enter .45s both;animation-delay:calc(var(--k,0) * 90ms)}
+.card:last-child{margin-bottom:0}
 .card b{display:block;font-size:14px;font-weight:600}
 .card small{display:block;font:400 11.5px var(--font-mono);color:var(--mut)}
 .big{display:block;font-size:26px;font-weight:600;letter-spacing:-.03em;color:var(--acc)}

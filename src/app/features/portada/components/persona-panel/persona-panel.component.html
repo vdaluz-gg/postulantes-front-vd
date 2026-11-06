@@ -46,7 +46,7 @@
         @switch (flow().kind) {
           @case ('topic') {
             @if (activeChip()?.peek; as peek) {
-              <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()" [grow]="peek.kind === 'service'">
+              <div appPeekPanel [heading]="peek.title" [replayKey]="activeChipId()">
                 @switch (peek.kind) {
                   @case ('service') {
                     <div appServicePreview [service]="serviceById(peek.serviceId)"></div>
