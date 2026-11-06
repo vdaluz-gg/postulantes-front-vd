@@ -133,8 +133,10 @@ export class EditorStore {
       .pipe(finalize(() => this.status() === status && this.status.set('ready')))
       .subscribe({
         next: (stored) => {
-          // Si se siguió editando mientras guardaba, se conservan esos cambios.
+          // Si se siguió editando mientras guardaba, se conservan esos cambios con la versión nueva
+          // (el servidor rechaza un guardado sobre una versión vieja).
           if (this.config() === config) this.config.set(stored);
+          else this.config.update((c) => c && { ...c, version: stored.version });
           this.saved.set(this.config() === stored ? stored : config);
           onDone?.();
         },

@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
+import { Observable, catchError, delay, of, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../../core/api/api';
 import { STORAGE_KEYS, StorageService } from '../../../core/services/storage.service';
 import { SiteConfig } from './site-config.model';
 import { SITE_CONFIG_SEED } from './site-config.seed';
 
 /**
- * Lectura y guardado de la configuración. Hoy simulado en el navegador; la versión HTTP usa los
- * endpoints propuestos en site-config.model.ts (todavía no existen en el backend).
+ * Lectura y guardado de la configuración. Con backend usa los endpoints de site-config.model.ts;
+ * sin backend se simula en el navegador.
  */
 @Injectable({ providedIn: 'root', useFactory: () => new MockSiteConfigApi() })
 export abstract class SiteConfigApi {
@@ -25,8 +25,11 @@ export class HttpSiteConfigApi extends SiteConfigApi {
   private readonly http = inject(HttpClient);
   private readonly base = `${inject(API_BASE_URL)}/backoffice/site-config`;
 
+  /** Si todavía no se guardó nada (404), se arranca de la configuración inicial. */
   load(): Observable<SiteConfig> {
-    return this.http.get<SiteConfig>(this.base);
+    return this.http.get<SiteConfig>(this.base).pipe(
+      catchError((e: unknown) => (e instanceof HttpErrorResponse && e.status === 404 ? of(SITE_CONFIG_SEED) : throwError(() => e))),
+    );
   }
 
   save(config: SiteConfig): Observable<SiteConfig> {

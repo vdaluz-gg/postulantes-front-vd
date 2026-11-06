@@ -1,7 +1,9 @@
 import {
+  APPLICATION_SECTION,
   AlertConfig,
   Audience,
   AudienceConfig,
+  CORE_APPLICATION_FIELDS,
   ChannelConfig,
   CopyConfig,
   DocumentRequirement,
@@ -214,6 +216,22 @@ export interface ConfigIssue {
   readonly message: string;
 }
 
+/** Los datos que necesita la postulación tienen que estar, visibles, obligatorios y editables. */
+function coreFieldIssues(a: AudienceConfig): ConfigIssue[] {
+  const section = a.sections.find((s) => s.id === APPLICATION_SECTION);
+  if (!section) return [];
+  return CORE_APPLICATION_FIELDS.flatMap((id): ConfigIssue[] => {
+    const f = section.fields.find((x) => x.id === id);
+    if (!f) {
+      const message = `Falta el campo «${id}»: el sistema lo necesita para registrar la postulación.`;
+      return [{ selection: { kind: 'section', audience: 'postulantes', sectionId: section.id }, message }];
+    }
+    if (f.visible && f.required && !f.readonly) return [];
+    const message = `«${f.label}» lo necesita el sistema para registrar la postulación: dejalo visible y obligatorio.`;
+    return [{ selection: { kind: 'field', audience: 'postulantes', sectionId: section.id, id }, message }];
+  });
+}
+
 /** Problemas que impiden publicar: etiquetas vacías, listas sin opciones, ids repetidos, URLs mal formadas. */
 export function findIssues(config: SiteConfig): ConfigIssue[] {
   const issues: ConfigIssue[] = [];
@@ -238,6 +256,7 @@ export function findIssues(config: SiteConfig): ConfigIssue[] {
         }
       }
     }
+    if (audience === 'postulantes') issues.push(...coreFieldIssues(a));
     for (const d of a.documents) {
       const at: Selection = { kind: 'documents', audience, id: d.id };
       if (!d.name.trim()) issues.push({ selection: at, message: 'Un documento no tiene nombre.' });

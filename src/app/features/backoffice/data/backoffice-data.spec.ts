@@ -7,7 +7,7 @@ import { STORAGE_KEYS } from '../../../core/services/storage.service';
 import { AuthApi, DEMO_USERS, HttpAuthApi, MockAuthApi } from './auth.api';
 import { AuthStore } from './auth.store';
 import { EditorStore } from './editor.store';
-import { MockSiteConfigApi, SiteConfigApi } from './site-config.api';
+import { HttpSiteConfigApi, MockSiteConfigApi, SiteConfigApi } from './site-config.api';
 import { SiteConfig } from './site-config.model';
 import { addField, findField, updateField } from './site-config.ops';
 import { SITE_CONFIG_SEED } from './site-config.seed';
@@ -129,6 +129,46 @@ describe('HttpAuthApi', () => {
     expect(meReq.request.headers.get('Authorization')).toBe('Bearer jwt');
     meReq.flush(profile);
     expect(await me).toEqual(profile);
+    ctrl.verify();
+  });
+});
+
+describe('HttpSiteConfigApi', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: 'http://api' },
+        { provide: SiteConfigApi, useClass: HttpSiteConfigApi },
+      ],
+    }),
+  );
+
+  it('sin nada guardado en el servidor (404) arranca de la configuración inicial', async () => {
+    const api = TestBed.inject(SiteConfigApi);
+    const ctrl = TestBed.inject(HttpTestingController);
+    const loaded = firstValueFrom(api.load());
+    ctrl.expectOne('http://api/backoffice/site-config').flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
+    expect(await loaded).toBe(SITE_CONFIG_SEED);
+  });
+
+  it('guarda con PUT y publica con POST; otros errores siguen de largo', async () => {
+    const api = TestBed.inject(SiteConfigApi);
+    const ctrl = TestBed.inject(HttpTestingController);
+    const saved = firstValueFrom(api.save(SITE_CONFIG_SEED, 'Yo'));
+    const put = ctrl.expectOne('http://api/backoffice/site-config');
+    expect(put.request.method).toBe('PUT');
+    put.flush({ ...SITE_CONFIG_SEED, version: 2, status: 'draft' });
+    expect((await saved).version).toBe(2);
+
+    const published = firstValueFrom(api.publish(SITE_CONFIG_SEED, 'Yo'));
+    ctrl.expectOne('http://api/backoffice/site-config/publish').flush({ ...SITE_CONFIG_SEED, version: 3 });
+    expect((await published).version).toBe(3);
+
+    const failed = firstValueFrom(api.load());
+    ctrl.expectOne('http://api/backoffice/site-config').flush({ message: 'x' }, { status: 500, statusText: 'Error' });
+    await expect(failed).rejects.toBeInstanceOf(HttpErrorResponse);
     ctrl.verify();
   });
 });

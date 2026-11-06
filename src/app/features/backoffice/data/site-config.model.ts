@@ -2,7 +2,7 @@
  * Configuración que administra el backoffice: qué campos, documentos, avisos, canales y textos
  * ve cada público (postulantes, clientes y colaboradores).
  *
- * Contrato pensado para la API (postulantes-back-vd, todavía sin endpoint):
+ * Contrato de la API (postulantes-back-vd):
  *   GET  /backoffice/site-config          → SiteConfig (borrador vigente)
  *   PUT  /backoffice/site-config          → SiteConfig (guarda el borrador, incrementa version)
  *   POST /backoffice/site-config/publish  → SiteConfig (status: 'published')
@@ -179,6 +179,15 @@ export const CHANNEL_LABEL: Readonly<Record<ChannelKind, string>> = {
   x: 'X',
   tiktok: 'TikTok',
 };
+
+/** Sección de postulantes con el formulario de postulación de la portada. */
+export const APPLICATION_SECTION = 'application';
+
+/**
+ * Datos sin los que el backend no registra una postulación: no se pueden borrar, ocultar ni volver
+ * opcionales (el backend rechaza publicar una configuración así).
+ */
+export const CORE_APPLICATION_FIELDS: readonly string[] = ['fullName', 'email', 'dni', 'whatsapp'];
 
 /** Tipos que necesitan una lista de opciones. */
 export const hasOptions = (type: FieldType): boolean => type === 'select' || type === 'chips';

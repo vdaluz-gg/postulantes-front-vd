@@ -120,6 +120,19 @@ describe('revisión antes de publicar', () => {
     ]);
   });
 
+  it('no deja publicar sin los datos que necesita el backend para registrar la postulación', () => {
+    let config = updateField(seed, 'postulantes', 'application', 'dni', { visible: false });
+    config = updateField(config, 'postulantes', 'application', 'whatsapp', { required: false });
+    config = removeField(config, 'postulantes', 'application', 'email');
+    expect(findIssues(config).map((i) => i.message)).toEqual([
+      'Falta el campo «email»: el sistema lo necesita para registrar la postulación.',
+      '«DNI» lo necesita el sistema para registrar la postulación: dejalo visible y obligatorio.',
+      '«WhatsApp» lo necesita el sistema para registrar la postulación: dejalo visible y obligatorio.',
+    ]);
+    // La zona y los campos nuevos sí se pueden ocultar o volver opcionales.
+    expect(findIssues(updateField(seed, 'postulantes', 'application', 'zone', { visible: false }))).toEqual([]);
+  });
+
   it('pide https en las redes y fechas en orden en los avisos', () => {
     let config = updateItem(seed, 'postulantes', 'channels', 'linkedin', { value: 'linkedin.com/empresa' });
     config = updateItem(config, 'postulantes', 'alerts', 'no-money', { startsOn: '2026-12-10', endsOn: '2026-12-01' });
