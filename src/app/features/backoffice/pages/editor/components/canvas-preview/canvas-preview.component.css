@@ -37,19 +37,20 @@ button.pick{font:inherit;color:inherit;text-align:left}
 .mobile .card{padding:18px}
 .card h2{margin:4px 0;font-size:17px;letter-spacing:-.01em}
 .desc{font-size:13.5px;color:var(--mut);max-width:60ch}
-.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;margin-top:16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px;margin-top:18px}
 .mobile .fields{grid-template-columns:minmax(0,1fr)}
-.field{align-self:start;padding:6px;margin:-6px;width:auto;border-radius:14px}
+/* El borde de selección queda a 6 px del campo: con la separación de la grilla no se pisan. */
+.field{align-self:start;padding:6px;margin:-6px;width:auto;border-radius:14px;outline-offset:-2px}
 .field.wide{grid-column:1/-1}
 .empty{grid-column:1/-1;padding:16px;border:1px dashed var(--line2);border-radius:var(--r-s);color:var(--mut);font-size:13.5px;text-align:center}
 
-.copy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-.mobile .copy{grid-template-columns:minmax(0,1fr)}
-.copy-item{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:0;border-radius:var(--r-s);background:var(--surface2);min-width:0}
+/* Cada texto ocupa lo que mide, como se lee en el portal. */
+.copy{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px;margin-top:10px}
+.copy-item{display:flex;flex-direction:column;gap:2px;max-width:min(100%,420px);padding:10px 14px;border:0;border-radius:var(--r-s);background:var(--surface2);outline-offset:2px}
 .copy-item small{font-size:12px;color:var(--mut)}
 .copy-item span{font-size:14.5px;font-weight:600;overflow-wrap:anywhere}
 .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .list.row{flex-direction:row;flex-wrap:wrap}
 .mut{color:var(--mut)}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}}
-@media (max-width:860px){:host{padding:14px 12px 40px}.fields,.copy{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){:host{padding:14px 12px 40px}.fields{grid-template-columns:minmax(0,1fr)}}
