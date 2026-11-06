@@ -40,6 +40,8 @@
   --font-display:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
   --font-mono:"DM Mono",ui-monospace,Consolas,monospace;
 
+  /* Fuente del sistema, sin web-font. Segoe UI no tiene peso 500: Chrome lo muestra como 600 y
+     Firefox como 400. Con --font usar solo 400, 600 o 700. */
   --font:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
   --r:18px;--r-s:12px;--nav-w:272px;--bar-h:68px;
   --ease:cubic-bezier(.2,.7,.2,1);

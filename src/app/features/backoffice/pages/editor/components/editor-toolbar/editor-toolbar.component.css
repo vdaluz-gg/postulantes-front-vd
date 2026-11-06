@@ -13,7 +13,7 @@
 .pop.right{left:auto;right:0;width:260px;display:flex;flex-direction:column;gap:12px}
 .pop-t{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
 .pop ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:50vh;overflow:auto}
-.pop li button{width:100%;min-height:40px;padding:8px 10px;border:0;border-radius:10px;background:transparent;color:var(--ink);font:500 13.5px/1.35 var(--font);text-align:left}
+.pop li button{width:100%;min-height:40px;padding:8px 10px;border:0;border-radius:10px;background:transparent;color:var(--ink);font:600 13.5px/1.35 var(--font);text-align:left}
 .pop li button:hover{background:var(--surface2)}
 .who{display:flex;flex-direction:column;gap:2px;font-size:14px}
 .who span{font-size:12.5px;color:var(--mut);overflow-wrap:anywhere}
