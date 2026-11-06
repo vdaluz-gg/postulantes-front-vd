@@ -1,4 +1,5 @@
 import { Provider } from '@angular/core';
+import { AuthApi, HttpAuthApi } from './features/backoffice/data/auth.api';
 import { CandidacyApi, HttpCandidacyApi } from './features/portada/postulante/candidacy.api';
 import { HttpOffersApi, OffersApi } from './features/portada/postulante/offers.api';
 
@@ -13,5 +14,6 @@ export function provideBackendApis(): Provider[] {
   return [
     { provide: OffersApi, useClass: HttpOffersApi },
     { provide: CandidacyApi, useClass: HttpCandidacyApi },
+    { provide: AuthApi, useClass: HttpAuthApi },
   ];
 }

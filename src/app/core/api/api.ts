@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { InjectionToken, inject } from '@angular/core';
+import { tap } from 'rxjs';
 
 /**
  * Base de la API (postulantes-back-vd). Hoy el front usa datos simulados; al conectarla, cada
@@ -14,6 +15,12 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL', {
 export const API_TOKEN = new InjectionToken<() => string | null>('API_TOKEN', {
   providedIn: 'root',
   factory: () => () => null,
+});
+
+/** Qué hacer cuando la API rechaza el token (401). Lo provee la sesión del backoffice. */
+export const API_UNAUTHORIZED = new InjectionToken<() => void>('API_UNAUTHORIZED', {
+  providedIn: 'root',
+  factory: () => () => undefined,
 });
 
 /** Página de resultados, igual que la respuesta paginada del backend. */
@@ -35,6 +42,9 @@ export interface ApiError {
 
 /** Primer mensaje legible de un error de la API o de la red. */
 export function errorMessage(error: unknown, fallback = 'No pudimos completar la acción. Probá de nuevo.'): string {
+  if (error instanceof HttpErrorResponse && error.status === 429) {
+    return 'Hiciste muchos intentos seguidos. Esperá un minuto y probá de nuevo.';
+  }
   const body = error instanceof HttpErrorResponse ? (error.error as Partial<ApiError> | null) : (error as Partial<ApiError> | null);
   const message = body?.message;
   if (Array.isArray(message)) return message[0] ?? fallback;
@@ -43,9 +53,16 @@ export function errorMessage(error: unknown, fallback = 'No pudimos completar la
   return fallback;
 }
 
-/** Agrega `Authorization: Bearer …` solo a los pedidos que van a la API. */
+/** Agrega `Authorization: Bearer …` solo a los pedidos que van a la API, y avisa si el token ya no sirve. */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(API_TOKEN)();
   if (!token || !req.url.startsWith(inject(API_BASE_URL))) return next(req);
-  return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
+  const unauthorized = inject(API_UNAUTHORIZED);
+  return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })).pipe(
+    tap({
+      error: (e: unknown) => {
+        if (e instanceof HttpErrorResponse && e.status === 401) unauthorized();
+      },
+    }),
+  );
 };

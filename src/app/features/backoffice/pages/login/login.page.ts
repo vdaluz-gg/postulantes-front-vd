@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, isDevMode, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { errorMessage } from '../../../../core/api/api';
@@ -11,7 +11,7 @@ import { BoTextFieldComponent } from '../../ui/bo-text-field/bo-text-field.compo
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Ingreso con correo y contraseña. Hoy valida contra usuarios de prueba (MockAuthApi). */
+/** Ingreso con correo y contraseña contra `AuthApi` (backend o usuarios de prueba, según app.backend.ts). */
 @Component({
   selector: 'app-backoffice-login',
   imports: [MatButtonModule, BoBrandComponent, BoTextFieldComponent, ThemeToggleComponent],
@@ -33,7 +33,9 @@ export class LoginPage {
   protected readonly showPassword = signal(false);
   protected readonly emailError = signal('');
   protected readonly passwordError = signal('');
-  protected readonly formError = signal('');
+  protected readonly formError = signal(this.auth.expired() ? 'Tu sesión venció. Ingresá de nuevo para seguir.' : '');
+  /** El atajo con datos de ejemplo existe solo en desarrollo: en producción esas cuentas no deben existir. */
+  protected readonly demo = isDevMode();
   protected readonly busy = signal(false);
 
   protected submit(event?: Event): void {

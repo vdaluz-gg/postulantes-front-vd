@@ -1,10 +1,10 @@
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
-import { API_BASE_URL, API_TOKEN, authInterceptor, errorMessage } from '../../../core/api/api';
+import { API_BASE_URL, API_TOKEN, API_UNAUTHORIZED, authInterceptor, errorMessage } from '../../../core/api/api';
 import { STORAGE_KEYS } from '../../../core/services/storage.service';
-import { AuthApi, DEMO_USERS, MockAuthApi } from './auth.api';
+import { AuthApi, DEMO_USERS, HttpAuthApi, MockAuthApi } from './auth.api';
 import { AuthStore } from './auth.store';
 import { EditorStore } from './editor.store';
 import { MockSiteConfigApi, SiteConfigApi } from './site-config.api';
@@ -41,6 +41,12 @@ describe('login simulado', () => {
     jest.advanceTimersByTime(600);
     await expect(failed).rejects.toEqual(expect.objectContaining({ statusCode: 401, message: 'Credenciales inválidas' }));
   });
+
+  it('el mock también confirma el token, y rechaza uno desconocido', async () => {
+    const api = new MockAuthApi();
+    expect((await firstValueFrom(api.me(`mock.${DEMO_USERS[1].id}`))).email).toBe(DEMO_USERS[1].email);
+    await expect(firstValueFrom(api.me('otro'))).rejects.toEqual(expect.objectContaining({ statusCode: 401 }));
+  });
 });
 
 describe('API', () => {
@@ -65,6 +71,65 @@ describe('API', () => {
     http.get('mock/ofertas.json').subscribe();
     expect(ctrl.expectOne('http://api/backoffice/site-config').request.headers.get('Authorization')).toBe('Bearer abc');
     expect(ctrl.expectOne('mock/ofertas.json').request.headers.has('Authorization')).toBe(false);
+  });
+
+  it('si la API rechaza el token (401), avisa a la sesión; otros errores no', () => {
+    const unauthorized = jest.fn();
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([authInterceptor])),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: 'http://api' },
+        { provide: API_TOKEN, useValue: () => 'abc' },
+        { provide: API_UNAUTHORIZED, useValue: unauthorized },
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const ctrl = TestBed.inject(HttpTestingController);
+    http.get('http://api/a').subscribe({ error: () => undefined });
+    ctrl.expectOne('http://api/a').flush('x', { status: 500, statusText: 'Error' });
+    expect(unauthorized).not.toHaveBeenCalled();
+    http.get('http://api/b').subscribe({ error: () => undefined });
+    ctrl.expectOne('http://api/b').flush('x', { status: 401, statusText: 'Unauthorized' });
+    expect(unauthorized).toHaveBeenCalledTimes(1);
+  });
+
+  it('demasiados intentos (429) se explica en castellano', () => {
+    const error = new HttpErrorResponse({ status: 429, error: { statusCode: 429, message: 'ThrottlerException: Too Many Requests' } });
+    expect(errorMessage(error)).toBe('Hiciste muchos intentos seguidos. Esperá un minuto y probá de nuevo.');
+  });
+});
+
+describe('HttpAuthApi', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: 'http://api' },
+        { provide: AuthApi, useClass: HttpAuthApi },
+      ],
+    }),
+  );
+
+  it('ingresa con POST /auth/login y confirma el token con GET /auth/me', async () => {
+    const api = TestBed.inject(AuthApi);
+    const ctrl = TestBed.inject(HttpTestingController);
+    const profile = { id: 'a1', email: 'admin@ejemplo.com', fullName: 'Administración', role: 'admin' as const };
+
+    const login = firstValueFrom(api.login('admin@ejemplo.com', 'Backoffice2026'));
+    const req = ctrl.expectOne('http://api/auth/login');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ email: 'admin@ejemplo.com', password: 'Backoffice2026' });
+    req.flush({ accessToken: 'jwt', admin: profile });
+    expect(await login).toEqual({ accessToken: 'jwt', admin: profile });
+
+    const me = firstValueFrom(api.me('jwt'));
+    const meReq = ctrl.expectOne('http://api/auth/me');
+    expect(meReq.request.headers.get('Authorization')).toBe('Bearer jwt');
+    meReq.flush(profile);
+    expect(await me).toEqual(profile);
+    ctrl.verify();
   });
 });
 

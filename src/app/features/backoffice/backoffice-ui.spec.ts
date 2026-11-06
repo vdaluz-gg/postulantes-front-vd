@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { MotionService } from '../../core/services/motion.service';
 import { BACKOFFICE_ROUTES } from './backoffice.routes';
 import { AuthApi, DEMO_USERS } from './data/auth.api';
+import { AuthStore } from './data/auth.store';
 import { SiteConfigApi } from './data/site-config.api';
 import { SITE_CONFIG_SEED } from './data/site-config.seed';
 
@@ -46,6 +47,10 @@ describe('Backoffice', () => {
                 ? of({ accessToken: 'mock.test', admin })
                 : throwError(() => ({ statusCode: 401, error: 'Unauthorized', message: 'Credenciales inválidas' }));
             },
+            me: (token: string) =>
+              token === 'mock.test'
+                ? of({ ...admin, fullName: 'Nombre actualizado' })
+                : throwError(() => ({ statusCode: 401, error: 'Unauthorized', message: 'Token inválido o vencido' })),
           },
         },
         {
@@ -124,5 +129,32 @@ describe('Backoffice', () => {
     buttonByText('Deshacer').click();
     await settle();
     expect(count()).toBe(1);
+  });
+
+  it('una sesión guardada se confirma con el servidor y toma el perfil actualizado', async () => {
+    sessionStorage.setItem('gg_bo_ses', JSON.stringify({ accessToken: 'mock.test', admin }));
+    await harness.navigateByUrl('/backoffice');
+    await settle();
+    expect(TestBed.inject(Router).url).toBe('/backoffice');
+    expect(TestBed.inject(AuthStore).admin()!.fullName).toBe('Nombre actualizado');
+  });
+
+  it('si el token venció, cierra la sesión y avisa en el ingreso', async () => {
+    sessionStorage.setItem('gg_bo_ses', JSON.stringify({ accessToken: 'vencido', admin }));
+    await harness.navigateByUrl('/backoffice');
+    await settle();
+    expect(TestBed.inject(Router).url).toBe('/backoffice/ingresar?volver=%2Fbackoffice');
+    expect(el.querySelector('.form-err')!.textContent).toBe('Tu sesión venció. Ingresá de nuevo para seguir.');
+    expect(sessionStorage.getItem('gg_bo_ses')).toBeNull();
+  });
+
+  it('si el servidor rechaza el token mientras se trabaja, vuelve al ingreso', async () => {
+    sessionStorage.setItem('gg_bo_ses', JSON.stringify({ accessToken: 'mock.test', admin }));
+    await harness.navigateByUrl('/backoffice');
+    await settle();
+    TestBed.inject(AuthStore).expire();
+    await settle();
+    expect(TestBed.inject(Router).url).toBe('/backoffice/ingresar?volver=%2Fbackoffice');
+    expect(el.querySelector('.form-err')!.textContent).toContain('Tu sesión venció');
   });
 });

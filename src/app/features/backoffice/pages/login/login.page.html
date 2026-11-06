@@ -40,7 +40,9 @@
       <button mat-flat-button [attr.aria-busy]="busy() || null" type="submit" [disabled]="busy()">
         {{ busy() ? 'Ingresando…' : 'Ingresar' }}
       </button>
-      <button mat-stroked-button type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
+      @if (demo) {
+        <button mat-stroked-button type="button" [disabled]="busy()" (click)="useDemo()">Entrar con datos de ejemplo</button>
+      }
     </form>
   </section>
 </main>
