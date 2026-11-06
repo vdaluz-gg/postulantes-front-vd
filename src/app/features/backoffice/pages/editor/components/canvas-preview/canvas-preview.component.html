@@ -26,16 +26,19 @@
               <button
                 type="button"
                 class="copy-item pick"
+                [class.wide]="c.multiline"
                 [attr.data-sel]="sel({ kind: 'copy', audience: a.audience, id: c.id })"
                 [attr.aria-label]="'Texto: ' + c.label"
                 (click)="pick({ kind: 'copy', audience: a.audience, id: c.id })"
               >
-                <small>{{ c.label }}</small>
-                @for (line of copyLines(c.value); track $index) {
-                  <span>{{ line }}</span>
-                } @empty {
-                  <span class="mut">Sin texto</span>
-                }
+                <span class="lb">{{ c.label }}</span>
+                <span class="val">
+                  @for (line of copyLines(c.value); track $index) {
+                    <span>{{ line }}</span>
+                  } @empty {
+                    <span class="mut">Sin texto</span>
+                  }
+                </span>
               </button>
             }
           </div>

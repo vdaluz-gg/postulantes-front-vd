@@ -7,13 +7,12 @@
  */
 .frame{--band:var(--band-postulantes,#8b3bf0);--pv:#a66bff;--pv-t:#c7a6ff;--pv-on:#0f0820;--pv-tint:rgba(166,107,255,.16);--al-line:color-mix(in srgb,var(--fuc) 40%,var(--line));--al-bg:var(--tint-fuc);--al-ic:var(--fuc-t)}
 .frame.aud-clientes{--band:var(--band-clientes,#c42a7f);--pv:#ff5fae;--pv-t:#ff8cc4;--pv-on:#1a0a14;--pv-tint:rgba(255,95,174,.15);--al-line:rgba(255,180,84,.45);--al-bg:rgba(255,180,84,.12);--al-ic:#ffb454}
-.frame.aud-colaboradores{--band:var(--band-colaboradores,#46b191);--band-on:var(--band-on-colaboradores,#052219);--pv:#46b191;--pv-t:#8fdcc2;--pv-on:#052219;--pv-tint:rgba(70,177,145,.16)}
-.frame{--bg:color-mix(in srgb,var(--pv) 7%,#141419);--surface:color-mix(in srgb,var(--pv) 5%,#1c1c23);--surface2:color-mix(in srgb,var(--pv) 9%,#26262f)}
+.frame.aud-colaboradores{--band:var(--band-colaboradores,#46b191);--band-on:var(--band-on-colaboradores,#052219);--pv:#46b191;--pv-t:#8fdcc2;--pv-on:#052219;--pv-tint:rgba(70,177,145,.16);--cta:#3fd6a2}
+.frame{--cta-text:var(--ink);--bg:color-mix(in srgb,var(--pv) 7%,#141419);--surface:color-mix(in srgb,var(--pv) 5%,#1c1c23);--surface2:color-mix(in srgb,var(--pv) 9%,#26262f)}
 :host-context([data-theme="light"]) .frame{--pv:#7a2be3;--pv-t:#6a20cf;--pv-on:#fff;--pv-tint:rgba(122,43,227,.10)}
-/* Botones de Cliente en claro: rosa claro con texto oscuro (7,8:1), más liviano que el fucsia. */
-:host-context([data-theme="light"]) .frame.aud-clientes{--pv:#c42a7f;--pv-t:#a81f6c;--pv-tint:rgba(196,42,127,.09);--al-ic:#8a4b00;--cta:#ff79bd;--cta-on:#1a0a14}
+:host-context([data-theme="light"]) .frame.aud-clientes{--pv:#c42a7f;--pv-t:#a81f6c;--pv-tint:rgba(196,42,127,.09);--al-ic:#8a4b00}
 :host-context([data-theme="light"]) .frame.aud-colaboradores{--pv:#46b191;--pv-t:#0e6650;--pv-on:#052219;--pv-line:#2f9477;--pv-tint:rgba(70,177,145,.12)}
-:host-context([data-theme="light"]) .frame{--bg:color-mix(in srgb,var(--pv) 5%,#f7f7fa);--surface:#fff;--surface2:color-mix(in srgb,var(--pv) 6%,#f1f1f5)}
+:host-context([data-theme="light"]) .frame{--cta-text:var(--pv-t);--bg:color-mix(in srgb,var(--pv) 5%,#f7f7fa);--surface:#fff;--surface2:color-mix(in srgb,var(--pv) 6%,#f1f1f5)}
 
 .frame{margin:0 auto;max-width:960px;border-radius:22px;border:2px solid var(--band);background:var(--bg);color:var(--ink);overflow:hidden;transition:max-width .5s cubic-bezier(.2,.7,.2,1);animation:rise .5s cubic-bezier(.22,.61,.36,1) both}
 .frame.mobile{max-width:390px}
@@ -46,13 +45,16 @@ button.pick{font:inherit;color:inherit;text-align:left}
 .field.wide{grid-column:1/-1}
 .empty{grid-column:1/-1;padding:16px;border:1px dashed var(--line2);border-radius:var(--r-s);color:var(--mut);font-size:13.5px;text-align:center}
 
-/* Cada texto ocupa lo que mide, como se lee en el portal. */
-.copy{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px;margin-top:10px}
-.copy-item{display:flex;flex-direction:column;gap:2px;max-width:min(100%,420px);padding:10px 14px;border:0;border-radius:var(--r-s);background:var(--surface2);outline-offset:2px}
-.copy-item small{font-size:12px;color:var(--mut)}
-.copy-item span{font-size:14.5px;font-weight:600;overflow-wrap:anywhere}
+/* Los textos se ordenan como los campos: misma grilla, etiqueta arriba y el texto en su caja. */
+.copy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px;margin-top:12px}
+.mobile .copy{grid-template-columns:minmax(0,1fr)}
+.copy-item{display:flex;flex-direction:column;gap:6px;align-self:start;min-width:0;padding:6px;margin:-6px;border:0;border-radius:14px;background:none;outline-offset:-2px}
+.copy-item.wide{grid-column:1/-1}
+.copy-item .lb{font-size:13.5px;font-weight:600;color:var(--mut)}
+.val{display:flex;flex-direction:column;gap:2px;min-height:48px;justify-content:center;padding:11px 14px;border-radius:var(--r-s);border:1px solid var(--line2);background:var(--surface)}
+.val span{font-size:14.5px;font-weight:500;overflow-wrap:anywhere}
 .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .list.row{flex-direction:row;flex-wrap:wrap}
 .mut{color:var(--mut)}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}}
-@media (max-width:860px){:host{padding:14px 12px 40px}.fields{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){:host{padding:14px 12px 40px}.fields,.copy{grid-template-columns:minmax(0,1fr)}}
