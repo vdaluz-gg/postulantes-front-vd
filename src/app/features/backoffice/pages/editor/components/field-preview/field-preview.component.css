@@ -1,7 +1,7 @@
 :host{display:flex;flex-direction:column;gap:6px;min-width:0;--tone:var(--line2)}
 :host(.wide){grid-column:1/-1}
 :host(.hidden-field){opacity:.45}
-:host(.tone-section){--tone:var(--pv)}
+:host(.tone-section){--tone:var(--pv-line,var(--pv))}
 :host(.tone-positive){--tone:var(--mint)}
 :host(.tone-alert){--tone:var(--fuc)}
 .lb{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink)}
