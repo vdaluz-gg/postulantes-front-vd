@@ -7,12 +7,17 @@ import { join } from 'node:path';
 import { firstValueFrom } from 'rxjs';
 import { CandidacyApi, CandidateContact, HttpCandidacyApi, zoneKey } from './candidacy.api';
 import {
+  cuilValidator,
   dniValidator,
   emailValidator,
+  formatCuil,
   formatDni,
-  fullNameValidator,
+  isValidCuil,
+  nameValidator,
+  splitFullName,
   whatsappValidator,
 } from './candidate-validators';
+import { FormGroup } from '@angular/forms';
 import { JobOffersResponse, JobPosting, formatDayMonth, toJobPosting } from './job-offer';
 import { searchJobs } from './job-search';
 import { API_BASE_URL } from '../../../core/api/api';
@@ -117,11 +122,41 @@ describe('validadores del formulario de contacto', () => {
   const check = (validator: typeof dniValidator, value: string) =>
     validator(new FormControl(value));
 
-  it('nombre y apellido', () => {
-    expect(check(fullNameValidator, 'Martina Rodríguez')).toBeNull();
-    expect(check(fullNameValidator, 'Martina')).toEqual({ fullName: 'missingLastName' });
-    expect(check(fullNameValidator, 'Martina 123')).toEqual({ fullName: 'invalidChars' });
-    expect(check(fullNameValidator, '')).toBeNull();
+  it('nombre y apellido: solo letras, espacios, apóstrofos y guiones', () => {
+    expect(check(nameValidator, 'María Laura')).toBeNull();
+    expect(check(nameValidator, "D'Angelo-Pérez")).toBeNull();
+    expect(check(nameValidator, 'Martina 123')).toEqual({ name: 'invalidChars' });
+    expect(check(nameValidator, '')).toBeNull();
+  });
+
+  it('separa un nombre completo cuando llega junto', () => {
+    expect(splitFullName('Lucía Fernández')).toEqual({ firstName: 'Lucía', lastName: 'Fernández' });
+    expect(splitFullName('María Laura Gómez')).toEqual({
+      firstName: 'María Laura',
+      lastName: 'Gómez',
+    });
+    expect(splitFullName('Juan Carlos Pérez García')).toEqual({
+      firstName: 'Juan Carlos',
+      lastName: 'Pérez García',
+    });
+    expect(splitFullName('Martina')).toEqual({ firstName: 'Martina', lastName: '' });
+  });
+
+  it('CUIL: 11 números, prefijo de persona, dígito verificador y el mismo DNI', () => {
+    expect(isValidCuil('27-40123456-5')).toBe(true);
+    expect(isValidCuil('27401234565')).toBe(true);
+    expect(isValidCuil('27-40123456-4')).toBe(false);
+    expect(isValidCuil('30-40123456-5')).toBe(false);
+    expect(formatCuil('27401234565')).toBe('27-40123456-5');
+    expect(check(cuilValidator, '')).toBeNull();
+    expect(check(cuilValidator, '27-4012345')).toEqual({ cuil: 'invalid' });
+    const form = new FormGroup({
+      dni: new FormControl('38.412.907'),
+      cuil: new FormControl('27-40123456-5'),
+    });
+    expect(cuilValidator(form.controls.cuil)).toEqual({ cuil: 'mismatch' });
+    form.controls.cuil.setValue('27-38412907-8');
+    expect(cuilValidator(form.controls.cuil)).toBeNull();
   });
 
   it('DNI de 7 u 8 dígitos, con o sin puntos', () => {
@@ -193,7 +228,8 @@ describe('OffersApi', () => {
 
 describe('HttpCandidacyApi', () => {
   const contact: CandidateContact = {
-    fullName: 'Martina Rodríguez',
+    firstName: 'Martina',
+    lastName: 'Rodríguez',
     email: 'martina@ejemplo.com',
     dni: '38.412.907',
     whatsapp: '11 5555-0142',
@@ -227,23 +263,50 @@ describe('HttpCandidacyApi', () => {
     req.flush({
       cvId: 'cv-1',
       fileName: 'cv.pdf',
-      prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande', zoneId: 'z1' },
+      prefill: {
+        fullName: 'Martina Rodríguez',
+        firstName: 'Martina',
+        lastName: 'Rodríguez',
+        cuil: '27-38412907-8',
+        zone: 'Monte Grande',
+        zoneId: 'z1',
+      },
     });
     expect(await result).toEqual({
       cvId: 'cv-1',
-      prefill: { fullName: 'Martina Rodríguez', zone: 'Monte Grande' },
+      prefill: {
+        firstName: 'Martina',
+        lastName: 'Rodríguez',
+        cuil: '27-38412907-8',
+        zone: 'Monte Grande',
+      },
     });
   });
 
+  it('si el backend manda el nombre junto, lo separa en nombre y apellido', async () => {
+    const result = firstValueFrom(api.readCv(new File(['cv'], 'cv.pdf')));
+    http
+      .expectOne('http://api/cv')
+      .flush({ cvId: 'cv-2', prefill: { fullName: 'María Laura Gómez' } });
+    expect((await result).prefill).toEqual({ firstName: 'María Laura', lastName: 'Gómez' });
+  });
+
   it('envía la postulación con zona, oferta y CV, y devuelve el código de seguimiento', async () => {
-    const result = firstValueFrom(api.apply(contact, { offerRef: 'CSYP1233113446', cvId: 'cv-1' }));
+    const result = firstValueFrom(
+      api.apply(
+        { ...contact, cuil: '27-38412907-8' },
+        { offerRef: 'CSYP1233113446', cvId: 'cv-1' },
+      ),
+    );
     http.expectOne('http://api/zones').flush([{ id: 'z1', name: 'Monte Grande' }]);
     const req = http.expectOne('http://api/applications');
     expect(req.request.body).toEqual({
-      fullName: 'Martina Rodríguez',
+      firstName: 'Martina',
+      lastName: 'Rodríguez',
       email: 'martina@ejemplo.com',
       dni: '38.412.907',
       whatsapp: '11 5555-0142',
+      cuil: '27-38412907-8',
       position: 'Operario/a Pan 29',
       channel: 'new_web',
       zoneId: 'z1',
@@ -265,7 +328,8 @@ describe('HttpCandidacyApi', () => {
     http.expectOne('http://api/zones').flush('error', { status: 500, statusText: 'Error' });
     const req = http.expectOne('http://api/applications');
     expect(Object.keys(req.request.body)).toEqual([
-      'fullName',
+      'firstName',
+      'lastName',
       'email',
       'dni',
       'whatsapp',

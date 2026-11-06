@@ -25,15 +25,18 @@ import { SITE_CONFIG_SEED } from '../../../../backoffice/data/site-config.seed';
 import { PortadaButtonComponent } from '../../../components/portada-button/portada-button.component';
 import { AnswerValue, CandidateContact } from '../../candidacy.api';
 import {
+  cuilValidator,
   dniValidator,
   emailValidator,
+  formatCuil,
   formatDni,
-  fullNameValidator,
+  nameValidator,
   whatsappValidator,
 } from '../../candidate-validators';
 
 /** Datos propios del formulario: viajan como datos del postulante; el resto son respuestas extra. */
-type CoreName = 'fullName' | 'email' | 'dni' | 'whatsapp' | 'zone' | 'position';
+type CoreName =
+  'firstName' | 'lastName' | 'email' | 'dni' | 'cuil' | 'whatsapp' | 'zone' | 'position';
 
 interface CoreMeta {
   readonly autocomplete: string;
@@ -47,14 +50,34 @@ interface CoreMeta {
 }
 
 const CORE: Readonly<Record<CoreName, CoreMeta>> = {
-  fullName: {
-    autocomplete: 'name',
-    validators: [fullNameValidator],
+  firstName: {
+    autocomplete: 'given-name',
+    validators: [nameValidator, Validators.maxLength(80)],
     locked: true,
     messages: {
-      required: 'Escribí tu nombre y apellido.',
+      required: 'Escribí tu nombre.',
       invalidChars: 'Usá solo letras en tu nombre.',
-      missingLastName: 'Sumá tu apellido.',
+      maxlength: 'El nombre es demasiado largo.',
+    },
+  },
+  lastName: {
+    autocomplete: 'family-name',
+    validators: [nameValidator, Validators.maxLength(80)],
+    locked: true,
+    messages: {
+      required: 'Escribí tu apellido.',
+      invalidChars: 'Usá solo letras en tu apellido.',
+      maxlength: 'El apellido es demasiado largo.',
+    },
+  },
+  cuil: {
+    autocomplete: 'off',
+    inputmode: 'numeric',
+    validators: [cuilValidator],
+    messages: {
+      required: 'Escribí tu CUIL.',
+      invalid: 'Revisá el CUIL: son 11 números, por ejemplo 20-12345678-6.',
+      mismatch: 'El CUIL no coincide con tu DNI: revisá los dos.',
     },
   },
   dni: {
@@ -120,7 +143,8 @@ export interface FormField {
 
 /** Arma la lista de campos: respeta orden, textos y reglas publicadas; los datos básicos no se pueden quitar. */
 export function formFields(configs: readonly FieldConfig[]): FormField[] {
-  const list = [...configs];
+  // "fullName" es el campo de antes de separar nombre y apellido: ya no se muestra ni se envía.
+  const list = configs.filter((f) => f.id !== 'fullName');
   for (const seed of SEED_FIELDS)
     if (!list.some((f) => f.id === seed.id))
       list.push({ ...seed, visible: seed.id === 'position' ? false : seed.visible });
@@ -299,15 +323,31 @@ export class CandidateFormComponent {
     control.markAsTouched();
   }
 
-  protected formatDniOnBlur(): void {
+  /** Al salir de un campo: DNI con puntos y CUIL con guiones. */
+  protected onBlur(id: string): void {
+    if (id === 'dni') this.formatDniOnBlur();
+    if (id === 'cuil') this.formatCuilOnBlur();
+  }
+
+  private formatDniOnBlur(): void {
     const control = this.control('dni');
     if (control && !control.errors) control.setValue(formatDni(String(control.value)));
+    // El CUIL se compara con el DNI: si cambió el DNI, se vuelve a revisar.
+    this.control('cuil')?.updateValueAndValidity();
+  }
+
+  private formatCuilOnBlur(): void {
+    const control = this.control('cuil');
+    if (control && !control.errors && control.value) {
+      control.setValue(formatCuil(String(control.value)));
+    }
   }
 
   protected submit(): void {
     this.attempted.set(true);
     this.serverError.set('');
     const form = this.form();
+    form.controls['cuil']?.updateValueAndValidity();
     form.markAllAsTouched();
     if (form.invalid) {
       const invalid = this.fields().filter((f) => form.controls[f.config.id].invalid);
@@ -329,9 +369,11 @@ export class CandidateFormComponent {
         f.config.type === 'number' ? Number(v) : typeof v === 'string' ? v.trim() : v;
     }
     this.submitted.emit({
-      fullName: text('fullName'),
+      firstName: text('firstName'),
+      lastName: text('lastName'),
       email: text('email').toLowerCase(),
       dni: formatDni(text('dni')),
+      ...(text('cuil') && { cuil: formatCuil(text('cuil')) }),
       whatsapp: text('whatsapp'),
       zone: text('zone'),
       position: text('position'),

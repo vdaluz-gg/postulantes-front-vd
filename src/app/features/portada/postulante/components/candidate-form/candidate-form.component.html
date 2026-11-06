@@ -106,7 +106,7 @@
                   [class.f]="filled().has(f.id)"
                   [attr.aria-invalid]="errorFor(field) ? 'true' : null"
                   [attr.aria-describedby]="describedBy(field)"
-                  (blur)="f.id === 'dni' && formatDniOnBlur()"
+                  (blur)="onBlur(f.id)"
                 />
               }
             }

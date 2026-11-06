@@ -5,6 +5,7 @@ import { AuthStore } from './auth.store';
 import { SiteConfigApi } from './site-config.api';
 import { Audience, SiteConfig } from './site-config.model';
 import { Selection, findIssues } from './site-config.ops';
+import { upgradeConfig } from './site-config.upgrade';
 
 /** Cambios seguidos sobre el mismo dato (tipear una etiqueta) se juntan en un solo paso de historial. */
 const COALESCE_MS = 900;
@@ -47,7 +48,9 @@ export class EditorStore {
   load(): void {
     this.status.set('loading');
     this.api.load().subscribe({
-      next: (config) => {
+      next: (stored) => {
+        // Una configuración guardada con el formato anterior se pone al día al abrirla.
+        const config = upgradeConfig(stored);
         this.config.set(config);
         this.saved.set(config);
         this.past.set([]);

@@ -38,8 +38,10 @@ describe('configuración inicial', () => {
 
   it('incluye los campos de la maqueta de cada portal', () => {
     expect(fieldIds(seed, 'application')).toEqual([
-      'fullName',
+      'firstName',
+      'lastName',
       'dni',
+      'cuil',
       'email',
       'whatsapp',
       'zone',
@@ -88,9 +90,11 @@ describe('operaciones del editor', () => {
   it('agrega un campo después del elegido o al final', () => {
     const after = addField(seed, 'postulantes', 'application', 'dni');
     expect(fieldIds(after.config, 'application')).toEqual([
-      'fullName',
+      'firstName',
+      'lastName',
       'dni',
       'campo',
+      'cuil',
       'email',
       'whatsapp',
       'zone',
@@ -109,8 +113,8 @@ describe('operaciones del editor', () => {
     );
 
     const moved = moveField(seed, 'postulantes', 'application', 'dni', -1);
-    expect(fieldIds(moved, 'application').slice(0, 2)).toEqual(['dni', 'fullName']);
-    expect(moveField(seed, 'postulantes', 'application', 'fullName', -1)).toEqual(seed);
+    expect(fieldIds(moved, 'application').slice(0, 3)).toEqual(['firstName', 'dni', 'lastName']);
+    expect(moveField(seed, 'postulantes', 'application', 'firstName', -1)).toEqual(seed);
 
     const removed = removeField(seed, 'postulantes', 'application', 'zone');
     expect(fieldIds(removed, 'application')).not.toContain('zone');

@@ -2,15 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay, switchMap, timer } from 'rxjs';
 import { API_BASE_URL } from '../../../core/api/api';
+import { splitFullName } from './candidate-validators';
 
 /** Respuesta a un campo que el backoffice agregó al formulario. */
 export type AnswerValue = string | number | boolean | readonly string[];
 
 /** Datos de contacto del postulante (los completa la IA desde el CV y la persona los revisa). */
 export interface CandidateContact {
-  readonly fullName: string;
+  readonly firstName: string;
+  readonly lastName: string;
   readonly email: string;
   readonly dni: string;
+  /** Opcional: 11 números (con guiones o sin ellos). */
+  readonly cuil?: string;
   readonly whatsapp: string;
   readonly zone: string;
   readonly position: string;
@@ -66,7 +70,8 @@ export class MockCandidacyApi extends CandidacyApi {
       map(() => ({
         cvId: null,
         prefill: {
-          fullName: 'Martina Rodríguez',
+          firstName: 'Martina',
+          lastName: 'Rodríguez',
           dni: '38.412.907',
           whatsapp: '11 5555-0142',
           zone: 'Monte Grande',
@@ -97,6 +102,19 @@ interface Zone {
   readonly name: string;
 }
 
+/** Nombre y apellido de la lectura del CV; si el backend los manda juntos, se separan. */
+function namesOf(prefill: Record<string, string>): { firstName?: string; lastName?: string } {
+  if (prefill['firstName'] || prefill['lastName']) {
+    return {
+      ...(prefill['firstName'] && { firstName: prefill['firstName'] }),
+      ...(prefill['lastName'] && { lastName: prefill['lastName'] }),
+    };
+  }
+  if (!prefill['fullName']) return {};
+  const { firstName, lastName } = splitFullName(prefill['fullName']);
+  return { ...(firstName && { firstName }), ...(lastName && { lastName }) };
+}
+
 /** Compara nombres de zona sin tildes, mayúsculas ni espacios de más. */
 export const zoneKey = (name: string): string =>
   name.normalize('NFD').replace(/\p{M}/gu, '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -118,8 +136,9 @@ export class HttpCandidacyApi extends CandidacyApi {
       map(({ cvId, prefill }) => ({
         cvId,
         prefill: {
-          ...(prefill['fullName'] && { fullName: prefill['fullName'] }),
+          ...namesOf(prefill),
           ...(prefill['email'] && { email: prefill['email'] }),
+          ...(prefill['cuil'] && { cuil: prefill['cuil'] }),
           ...(prefill['dni'] && { dni: prefill['dni'] }),
           ...(prefill['whatsapp'] && { whatsapp: prefill['whatsapp'] }),
           ...(prefill['zone'] && { zone: prefill['zone'] }),
@@ -132,12 +151,14 @@ export class HttpCandidacyApi extends CandidacyApi {
     return this.zoneId(contact.zone).pipe(
       switchMap((zoneId) =>
         this.http.post<ApplyResponse>(`${this.base}/applications`, {
-          fullName: contact.fullName,
+          firstName: contact.firstName,
+          lastName: contact.lastName,
           email: contact.email,
           dni: contact.dni,
           whatsapp: contact.whatsapp,
           position: contact.position,
           channel: 'new_web',
+          ...(contact.cuil && { cuil: contact.cuil }),
           ...(zoneId && { zoneId }),
           ...(target.offerRef && { offerCode: target.offerRef }),
           ...(target.cvId && { cvId: target.cvId }),

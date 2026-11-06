@@ -13,6 +13,7 @@ import {
   SiteConfig,
 } from '../backoffice/data/site-config.model';
 import { SITE_CONFIG_SEED } from '../backoffice/data/site-config.seed';
+import { upgradeAudience } from '../backoffice/data/site-config.upgrade';
 import { Persona } from './portada.data';
 
 /** Lo que publicó el backoffice para cada portal. */
@@ -108,6 +109,8 @@ export class PortadaConfig {
   readonly alerts = computed(() => activeAlerts(this.postulantes().alerts, localDate()));
 
   load(): Subscription {
-    return this.api.audience('postulantes').subscribe((config) => this.postulantes.set(config));
+    return this.api
+      .audience('postulantes')
+      .subscribe((config) => this.postulantes.set(upgradeAudience(config)));
   }
 }

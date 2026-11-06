@@ -73,18 +73,25 @@ const postulantes: AudienceConfig = {
       description: 'Datos que pide la portada al postularse. La IA los completa con el CV.',
       screen: 'Portada · Postularme',
       fields: [
-        field('fullName', 'Nombre y apellido', 'text', {
+        field('firstName', 'Nombre', 'text', {
           required: true,
           placeholder: 'Como figura en tu DNI',
-          validation: {
-            pattern: "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+\\s+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+$",
-            message: 'Sumá tu apellido.',
-          },
+          validation: { maxLength: 80, message: 'Usá solo letras en tu nombre.' },
+        }),
+        field('lastName', 'Apellido', 'text', {
+          required: true,
+          placeholder: 'Como figura en tu DNI',
+          validation: { maxLength: 80, message: 'Usá solo letras en tu apellido.' },
         }),
         field('dni', 'DNI', 'text', {
           required: true,
           placeholder: 'Sin puntos',
           validation: { pattern: '^\\d{7,8}$', message: 'Revisá el DNI: son 7 u 8 números.' },
+        }),
+        field('cuil', 'CUIL', 'text', {
+          placeholder: 'Con o sin guiones',
+          help: 'Lo encontrás en tu recibo de sueldo o en ANSES.',
+          validation: { message: 'Revisá el CUIL: son 11 números e incluyen tu DNI.' },
         }),
         field('email', 'Email', 'email', {
           required: true,

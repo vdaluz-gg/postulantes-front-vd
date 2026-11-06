@@ -15,6 +15,7 @@ import { formFields } from './postulante/components/candidate-form/candidate-for
 import { CandidacyApi, CandidateContact } from './postulante/candidacy.api';
 import {
   HttpPublishedConfigApi,
+  PortadaConfig,
   PublishedConfigApi,
   activeAlerts,
   withCopy,
@@ -69,20 +70,24 @@ describe('configuración publicada: reglas', () => {
 
   it('los datos que necesita la postulación siempre están y son obligatorios; lo oculto no es obligatorio', () => {
     const fields = formFields([
-      text('fullName', 'Nombre', { visible: false, required: false }),
+      text('fullName', 'Nombre y apellido'),
+      text('firstName', 'Nombre', { visible: false, required: false }),
       text('zone', 'Zona', { visible: false, required: true }),
       text('extra', 'Extra', { required: true, visible: false }),
     ]);
     const by = (id: string) => fields.find((f) => f.config.id === id)!;
-    expect(by('fullName')).toEqual(expect.objectContaining({ visible: true, required: true }));
+    expect(by('firstName')).toEqual(expect.objectContaining({ visible: true, required: true }));
     expect(by('zone')).toEqual(expect.objectContaining({ visible: false, required: false }));
     expect(by('extra')).toEqual(expect.objectContaining({ visible: false, required: false }));
     // Los que faltan se agregan; el puesto oculto (lo completa la oferta).
+    // El campo viejo "Nombre y apellido" ya no se muestra.
     expect(fields.map((f) => f.config.id)).toEqual([
-      'fullName',
+      'firstName',
       'zone',
       'extra',
+      'lastName',
       'dni',
+      'cuil',
       'email',
       'whatsapp',
       'position',
@@ -106,6 +111,40 @@ describe('configuración publicada: reglas', () => {
       .expectOne('http://api/site-config/postulantes')
       .flush({ message: 'x' }, { status: 404, statusText: 'Not Found' });
     expect(await published).toBe(SITE_CONFIG_SEED.audiences.postulantes);
+  });
+});
+
+describe('configuración publicada con el formato anterior', () => {
+  it('la portada la pone al día: "Nombre y apellido" pasa a ser Nombre y Apellido, y suma el CUIL', () => {
+    const legacy: AudienceConfig = {
+      ...SITE_CONFIG_SEED.audiences.postulantes,
+      sections: SITE_CONFIG_SEED.audiences.postulantes.sections.map((s) =>
+        s.id === 'application'
+          ? {
+              ...s,
+              fields: [
+                text('fullName', 'Nombre y apellido', { required: true }),
+                ...s.fields.filter((f) => !['firstName', 'lastName', 'cuil'].includes(f.id)),
+              ],
+            }
+          : s,
+      ),
+    };
+    TestBed.configureTestingModule({
+      providers: [{ provide: PublishedConfigApi, useValue: { audience: () => of(legacy) } }],
+    });
+    const config = TestBed.inject(PortadaConfig);
+    config.load();
+    expect(config.applicationFields().map((f) => f.id)).toEqual([
+      'firstName',
+      'lastName',
+      'dni',
+      'cuil',
+      'email',
+      'whatsapp',
+      'zone',
+      'position',
+    ]);
   });
 });
 
@@ -144,9 +183,9 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     config = updateField(config, 'postulantes', 'application', 'zone', {
       placeholder: 'Barrio o ciudad',
     });
-    const [fullName, ...rest] = findSection(config, 'postulantes', 'application')!.fields;
+    const [firstName, ...rest] = findSection(config, 'postulantes', 'application')!.fields;
     const fields = [
-      fullName,
+      firstName,
       text('middleName', 'Segundo nombre', { required: true, placeholder: 'Si tenés' }),
       ...rest,
       text('shift', 'Turno', {
@@ -218,9 +257,11 @@ describe('la portada muestra lo que publicó el backoffice', () => {
       (f) => f.querySelector('input,select,textarea,[role=group]')!.id,
     );
     expect(ids).toEqual([
-      'cf-fullName',
+      'cf-firstName',
       'cf-middleName',
+      'cf-lastName',
       'cf-dni',
+      'cf-cuil',
       'cf-email',
       'cf-whatsapp',
       'cf-zone',
@@ -231,7 +272,8 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     expect(el.querySelector<HTMLInputElement>('#cf-zone')!.placeholder).toBe('Barrio o ciudad');
     expect(el.querySelector('label[for="cf-shift"]')!.textContent).toBe('Turno (opcional)');
 
-    type('cf-fullName', 'Lucía Fernández');
+    type('cf-firstName', 'Lucía');
+    type('cf-lastName', 'Fernández');
     type('cf-dni', '40123456');
     type('cf-email', 'lucia@ejemplo.com');
     type('cf-whatsapp', '11 4444-0101');
@@ -249,7 +291,8 @@ describe('la portada muestra lo que publicó el backoffice', () => {
     await render();
     expect(applied).toEqual([
       expect.objectContaining({
-        fullName: 'Lucía Fernández',
+        firstName: 'Lucía',
+        lastName: 'Fernández',
         dni: '40.123.456',
         answers: { middleName: 'Sofía', shift: 'tarde' },
       }),
@@ -258,8 +301,10 @@ describe('la portada muestra lo que publicó el backoffice', () => {
 
   it('la configuración inicial coincide con los campos que usa el formulario', () => {
     expect(seedFields.map((f) => f.id)).toEqual([
-      'fullName',
+      'firstName',
+      'lastName',
       'dni',
+      'cuil',
       'email',
       'whatsapp',
       'zone',

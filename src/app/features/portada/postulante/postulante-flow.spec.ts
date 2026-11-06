@@ -74,8 +74,10 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
               of({
                 cvId: 'cv-1',
                 prefill: {
-                  fullName: 'Martina Rodríguez',
+                  firstName: 'Martina',
+                  lastName: 'Rodríguez',
                   dni: '38.412.907',
+                  cuil: '27-38412907-8',
                   whatsapp: '11 5555-0142',
                   zone: 'Monte Grande',
                 },
@@ -204,7 +206,9 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(el.querySelector('[appPeekPanel] .ph')!.textContent!.trim()).toBe(
       'La IA leyó tu CV y completó todo',
     );
-    expect(el.querySelector<HTMLInputElement>('#cf-fullName')!.value).toBe('Martina Rodríguez');
+    expect(el.querySelector<HTMLInputElement>('#cf-firstName')!.value).toBe('Martina');
+    expect(el.querySelector<HTMLInputElement>('#cf-lastName')!.value).toBe('Rodríguez');
+    expect(el.querySelector<HTMLInputElement>('#cf-cuil')!.value).toBe('27-38412907-8');
     expect(el.querySelector<HTMLInputElement>('#cf-position')!.value).toBe('Operario/a Pan 29');
 
     button('Enviar postulación').click();
@@ -219,9 +223,11 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     expect(applied).toEqual([
       {
         contact: {
-          fullName: 'Martina Rodríguez',
+          firstName: 'Martina',
+          lastName: 'Rodríguez',
           email: 'martina@ejemplo.com',
           dni: '38.412.907',
+          cuil: '27-38412907-8',
           whatsapp: '11 5555-0142',
           zone: 'Monte Grande',
           position: 'Operario/a Pan 29',
@@ -239,7 +245,8 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
     await render();
     button('Prefiero completar mis datos a mano').click();
     await render();
-    type('cf-fullName', 'Martina Rodríguez');
+    type('cf-firstName', 'Martina');
+    type('cf-lastName', 'Rodríguez');
     type('cf-dni', '38412907');
     type('cf-email', 'martina@ejemplo.com');
     type('cf-whatsapp', '11 5555-0142');
@@ -277,21 +284,56 @@ describe('Panel del postulante: ofertas, CV y formulario', () => {
       'Postulación espontánea',
     );
 
-    type('cf-fullName', 'Martina');
+    type('cf-firstName', 'Martina 2');
     type('cf-dni', '123');
+    type('cf-cuil', '27-38412907-9');
     type('cf-whatsapp', '5555');
     await render();
     button('Enviar postulación').click();
     await render();
 
     expect(applied).toEqual([]);
-    expect(el.querySelector('.summary')!.textContent).toBe('Revisá 5 campos.');
-    expect(el.querySelector('#cf-fullName')!.getAttribute('aria-invalid')).toBe('true');
-    expect(el.querySelector('#cf-fullName-err')!.textContent).toBe('Sumá tu apellido.');
+    expect(el.querySelector('.summary')!.textContent).toBe('Revisá 7 campos.');
+    expect(el.querySelector('#cf-firstName')!.getAttribute('aria-invalid')).toBe('true');
+    expect(el.querySelector('#cf-firstName-err')!.textContent).toBe(
+      'Usá solo letras en tu nombre.',
+    );
+    expect(el.querySelector('#cf-lastName-err')!.textContent).toBe('Escribí tu apellido.');
     expect(el.querySelector('#cf-dni-err')!.textContent).toBe('Revisá el DNI: son 7 u 8 números.');
+    expect(el.querySelector('#cf-cuil-err')!.textContent).toContain('Revisá el CUIL');
     expect(el.querySelector('#cf-whatsapp-err')!.textContent).toContain('10 dígitos');
     expect(el.querySelector('#cf-zone-err')!.textContent).toBe('Contanos en qué zona vivís.');
-    expect(document.activeElement).toBe(el.querySelector('#cf-fullName'));
+    expect(document.activeElement).toBe(el.querySelector('#cf-firstName'));
+  });
+
+  it('el CUIL es opcional, se formatea al salir y tiene que coincidir con el DNI', async () => {
+    button('Dejar mi CV con IA').click();
+    await render();
+    button('Prefiero completar mis datos a mano').click();
+    await render();
+    expect(el.querySelector('label[for="cf-cuil"]')!.textContent!.trim()).toBe('CUIL (opcional)');
+    type('cf-firstName', 'Lucía');
+    type('cf-lastName', 'Fernández');
+    type('cf-dni', '40123456');
+    type('cf-email', 'lucia@ejemplo.com');
+    type('cf-whatsapp', '11 4444-0101');
+    type('cf-zone', 'Monte Grande');
+    type('cf-cuil', '27384129078');
+    await render();
+    button('Enviar postulación').click();
+    await render();
+    expect(el.querySelector('#cf-cuil-err')!.textContent).toBe(
+      'El CUIL no coincide con tu DNI: revisá los dos.',
+    );
+
+    type('cf-cuil', '27401234565');
+    await render();
+    expect(el.querySelector<HTMLInputElement>('#cf-cuil')!.value).toBe('27-40123456-5');
+    button('Enviar postulación').click();
+    await render();
+    expect(applied[0].contact).toEqual(
+      expect.objectContaining({ cuil: '27-40123456-5', firstName: 'Lucía', lastName: 'Fernández' }),
+    );
   });
 
   it('"Sí, postulame" del aviso de WhatsApp abre la carga del CV para ese puesto', async () => {

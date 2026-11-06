@@ -208,7 +208,13 @@ export const APPLICATION_SECTION = 'application';
  * Datos sin los que el backend no registra una postulación: no se pueden borrar, ocultar ni volver
  * opcionales (el backend rechaza publicar una configuración así).
  */
-export const CORE_APPLICATION_FIELDS: readonly string[] = ['fullName', 'email', 'dni', 'whatsapp'];
+export const CORE_APPLICATION_FIELDS: readonly string[] = [
+  'firstName',
+  'lastName',
+  'email',
+  'dni',
+  'whatsapp',
+];
 
 /** Tipos que necesitan una lista de opciones. */
 export const hasOptions = (type: FieldType): boolean => type === 'select' || type === 'chips';
