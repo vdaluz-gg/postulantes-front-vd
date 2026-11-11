@@ -4,10 +4,14 @@
   align-items: flex-start;
   gap: 6px;
 }
+/*
+ * El área táctil de los botones (48 px) sobresale del botón: el relleno le hace lugar dentro de la
+ * lista para que no aparezcan barras de desplazamiento, y el margen negativo conserva la alineación.
+ */
 ol {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: -6px -8px -6px 0;
+  padding: 6px 8px 6px 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -15,7 +19,10 @@ ol {
   max-height: 280px;
   overflow: auto;
 }
+/* Ancla la etiqueta oculta (.sr, absoluta) a su opción: si no, se ubica respecto de la página y la
+   estira cuando el panel se desplaza, y la página entera se corre. */
 li {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
